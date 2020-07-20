@@ -48,6 +48,7 @@ export default {
             var id = localStorage.getItem('id')
              axios.get(`${BACK_URL}/account/delete/${id}`)
             .then((response)=>{
+                console.log(response)
                 alert("회원 탈퇴가 완료되었습니다.")
             })
             .catch((err)=>{

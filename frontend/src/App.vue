@@ -1,13 +1,12 @@
 <template>
   <div id="app">
-    <Header :isHeader="isHeader"/>
-    <router-view/>
+    <Header :isHeader="isHeader" :isLoggedIn="isLoggedin"/>
+    <router-view @loginDone="login" />
   </div>
 </template>
 
 <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>  
 <script>
-import './assets/css/style.scss' 
 import Header from './components/common/Header.vue'
 import constants from './lib/constants' 
 
@@ -27,6 +26,9 @@ export default {
       }
   },
   methods : {
+    login(){
+      this.isLoggedin = true
+    },
       checkUrl(url) { 
 
           let array = [
@@ -47,7 +49,8 @@ export default {
   data: function () {
         return {
             isHeader: true,
-            constants
+            constants,
+            isLoggedin: false,
         } 
     },
 }

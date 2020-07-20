@@ -8,29 +8,41 @@
         <ul class="navbar-nav">
               <li class="nav-item"><a class="nav-link" href="/"><i class="fas fa-home"></i></a></li>
               <li class="nav-item"><router-link v-bind:to="{name:constants.URL_TYPE.POST.MAIN}" class="nav-link"><i class="far fa-sticky-note"></i></router-link></li>
-              <li class="nav-item"><router-link
+              <li class="nav-item"><router-link v-if="!isLoggedIn"
                   v-bind:to="{name:constants.URL_TYPE.USER.LOGIN}"
                   class="nav-link"
                   data-toggle="modal"
                   data-target="#exampleModal"
               ><i class="fas fa-user-alt"></i></router-link>
               </li>
-              <li class="nav-item"><router-link v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="nav-link"><i class="fas fa-user-plus"></i></router-link></li>
+              <li class="nav-item"><router-link v-if="!isLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="nav-link"><i class="fas fa-user-plus"></i></router-link></li>
               <li class="nav-item">
-                <a class="nav-link" @click="logout"><i class="fas fa-sign-out-alt"></i></a>
+                <a class="nav-link" v-if="isLoggedIn" @click="logout"><i class="fas fa-sign-out-alt"></i></a>
               </li>
               <li class="nav-item">
-                <router-link
+                <router-link v-if="isLoggedIn"
                   v-bind:to="{name:constants.URL_TYPE.USER.PROFILE}"
                   class="nav-link"
                 ><i class="far fa-address-card"></i></router-link>
               </li>
               <li class="nav-item">
-                <router-link
+                <router-link v-if="isLoggedIn"
                   v-bind:to="{name:constants.URL_TYPE.USER.EDIT}"
                   class="nav-link"
                 ><i class="fas fa-user-edit"></i></router-link>
               </li>
+              <li class="nav-item">
+                <router-link
+                  to="/create"
+                  class="nav-link"
+                >Write a Recipe</router-link>
+              </li>
+              <!-- <li class="nav-item">
+                <router-link
+                  to="/search"
+                  class="nav-link"
+                >search</router-link>
+              </li> -->
         </ul>
       </div>
     </nav>
@@ -39,16 +51,14 @@
 </template>   
 
 <script>
-const BACK_URL = "http://127.0.0.1:8080";
 import constants from "../../lib/constants";
 
 export default {
   name: "Header",
   components: {},
-  props: ["isHeader"],
+  props: ["isHeader","isLoggedIn"],
   computed: {},
   watch: {},
-  created() {},
   methods: {
     logout: function() {
       localStorage.removeItem("id");
@@ -60,8 +70,12 @@ export default {
     return {
       constants,
       keyword: ""
-    };
+    }
+  },
+  created:function() {
+    console.log(this.isLoggedIn)
   }
+  
 };
 </script>
 
