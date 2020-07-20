@@ -8,12 +8,8 @@
 </template>
 
 <script>
-import Header from '../components/common/Header.vue'
 export default {
     name:'Home',
-    components: {
-        Header,
-    },
     data: function(){
         return{
 

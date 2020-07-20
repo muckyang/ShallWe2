@@ -118,8 +118,6 @@
 import axios from "axios"
 const BACK_URL = "http://127.0.0.1:8080" //로컬 주소 넣으면 되나
 
-    import '../../assets/css/user.scss'
-
     export default {
         name: "Signup",
         components: {
@@ -149,6 +147,7 @@ const BACK_URL = "http://127.0.0.1:8080" //로컬 주소 넣으면 되나
                         alert("회원가입이 완료되었습니다.");
                     })
                     .catch((err) => {
+                      console.log(err)
                         alert("입력 값을 다시 확인해주세요");
                     });
                 }else{

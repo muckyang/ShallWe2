@@ -16,7 +16,6 @@ export default {
             EMAIL: 'email',
         },
         POST: {
-            MAIN : "main",
         },
         HOME:'home',
     }

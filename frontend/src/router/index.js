@@ -1,29 +1,33 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 
 import constants from '../lib/constants'
 
-import Home from '../page/Home.vue'
+import Home from '../views/Home.vue'
 
 // 유저
-import Login from '../page/user/Login.vue'
-import Join from '../page/user/Join.vue'
-import editUser from '../page/user/editUser.vue'
-import Profile from '../page/user/Profile.vue'
-import emailAuthenticate from '../page/user/emailAuthenticate.vue'
+import Login from '../components/user/Login.vue'
+import Join from '../components/user/Join.vue'
+import editUser from '../components/user/editUser.vue'
+import Profile from '../components/user/Profile.vue'
+import emailAuthenticate from '../components/user/emailAuthenticate.vue'
 
+// 아티클
+import articleCreate from '../views/articles/articleCreate.vue'
+import articleDetail from '../views/articles/articleDetail.vue'
+import articleUpdate from '../views/articles/articleUpdate.vue'
+import articleView from '../views/articles/articleView.vue'
 
-// 포스트
-import List from '../page/post/List.vue'
+//검색
+// import search from '../components/article/search.vue';
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
-  routes: [
+  const routes = [
     //Home
     {
       path:'/',
-      name:constants.URL_TYPE.HOME,
+      name:'HOME',
       component:Home,
     },   
     // 로그인
@@ -57,12 +61,34 @@ export default new Router({
       name: constants.URL_TYPE.USER.EMAIL,
       component: emailAuthenticate
     },
-    // 포스트
-    { 
-      path: '/list',
-      name: constants.URL_TYPE.POST.MAIN,
-      component: List
+    {
+      path: '/create',
+      name: 'articleCreate',
+      component: articleCreate
     },
-    
+    {
+      path: '/detail/:ID',
+      name: 'articleDetail',
+      component: articleDetail
+    },
+    {
+      path: '/update/:ID',
+      name: 'articleUpdate',
+      component: articleUpdate
+    },
+    {
+      path: '/article',
+      name: 'articleView',
+      component: articleView
+    },
+  
+  
   ]
+
+const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes
 })
+
+export default router
