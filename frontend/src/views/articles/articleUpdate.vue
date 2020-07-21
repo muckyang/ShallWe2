@@ -20,48 +20,23 @@ import axios from "axios"
 
 export default {
     name:'articleUpdate',
-    data(){
-      return{
-        article:{
-          title:null,
-          description:null,
-          // movie_title을 DB에 맞게 바꾸어 주면 된다.
-          pid:this.$route.params.ID,
-          writer:null,
+    data () {
+      return {
+        article: {
+          pid: this.$route.params.ID,
+          title: null,
+          description: null,
+          writer: null,
         },
-        user:null,
-        currentuser:null,
       }
     },
     methods: {
-        // getuser(){
-        //   const axiosConfig = {
-        //     headers:{
-        //       Authorization : `Token ${this.$cookies.get('auth-token')}`
-        //     },
-        //   }
-        //   axios.get(`${BACK_URL}/rest-auth/user/`,axiosConfig)
-        //     .then((reaponse)=>{
-        //       this.currentuser = reaponse.data.username
-        //     if (this.user !== this.currentuser){
-        //         this.$alert("잘 못 된 접근입니다.");
-        //         this.$router.push({name:'articleView'})
-        //     }  
-        //     })
-        //     .catch((err)=>{
-        //       console.error(err)
-        //     })
-        // },
-        getItem()
-        {
+        getItem () {
           axios.get(BACK_URL+'/post/detail/'+this.$route.params.ID)
           .then((response)=>{
             this.article.title = response.data.title
             this.article.description = response.data.description
-            // movie_title을 DB에 맞게 바꾸어 주면 된다.
             this.article.writer = response.data.writer
-            // this.user = response.data.user.username
-            // this.getuser()
           })
           .catch((err)=>{
             console.error(err)
@@ -70,7 +45,6 @@ export default {
         updateItem()
         {
           event.preventDefault()
-
           axios.post(BACK_URL+'/post/update/', this.article)
           .then((response) => {
             this.$router.push({name:'articleDetail',params:this.$route.params.ID})
