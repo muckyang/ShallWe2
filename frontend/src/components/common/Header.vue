@@ -2,8 +2,8 @@
   <div>
     <!-- Navbar1 -->
     <nav class="navbar navbar-light bg-light d-flex justify-content-center">
-        <a class="navbar-brand mt-3" href="/">로고 넣을 자리</a>
-        <!-- <img src="../../assets/img/logo.png" width="10 height="50" alt="" loading="lazy"> -->
+      <a class="navbar-brand mt-3" href="/">로고 넣을 공간</a>
+      <!-- <img src="../../assets/img/logo.png" width="10 height="50" alt="" loading="lazy"> -->
     </nav>
     <!-- Navbar2 -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -26,6 +26,7 @@
             </div>
           </li>
           <!-- Links -->
+          <li class="nav-item"><router-link to="/article" class="nav-link">글보기</router-link></li>
           <li class="nav-item"><router-link to="/create" class="nav-link">글쓰기</router-link></li>
           <li class="nav-item"><router-link v-if="!isLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.LOGIN}" class="nav-link" data-toggle="modal" data-target="#exampleModal">로그인</router-link></li>
           <li class="nav-item"><a class="nav-link" v-if="isLoggedIn" @click="logout">로그아웃</a></li>

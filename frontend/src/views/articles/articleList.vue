@@ -1,33 +1,18 @@
 <template>
-  <div>
-    <h1>articleList</h1>
-    <router-link to="/create">글쓰기</router-link>
-    <button @click="initArticles">asdaasdas</button>
-    <table>
-      <thead>
-        <tr>
-          <th>Pid</th>
-          <th>Title</th>
-          <th>Writer</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="article in articles" :key="article.pid">
-          <th>{{ article.pid }}</th>
-          <td><router-link :to="{name:'articleDetail',params:{ID:`${article.pid}`}}">{{article.description}}</router-link></td>
-          <td>{{ article.description }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- Pagenation -->
-    <div class="btn-cover d-flex justify-content-center">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item click" @click="prevPage"><a class="page-link">Previous</a></li>
-          <li class="page-item click" v-for="n in pageCount" :key="n" :pageNum=n><a class="page-link" @click="changePage(n)">{{n}}</a></li>
-          <li class="page-item click"><a class="page-link" @click="nextPage">Next</a></li>
-        </ul>
-      </nav>
+  <div class="mt-5">
+    <div class="container">
+      <div class="row">
+        <!-- Card -->
+        <div class="card col-3" style="width: 18rem;" v-for="article in articles" :key="article.pid">
+          <!-- 사진들은 다시 고를 겁니다. 현재는 랜덤 사진입니다. -->
+          <img src="https://source.unsplash.com/random" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Title 넣을 공간</h5>
+            <p class="card-text">{{ article.description }}</p>
+            <router-link class="btn btn-primary" :to="{name:'articleDetail',params:{ID:`${article.pid}`}}">보러가기</router-link>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -40,67 +25,26 @@ export default {
   name: 'articleList',
   data:function(){
     return{
-      articles:[],
-      page: 10,
-      pageNum: 0,
-      pageSize:10,
+      articles:[
+
+      ],
     }
   },
   methods:{
-    initArticles(){
-      console.log("VVVVVVVVVVVVVVV")
+    initArticles () {
       axios.get(`${BACK_URL}/post/read`)
       .then((reaponse)=>{
-        console.log(reaponse,"AAAAAAAAAAAAAAa")
         this.articles = reaponse.data.postList
       })
       .catch((err)=>{
         console.error(err)
       })
     },
-    loginAuthorization(){
-      if (!this.$session.get('jwt')){
-        this.$alert("로그인 후 사용하세요");
-        this.$router.push('/login')
-        }
-    },
-    nextPage () {
-      this.pageNum += 1;
-      const n = this.pageCount
-      if (this.pageNum>=n){
-        this.pageNum=n-1
-      }
-    },
-    prevPage () {
-      this.pageNum -= 1;
-      if (this.pageNum<0){
-        this.pageNum=0
-      }
-    },
-    changePage(n){
-      this.pageNum = n-1
-    },
   },
-  computed: {
-    pageCount () {
-      let listLeng = this.articles.length,
-          listSize = this.pageSize,
-          page = Math.floor(listLeng / listSize);
-      if (listLeng % listSize > 0) page += 1;
-      return page;
-    }
-
-  },
-  created(){
-    this.loginAuthorization()
-    this.initArticles()    
-  },
-  // watch:{
-  //   articles(){
-  //     this.initArticles()
-  //   }
-  // },
-}
+    created () {
+      this.initArticles()
+    },
+  }
 </script>
 
 <style>
