@@ -54,10 +54,9 @@
                 axios.get(`${BACK_URL}/account/login/${this.id}/${this.password}`)
                 .then(response=>{
                     alert("login success");
-                    this.$cookies.set('auth-token', response.data.key);
+                    this.$cookies.set('auth-token', response.data);
                     localStorage.setItem('id', this.id);
                     var id = localStorage.getItem('id');
-                    console.log(id)
                     this.isLoggedin = true
                     this.$emit('loginDone')
                     this.$router.push("/home");

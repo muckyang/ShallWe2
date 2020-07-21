@@ -41,7 +41,7 @@ public class PostController {
     @PostMapping("/post/create")
     @ApiOperation(value = "게시글등록")
     public Object create(@Valid @RequestBody CreateRequest request) throws MessagingException, IOException {
-        String message = "";
+    
         int pid = request.getPid();
         String title = request.getTitle();
         int memberAmount = request.getMemberAmount();
@@ -85,8 +85,8 @@ public class PostController {
     public Object read(@PathVariable int pid) {
 
         Optional<Post> postOpt = postDao.findPostByPid(pid);
-        ResponseEntity response = null;
-        String res = "";
+        ResponseEntity<Object> response = null;
+ 
         if (postOpt.isPresent()) {
             String ptitle = postOpt.get().getTitle();
             int ppid = postOpt.get().getPid();
@@ -115,7 +115,7 @@ public class PostController {
     public Object update(@Valid @RequestBody CreateRequest request) {
         // 프론트에서 넘겨줄때 hidden으로 id 넘겨줄 것
         // 이메일, 닉네임 중복처리
-        String message = "";
+
         int pid= request.getPid();
         String title = request.getTitle();
         int memberAmount = request.getMemberAmount();

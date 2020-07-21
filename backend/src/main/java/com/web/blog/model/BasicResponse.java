@@ -1,9 +1,6 @@
 package com.web.blog.model;
 
 import java.time.LocalDate;
-import java.util.List;
-
-import com.web.blog.model.post.Post;
 
 import io.swagger.annotations.ApiModelProperty;
 

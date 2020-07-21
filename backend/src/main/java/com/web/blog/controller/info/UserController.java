@@ -36,8 +36,8 @@ public class UserController {
     public Object info(@PathVariable  String id){
 
         Optional<User> userOpt = userDao.findById(id);
-        ResponseEntity response = null;
-         String res = "";
+        ResponseEntity<Object> response = null;
+        
         if (userOpt.isPresent()) {
              String uname = userOpt.get().getName();
              String uaddress = userOpt.get().getAddress();
@@ -56,9 +56,9 @@ public class UserController {
             result.nickname = unickname;
             result.birthday = ubirthday;
             response = new ResponseEntity<>(result, HttpStatus.OK);
-            // res = id;
+        
         } else {
-            // res="실패 ";
+
             response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 

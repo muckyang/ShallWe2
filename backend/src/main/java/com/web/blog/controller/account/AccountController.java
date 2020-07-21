@@ -12,6 +12,7 @@ import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
+import com.web.blog.service.JwtService;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -52,45 +53,62 @@ public class AccountController {
     @Autowired
     private SpringTemplateEngine TemplateEngine;
 
+    @Autowired
+    private JwtService jwtService; 
+
     @GetMapping("/account/login/{id}/{password}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "로그인") // SWAGGER UI에 보이는 이름
     // public Object login(@RequestParam(required = true) final String id,
     // @RequestParam(required = true) final String password) {
-    public Object login(@PathVariable  String id, @PathVariable String password) {
+    public Object login(@PathVariable  String id, @PathVariable  String password) {
 
          Optional<User> userOpt = userDao.findUserByIdAndPassword(id, password);
-        ResponseEntity response = null;
-         String res = "";
+        ResponseEntity<Object> response = null;
+
         if (userOpt.isPresent()) {
-             String uname = userOpt.get().getName();
-             String uaddress = userOpt.get().getAddress();
-             String uemail = userOpt.get().getEmail();
-             String unickname = userOpt.get().getNickname();
-             String uid = userOpt.get().getId();
-             String upassword = userOpt.get().getPassword();
-             
-             LocalDate ubirthday = userOpt.get().getBirthday();
+            //  String uname = userOpt.get().getName();
+            //  String uaddress = userOpt.get().getAddress();
+            //  String uemail = userOpt.get().getEmail();
+            //  String unickname = userOpt.get().getNickname();
+            //  String uid = userOpt.get().getId();
+            //  String upassword = userOpt.get().getPassword();
+            //  LocalDate ubirthday = userOpt.get().getBirthday();
 
              
-             final BasicResponse result = new BasicResponse();
-            result.email = uemail;
-            result.password = upassword;
-            result.name = uname;
-            result.id = uid;
-            result.address = uaddress;
-            result.nickname = unickname;
-            result.birthday = ubirthday;
-            response = new ResponseEntity<>(result, HttpStatus.OK);
+            //  final BasicResponse result = new BasicResponse();
+            // result.email = uemail;
+            // result.password = upassword;
+            // result.name = uname;
+            // result.id = uid;
+            // result.address = uaddress;
+            // result.nickname = unickname;
+            // result.birthday = ubirthday;
+            
             System.out.println("로그인성공");
-            // res = id;
+            User user = new User();
+            user.setId(id);
+            System.out.println(id);
+            user.setPassword(password);
+            user.setEmail(userOpt.get().getEmail());
+            String token = jwtService.createLoginToken(user);
+		    // LOGGER.debug("created jwt ::::::: {}" , token);
+		    // LOGGER.debug("jwt decoding... ");
+		    User jwtuser = jwtService.getUser(token);
+            // LOGGER.debug("decoded jwt ::::::: {}", jwtuser);
+            System.out.println("token>>>>>>"+token);
+            System.out.println("jwt>>>>>>"+jwtuser);
+
+            response = new ResponseEntity<>(token, HttpStatus.OK);
+
         } else {
-            // res="실패 ";
+
             response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             System.out.println("로그인 실패");
         }
 
         return response;
     }
+
 
     @PostMapping("/account/signup")
     @ApiOperation(value = "회원가입")

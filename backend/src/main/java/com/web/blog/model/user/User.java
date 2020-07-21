@@ -22,11 +22,11 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "user") // 이어줄 테이블명 지정 
 public class User  {
-  
+    
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int uid;
-    @Id
-    @JsonIgnore
+
     private String id;
     private String password;
     private String email;
