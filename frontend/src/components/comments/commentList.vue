@@ -1,8 +1,8 @@
 <template>
   <div>
     <hr>
-    <input type="text" v-model="comment_content.content">
-    <button @click="createComment">댓글쓰기</button>
+    <input type="text" v-model="comment_content.content"> 
+    <button type="button" class="btn btn-dark" @click="createComment">댓글쓰기</button>
     <commentListItem v-for="comment in comments" :key="comment.id" :comment="comment" @re-render="getComments" :user="comment.user.username"/>
   </div>
 </template>

@@ -1,12 +1,17 @@
 <template>
   <div>
-    <h1>articleDetail</h1>
-    <p>Title: {{ article.title }}</p>
-    <!-- movie_title을 DB에 맞게 바꾸어 주면 된다. -->
-    <p>Writer: {{ article.writer }}</p>
-    <p>description: {{ article.description }}</p>
-    <!-- <p>Updated at {{ udate }}/{{ utime }}</p> -->
-    <router-link :to="{name:'articleUpdate', params: {ID: `${article.pid}`}}">수정</router-link> 
+    <div class="doFlex">
+      <img class="MyImage" src="https://source.unsplash.com/random" alt="...">
+      <div class="articleInfo">
+        <div class="title"><p>{{ article.title }}</p></div>
+        <div><p>가격 들어갈 자리</p></div>
+        <!-- movie_title을 DB에 맞게 바꾸어 주면 된다. -->
+        <div class="writer"><p>{{ article.writer }}</p></div>
+        <div class="description"><p>{{ article.description }}</p></div>
+        <div class="update"><router-link :to="{name:'articleUpdate', params: {ID: `${article.pid}`}}">수정</router-link></div>
+      </div>
+      <!-- <p>Updated at {{ udate }}/{{ utime }}</p> -->    
+    </div> 
     <commentList/>
   </div>
 </template>
@@ -75,5 +80,25 @@
 </script>
 
 <style>
+.MyImage{
+  width: 35%;
+  height: 300px;
+}
+.doFlex{
+  display: flex;
+  padding: 10px 30px 10px 30px;
+}
+.articleInfo{
+  margin-left: 15px;
+  text-align: left;
+}
+.update{
+  justify-content: bottom;
+}
+.title{
+  font-size: xx-large;
+  font-weight: 600;
+
+}
 
 </style>

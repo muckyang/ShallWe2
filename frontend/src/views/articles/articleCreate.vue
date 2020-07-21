@@ -1,13 +1,31 @@
 <template>
   <div>
-    <h1>articleCreate</h1>
-    <p>Title</p>
-    <input type="text" id="title" v-model="articleData.title">
-    <p>Writer</p>
-    <input type="text" id="title" v-model="articleData.writer">
-    <p>Content</p>
-    <textarea id="content" rows="10" v-model="articleData.description"></textarea>
-    <button type="submit" @click="createArticle" value="Submit">Submit</button>
+
+    <div class="container m-5 mx-auto w-75 font-weight-bold">
+      <div class="text-center shadow border mb-5 bg-white rounded-lg m-5">
+        <form>
+          <div class="d-flex inline">
+            <p class="w-75 font-weight-bold h4 my-4 text-left ml-5 pl-5">New Article</p>
+
+          </div>
+          <hr class="mt-0"><br>
+          <div class="mt-2 mb-5 w-75 mx-auto">
+            <p class="align-self-center m-1 text-left">Title</p>
+            <input id="title" type="text" class="form-control form-control-lg" placeholder="제목을 입력해 주세요."/>
+          </div>
+          <div class="mt-2 mb-5 w-75 mx-auto">
+            <p class="align-self-center m-1 text-left">Content</p>
+            <textarea placeholder="내용을 입력해 주세요." class="form-control form-control-lg" v-model="articleData.content" id="content" cols="30" rows="10"></textarea>
+          </div>
+          <div class="pb-5">
+            <button class="font-weight-bold btn btn-dark" type="submit" @click="createArticle" value="Submit">Submit</button>
+          </div>
+        </form> 
+      </div>
+    </div>
+
+    <!-- <p>Writer</p>
+    <input type="text" id="title" v-model="articleData.writer"> -->
   </div>
 </template>
 
