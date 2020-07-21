@@ -15,7 +15,7 @@
           </div>
           <div class="mt-2 mb-5 w-75 mx-auto">
             <p class="align-self-center m-1 text-left">Writer</p>
-            <input id="title" type="text" class="form-control form-control-lg" placeholder="제목을 입력해 주세요." v-model="articleData.writer"/>
+            <input id="writer" type="text" class="form-control form-control-lg" placeholder="작성자을 입력해 주세요." v-model="articleData.writer"/>
           </div>
           <div class="mt-2 mb-5 w-75 mx-auto">
             <p class="align-self-center m-1 text-left">Content</p>
@@ -44,7 +44,7 @@
         articleData: {
           title: null,
           memberAmount : null,
-          writer : "asdsad",
+          writer : null,
           price : null,
           description: null
 
