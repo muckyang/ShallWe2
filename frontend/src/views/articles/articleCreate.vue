@@ -11,11 +11,15 @@
           <hr class="mt-0"><br>
           <div class="mt-2 mb-5 w-75 mx-auto">
             <p class="align-self-center m-1 text-left">Title</p>
-            <input id="title" type="text" class="form-control form-control-lg" placeholder="제목을 입력해 주세요."/>
+            <input id="title" type="text" class="form-control form-control-lg" placeholder="제목을 입력해 주세요." v-model="articleData.title"/>
+          </div>
+          <div class="mt-2 mb-5 w-75 mx-auto">
+            <p class="align-self-center m-1 text-left">Writer</p>
+            <input id="title" type="text" class="form-control form-control-lg" placeholder="제목을 입력해 주세요." v-model="articleData.writer"/>
           </div>
           <div class="mt-2 mb-5 w-75 mx-auto">
             <p class="align-self-center m-1 text-left">Content</p>
-            <textarea placeholder="내용을 입력해 주세요." class="form-control form-control-lg" v-model="articleData.content" id="content" cols="30" rows="10"></textarea>
+            <textarea placeholder="내용을 입력해 주세요." class="form-control form-control-lg" v-model="articleData.description" id="content" cols="30" rows="10"></textarea>
           </div>
           <div class="pb-5">
             <button class="font-weight-bold btn btn-dark" type="submit" @click="createArticle" value="Submit">Submit</button>
@@ -40,6 +44,7 @@
         articleData: {
           title: null,
           memberAmount : null,
+          writer : "asdsad",
           price : null,
           description: null
 
