@@ -1,4 +1,4 @@
-package com.web.blog.controller.post;
+package com.web.blog.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
-import com.web.blog.dao.post.PostDao;
+import com.web.blog.dao.PostDao;
 import com.web.blog.model.PostResponse;
 import com.web.blog.model.post.CreateRequest;
 import com.web.blog.model.post.Post;

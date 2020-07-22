@@ -1,4 +1,4 @@
-package com.web.blog.controller.account;
+package com.web.blog.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -8,7 +8,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 
-import com.web.blog.dao.user.UserDao;
+import com.web.blog.dao.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;

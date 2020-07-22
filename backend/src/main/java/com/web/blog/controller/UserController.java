@@ -1,9 +1,9 @@
-package com.web.blog.controller.info;
+package com.web.blog.controller;
 import java.time.LocalDate;
 import java.util.Optional;
 
 
-import com.web.blog.dao.user.UserDao;
+import com.web.blog.dao.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.user.User;
 
