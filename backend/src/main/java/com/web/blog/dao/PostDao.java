@@ -1,4 +1,4 @@
-package com.web.blog.dao.post;
+package com.web.blog.dao;
 
 import java.util.Optional;
 
