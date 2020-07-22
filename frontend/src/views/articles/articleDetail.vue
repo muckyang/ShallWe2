@@ -7,7 +7,7 @@
         <div class="articleInfo">
           <div class="title"><p>{{ article.title }}</p></div>
           <div><p>가격 들어갈 자리</p></div>
-          <div class="writer"><p>{{ article.writer }}</p></div>
+          <div class="writer"><p>{{ article.price }}</p></div>
           <div class="description" id="item-1"><p>{{ article.description }}</p></div>
           <div class="update btn btn-secondary"><router-link class="text-white text-decoration-none" :to="{name:'articleUpdate', params: {ID: `${article.pid}`}}">수정</router-link></div>
         </div> 
@@ -34,7 +34,14 @@
     },
     data () {
       return {
-        article: {user: {username: ''},pid:null,},
+        article: {
+          pid:null,
+          title: null,
+          price: null,
+          description: null,
+
+          
+          },
         isLiked:null,
       }
     },
@@ -57,11 +64,19 @@
         //     })
         // },
       getItem(){
-        // axios.get(BACK_URL+'/post/detail/'+this.$route.params.ID)
-        axios.get(BACK_URL+'/post/detail/'+this.$route.params.ID)
+        const config = {
+          headers: {
+            Authorization: `${this.$cookies.get('auth-token')}`
+          }
+        }
+        axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}`)
         .then((response)=>{
-          this.article = response.data
-          this.article.pid=response.data.pid
+          console.log(response)
+          this.article.pid = response.data.pid
+          this.article.title = response.data.title
+          this.article.price = response.data.price
+          this.article.description = response.data.description
+
           // this.cdate=this.article.created_at.substr(0,10)
           // this.ctime=this.article.created_at.substr(11,8)
         })
@@ -83,11 +98,11 @@
       }
     },
     created: function(){
-        this.getcurrentuser()
+        // this.getcurrentuser()
     },
     mounted: function(){
       this.getItem()
-      this.likeCheck()
+      // this.likeCheck()
     },
   }
 </script>
