@@ -8,7 +8,7 @@
 </template>
 
 <script>
-const BACK_URL = "http://127.0.0.1:8000"
+const BACK_URL = "http://127.0.0.1:8080"
 import axios from "axios"
 import commentListItem from '@/components/comments/commentListItem'
 
@@ -22,18 +22,21 @@ export default {
       flag:false,
       comments:'',
       comment_content:{
-        content:''
+        content:'',
+        writer: '',
+        articleno: '',
       },
     }
   },
   methods: {
       createComment(){
+        this.comment_content.articleno=this.$route.params.ID
         const config = {
           headers:{
-            Authorization : `Token ${this.$cookies.get('auth-token')}`
+            Authorization : `${this.$cookies.get('auth-token')}`
           },
         }
-        axios.post(BACK_URL+'/articles/'+this.$route.params.ID+'/comment-create/',this.comment_content,config)
+        axios.post( `${BACK_URL}/comment/create/${config.headers.Authorization}` , this.comment_content)
           .then(()=>{
             this.flag=true
             this.comment_content.content=''
@@ -43,7 +46,7 @@ export default {
           })
       },
       getComments()
-      {  
+      { 
         axios.get(BACK_URL+'/articles/'+this.$route.params.ID+'/comment-detail/')
             .then((response)=>{
               this.comments=response.data
