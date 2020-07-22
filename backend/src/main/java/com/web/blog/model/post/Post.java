@@ -25,9 +25,13 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pid;
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
 >>>>>>> master
+=======
+    
+>>>>>>> youngho2
     private String title;
     private int memberAmount;
     private int price;
