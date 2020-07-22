@@ -7,11 +7,14 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
-import com.web.blog.dao.LikeDao;
+// import com.web.blog.dao.LikeDao;
 import com.web.blog.dao.PostDao;
+import com.web.blog.dao.UserDao;
 import com.web.blog.model.PostResponse;
 import com.web.blog.model.post.CreateRequest;
 import com.web.blog.model.post.Post;
+import com.web.blog.model.user.User;
+import com.web.blog.service.JwtService;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,29 +41,45 @@ import io.swagger.annotations.ApiOperation;
 public class PostController {
     @Autowired
     PostDao postDao;
-    @Autowired
-    LikeDao likeDao;
 
+    @Autowired
+    UserDao userDao;
+
+    // @Autowired
+    // LikeDao likeDao;
+
+
+    @Autowired
+    private JwtService jwtService;
+  
     @PostMapping("/post/create/{token}")
     @ApiOperation(value = "게시글등록")
     // public Object create(@Valid @RequestBody CreateRequest request , HttpServletRequest req) throws MessagingException, IOException {
     public Object create(@Valid @RequestBody CreateRequest request , @PathVariable String token) throws MessagingException, IOException {
     
-        int pid = request.getPid();
+
         String title = request.getTitle();
         int memberAmount = request.getMemberAmount();
         int price = request.getPrice();
         String description = request.getDescription();
-        String writer = request.getWriter();    
+
 
         System.out.println(token);
+        User jwtuser = jwtService.getUser(token);
+        
+        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+       if(userOpt.isPresent()){
+
         Post post = new Post();
-        post.setPid(pid);
+        
+ 
         post.setTitle(title);
         post.setMemberAmount(memberAmount);
         post.setPrice(price);
         post.setDescription(description);
-        post.setWriter(writer);
+        post.setWriter(userOpt.get().getId()); //token값으로  id 받아옴
+
+
         System.out.println(post.getPid());
         System.out.println();
         postDao.save(post);
@@ -70,19 +89,22 @@ public class PostController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    String message = "로그인을 확인하세요";
+    return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+}
 
     @GetMapping("/post/read/")
     @ApiOperation(value = "게시글목록")
     public Object read( ) throws MessagingException, IOException {
 
         List<Post> plist = postDao.findAll();
-        final PostResponse result = new PostResponse();
+        PostResponse result = new PostResponse();
         result.postList = plist;
        
-        for(int i = 0 ; i < result.postList.size(); i ++){ //각 게시물 마다 좋아요 수 가져오기 
-            int likenum = likeDao.findByarticle(plist.get(i).getPid()).size();
-            result.postList.get(i).setLikenum(likenum);
-        }
+        // for(int i = 0 ; i < result.postList.size(); i ++){ //각 게시물 마다 좋아요 수 가져오기 
+            // int likenum = likeDao.findByarticle(plist.get(i).getPid()).size();
+        //     result.postList.get(i).setLikenum(likenum);
+        // }
         
         System.out.println("게시물 목록!!");
        

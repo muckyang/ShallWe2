@@ -14,14 +14,14 @@
             <img v-if="imageUrl" :src="imageUrl" alt="">
             <p><button class="btn btn-dark mt-4" @click="imageUpload" >이미지 업로드</button></p>
           </div>
-
+        
           <div class="form-group mb-5 w-75 mx-auto">
             <p class="align-self-center m-1 text-left">Title</p>
             <input id="title" type="text" class="form-control form-control-lg" placeholder="제목을 입력해 주세요." v-model="articleData.title"/>
           </div>
           <div class="form-group w-75 mb-5 mx-auto">
             <p class="align-self-center m-1 text-left">Price</p>
-            <input id="writer" type="text" class="form-control form-control-lg" placeholder="작성자을 입력해 주세요." v-model="articleData.writer"/>
+            <input id="price" type="number" class="form-control form-control-lg" placeholder="가격을 입력해 주세요." v-model="articleData.price"/>
           </div>
           <div class="form-group w-75 mx-auto">
             <p class="align-self-center m-1 text-left">Content</p>
@@ -70,9 +70,16 @@
             Authorization: `${this.$cookies.get('auth-token')}`
           }
         }
+<<<<<<< HEAD
+               axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}` ,this.articleData )
+          .then(res => { 
+            console.log(res.data) 
+            console.log(this.$cookies.get('auth-token'));
+=======
         axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}`)
           .then(res => { 
             console.log(res.data)
+>>>>>>> 7ea1d13c96a8fb91704525b96c7b5d638ded2bab
             this.$router.push('article')
           })
           .catch(err => console.log(err.response.data))
