@@ -70,16 +70,11 @@
             Authorization: `${this.$cookies.get('auth-token')}`
           }
         }
-<<<<<<< HEAD
                axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}` ,this.articleData )
           .then(res => { 
             console.log(res.data) 
             console.log(this.$cookies.get('auth-token'));
-=======
-        axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}`)
-          .then(res => { 
-            console.log(res.data)
->>>>>>> 7ea1d13c96a8fb91704525b96c7b5d638ded2bab
+
             this.$router.push('article')
           })
           .catch(err => console.log(err.response.data))
