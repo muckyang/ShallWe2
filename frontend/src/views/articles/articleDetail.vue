@@ -56,26 +56,19 @@
         //       console.error(err)
         //     })
         // },
-        getItem(){
-          // axios.get(BACK_URL+'/post/detail/'+this.$route.params.ID)
-          axios.get(BACK_URL+'/post/detail/'+this.$route.params.ID)
-          .then((response)=>{
-            this.article = response.data
-            this.article.pid=response.data.pid
-            console.log(this.article.created_at,this.article.updated_at)
-            this.cdate=this.article.created_at.substr(0,10)
-            this.udate=this.article.updated_at.substr(0,10)
-            this.ctime=this.article.created_at.substr(11,8)
-            this.utime=this.article.updated_at.substr(11,8)
-            console.log(this.cdate,this.udate)
-          if (this.article.user.username===this.currentuser){
-            this.flag = true
-          }
-          })
-          .catch((err)=>{
-            console.error(err)
-          })
-        },
+      getItem(){
+        // axios.get(BACK_URL+'/post/detail/'+this.$route.params.ID)
+        axios.get(BACK_URL+'/post/detail/'+this.$route.params.ID)
+        .then((response)=>{
+          this.article = response.data
+          this.article.pid=response.data.pid
+          // this.cdate=this.article.created_at.substr(0,10)
+          // this.ctime=this.article.created_at.substr(11,8)
+        })
+        .catch((err)=>{
+          console.error(err)
+        })
+      },
       likeCheck(){
         const articleId = this.$route.params.ID
         axios.post(BACK_URL + `/articles/${articleId}/like/check/`, null, { headers: {'Authorization':`Token ${this.$cookies.get('auth-token')}`}})

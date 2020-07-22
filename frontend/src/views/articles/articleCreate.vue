@@ -67,12 +67,12 @@
         event.preventDefault()
         const config = {
           headers: {
-            Authorization: `Token ${this.$cookies.get('auth-token')}`
+            Authorization: `${this.$cookies.get('auth-token')}`
           }
         }
-        axios.post(BACK_URL+'/post/create/',this.articleData, config)
+        axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}`)
           .then(res => { 
-            console.log(res.data) 
+            console.log(res.data)
             this.$router.push('article')
           })
           .catch(err => console.log(err.response.data))
