@@ -26,5 +26,7 @@ public class CreateRequest {
     @ApiModelProperty(required = true)
     @NotNull
     String writer;
+
+
         
 }

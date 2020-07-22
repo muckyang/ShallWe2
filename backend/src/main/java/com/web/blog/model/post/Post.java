@@ -20,16 +20,18 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "article") // 이어줄 테이블명 지정
-
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pid;
-    @JsonIgnore
     private String title;
     private int memberAmount;
     private int price;
     private String writer;
     private String description;
+    @JsonIgnore
+    private int likenum;
+    @JsonIgnore
+    private boolean isLike;
     
 }

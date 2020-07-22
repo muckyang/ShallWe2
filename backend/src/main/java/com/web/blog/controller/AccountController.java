@@ -54,49 +54,33 @@ public class AccountController {
     private SpringTemplateEngine TemplateEngine;
 
     @Autowired
-    private JwtService jwtService; 
+    private JwtService jwtService;
 
     @GetMapping("/account/login/{id}/{password}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "로그인") // SWAGGER UI에 보이는 이름
     // public Object login(@RequestParam(required = true) final String id,
     // @RequestParam(required = true) final String password) {
-    public Object login(@PathVariable  String id, @PathVariable  String password) {
+    public Object login(@PathVariable String id, @PathVariable String password) {
 
-         Optional<User> userOpt = userDao.findUserByIdAndPassword(id, password);
+        Optional<User> userOpt = userDao.findUserByIdAndPassword(id, password);
         ResponseEntity<Object> response = null;
 
         if (userOpt.isPresent()) {
-            //  String uname = userOpt.get().getName();
-            //  String uaddress = userOpt.get().getAddress();
-            //  String uemail = userOpt.get().getEmail();
-            //  String unickname = userOpt.get().getNickname();
-            //  String uid = userOpt.get().getId();
-            //  String upassword = userOpt.get().getPassword();
-            //  LocalDate ubirthday = userOpt.get().getBirthday();
 
-             
-            //  final BasicResponse result = new BasicResponse();
-            // result.email = uemail;
-            // result.password = upassword;
-            // result.name = uname;
-            // result.id = uid;
-            // result.address = uaddress;
-            // result.nickname = unickname;
-            // result.birthday = ubirthday;
-            
             System.out.println("로그인성공");
+            System.out.println(id);
             User user = new User();
             user.setId(id);
-            System.out.println(id);
             user.setPassword(password);
             user.setEmail(userOpt.get().getEmail());
+            // 토큰 생성
             String token = jwtService.createLoginToken(user);
-		    // LOGGER.debug("created jwt ::::::: {}" , token);
-		    // LOGGER.debug("jwt decoding... ");
-		    User jwtuser = jwtService.getUser(token);
-            // LOGGER.debug("decoded jwt ::::::: {}", jwtuser);
-            System.out.println("token>>>>>>"+token);
-            System.out.println("jwt>>>>>>"+jwtuser);
+
+            // 복호화
+            User jwtuser = jwtService.getUser(token);
+
+            System.out.println("생성한 토큰 >>>>>>" + token);
+            System.out.println("토큰 복호화 >>>>>>" + jwtuser);
 
             response = new ResponseEntity<>(token, HttpStatus.OK);
 
@@ -109,14 +93,13 @@ public class AccountController {
         return response;
     }
 
-
     @PostMapping("/account/signup")
     @ApiOperation(value = "회원가입")
-    public Object signup(@Valid @RequestBody SignupRequest request) throws MessagingException, IOException{
+    public Object signup(@Valid @RequestBody SignupRequest request) throws MessagingException, IOException {
         // 이메일, 닉네임 중복처리
         String message = "";
         User isEmail = userDao.getUserByEmail(request.getEmail());
-      User isNickname = userDao.getUserByNickname(request.getNickname());
+        User isNickname = userDao.getUserByNickname(request.getNickname());
         if (isEmail != null) { // 메일 중복
             message = "이메일 중복 입니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -125,15 +108,15 @@ public class AccountController {
             message = "닉네임 중복 입니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
-     String id = request.getId();
-         String password = request.getPassword();
-         String email = request.getEmail();
-         String name = request.getName();
-         String nickname = request.getNickname();
-         String address = request.getAddress();
-         LocalDate birthday = request.getBirthday();
+        String id = request.getId();
+        String password = request.getPassword();
+        String email = request.getEmail();
+        String name = request.getName();
+        String nickname = request.getNickname();
+        String address = request.getAddress();
+        LocalDate birthday = request.getBirthday();
 
-         User user = new User();
+        User user = new User();
         user.setId(id);
         user.setPassword(password);
         user.setEmail(email);
@@ -153,18 +136,17 @@ public class AccountController {
             // 수신자 설정
             helper.setTo(request.getEmail());
             // 템플릿에 전달할 데이터 설정
-      
+
             Context context = new Context();
             context.setVariable("test_key", "test_value");
-        
+
             // 메일 내용 설정 : 템플릿 프로세스
             String html = TemplateEngine.process("mail-template", context);
             helper.setText(html, true);
-            
 
             javaMailSender.send(mailmessage);
             System.out.println(request.getEmail());
-        } catch ( Exception e) {
+        } catch (Exception e) {
             System.out.println("메일전송 실패!");
             return new ResponseEntity<>("error", HttpStatus.BAD_REQUEST);
         }
@@ -177,64 +159,83 @@ public class AccountController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/account/update")
+    @PostMapping("/account/update/{token}")
     @ApiOperation(value = "수정하기")
-    public Object update(@Valid @RequestBody  SignupRequest request) {
-        // 프론트에서 넘겨줄때 hidden으로 id 넘겨줄 것
-        // 이메일, 닉네임 중복처리
+    public Object update(@Valid @RequestBody SignupRequest request, @PathVariable String token) {
+
+        // 복호화
+        User jwtuser = jwtService.getUser(token);
+
+        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
         String message = "";
+        if (userOpt.isPresent()) {
+            // 이메일, 닉네임 중복처리
 
-         String id = request.getId();
-         String password = request.getPassword();
-         String name = request.getName();
-         String nickname = request.getNickname();
-         String address = request.getAddress();
-         LocalDate birthday = request.getBirthday();
+            String id = request.getId();
+            String password = request.getPassword();
+            String name = request.getName();
+            String nickname = request.getNickname();
+            String address = request.getAddress();
+            LocalDate birthday = request.getBirthday();
 
-         User user = userDao.getOne(id);
+            User user = userDao.getOne(id);
 
-         String email = request.getEmail();// 바꿀거
-         String dbemail = user.getEmail();// 원래이메일
-         User isEmail = userDao.getUserByEmail(email);// 바꿀게 db에 있을때
-         User isNickname = userDao.getUserByNickname(request.getNickname());
+            String email = request.getEmail();// 바꿀거
+            String dbemail = user.getEmail();// 원래이메일
+            User isEmail = userDao.getUserByEmail(email);// 바꿀게 db에 있을때
+            User isNickname = userDao.getUserByNickname(request.getNickname());
 
-        user.setPassword(password);
-        user.setName(name);
-        user.setNickname(nickname);
-        user.setEmail(email);
-        user.setAddress(address);
-        user.setBirthday(birthday);
+            user.setPassword(password);
+            user.setName(name);
+            user.setNickname(nickname);
+            user.setEmail(email);
+            user.setAddress(address);
+            user.setBirthday(birthday);
 
-        if (isEmail != null && !isEmail.getEmail().equals(dbemail)) { // 메일 중복
-            message = "이메일 중복 입니다.";
+            if (isEmail != null && !isEmail.getEmail().equals(dbemail)) { // 메일 중복
+                message = "이메일 중복 입니다.";
+                return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+            }
+            if (isNickname != null && !isNickname.getNickname().equals(user.getNickname())) { // 닉네임 중복
+                message = "닉네임 중복 입니다.";
+                return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+            }
+
+            userDao.save(user);
+            System.out.println("수정하기 들어옴!! ");
+            BasicResponse result = new BasicResponse();
+            result.status = true;
+            result.data = "success";
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            message = "로그인 된 계정이 없습니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
-        if (isNickname != null && !isNickname.getNickname().equals(user.getNickname())) { // 닉네임 중복
-            message = "닉네임 중복 입니다.";
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-        }
-
-        userDao.save(user);
-        System.out.println("수정하기 들어옴!! ");
-         BasicResponse result = new BasicResponse();
-        result.status = true;
-        result.data = "success";
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/account/delete/{id}")
+    @GetMapping("/account/delete/{token}")
     @ApiOperation(value = "삭제하기")
-    public Object delete(@Valid @PathVariable String id) {
-         User user = userDao.getOne(id);
+    public Object delete(@Valid @PathVariable String token) {
 
-        userDao.delete(user);
-        System.out.println("삭제하기!! ");
-         BasicResponse result = new BasicResponse();
-        result.status = true;
-        result.data = "success";
+        User jwtuser = jwtService.getUser(token);
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        String message = "";
+        if (userOpt.isPresent()) {
+            User user = userDao.getOne(jwtuser.getId());
+
+            userDao.delete(user);
+            System.out.println("삭제하기!! ");
+            BasicResponse result = new BasicResponse();
+            result.status = true;
+            result.data = "success";
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }else{
+            message = "로그인 된 아이디가 없습니다.";
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

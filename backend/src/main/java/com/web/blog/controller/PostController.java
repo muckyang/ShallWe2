@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
+import com.web.blog.dao.LikeDao;
 import com.web.blog.dao.PostDao;
 import com.web.blog.model.PostResponse;
 import com.web.blog.model.post.CreateRequest;
@@ -37,18 +38,22 @@ import io.swagger.annotations.ApiOperation;
 public class PostController {
     @Autowired
     PostDao postDao;
+    @Autowired
+    LikeDao likeDao;
 
-    @PostMapping("/post/create")
+    @PostMapping("/post/create/{token}")
     @ApiOperation(value = "게시글등록")
-    public Object create(@Valid @RequestBody CreateRequest request) throws MessagingException, IOException {
+    // public Object create(@Valid @RequestBody CreateRequest request , HttpServletRequest req) throws MessagingException, IOException {
+    public Object create(@Valid @RequestBody CreateRequest request , @PathVariable String token) throws MessagingException, IOException {
     
         int pid = request.getPid();
         String title = request.getTitle();
         int memberAmount = request.getMemberAmount();
         int price = request.getPrice();
         String description = request.getDescription();
-        String writer = request.getWriter();
+        String writer = request.getWriter();    
 
+        System.out.println(token);
         Post post = new Post();
         post.setPid(pid);
         post.setTitle(title);
@@ -66,24 +71,30 @@ public class PostController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/post/read")
+    @GetMapping("/post/read/")
     @ApiOperation(value = "게시글목록")
-    public Object read() throws MessagingException, IOException {
+    public Object read( ) throws MessagingException, IOException {
 
         List<Post> plist = postDao.findAll();
-
-        System.out.println("게시물 목록!!");
         final PostResponse result = new PostResponse();
         result.postList = plist;
+       
+        for(int i = 0 ; i < result.postList.size(); i ++){ //각 게시물 마다 좋아요 수 가져오기 
+            int likenum = likeDao.findByarticle(plist.get(i).getPid()).size();
+            result.postList.get(i).setLikenum(likenum);
+        }
+        
+        System.out.println("게시물 목록!!");
+       
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/post/detail/{pid}") // SWAGGER UI에 보이는 REQUEST명
+    @GetMapping("/post/detail/{pid}/{token}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "게시물상세보기") // SWAGGER UI에 보이는 이름
     // public Object login(@RequestParam(required = true) final String id,
     // @RequestParam(required = true) final String password) {
-    public Object read(@PathVariable int pid) {
-
+    public Object read(@PathVariable int pid  , @PathVariable String token) {
+        //토큰 받아오면 그 토큰으로 유효성 검사 후 uid 받아와서 좋아요 한지 여부 확인
         Optional<Post> postOpt = postDao.findPostByPid(pid);
         ResponseEntity<Object> response = null;
  
@@ -112,20 +123,15 @@ public class PostController {
 
     @PostMapping("/post/update/")
     @ApiOperation(value = "게시글수정")
-    public Object update(@Valid @RequestBody CreateRequest request) {
-        // 프론트에서 넘겨줄때 hidden으로 id 넘겨줄 것
-        // 이메일, 닉네임 중복처리
+    public Object update(@Valid @RequestBody CreateRequest request ) {
 
+        // 이메일, 닉네임 중복처리
         int pid= request.getPid();
         String title = request.getTitle();
         int memberAmount = request.getMemberAmount();
         int price = request.getPrice();
         String description = request.getDescription();
-
-
-
         Post post = postDao.getPostByPid(pid);
-
 
         post.setTitle(title);
         post.setMemberAmount(memberAmount);
@@ -156,5 +162,16 @@ public class PostController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    // @GetMapping("/post/like/{pid}")
+    // @ApiOperation(value = "좋아요")
+    // public Object delete(@Valid @PathVariable int pid) {
+    //     Post post = postDao.getPostByPid(pid);
+    //     postDao.delete(post);
+    //     System.out.println("삭제하기!! ");
+    //     PostResponse result = new PostResponse();
+
+    //     return new ResponseEntity<>(result, HttpStatus.OK);
+    // }
 
 }
