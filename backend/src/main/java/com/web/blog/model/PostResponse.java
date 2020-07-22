@@ -22,4 +22,6 @@ public class PostResponse {
      public String writer;
      @ApiModelProperty(value = "postlist", position = 7)
      public List<Post> postList;
+     @ApiModelProperty(value = "likenum", position = 8)
+     public int likenum;
 }

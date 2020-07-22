@@ -32,7 +32,7 @@ export default {
   },
   methods:{
     initArticles () {
-      axios.get(`${BACK_URL}/post/read`)
+      axios.get(`${BACK_URL}/post/read/`)
       .then((reaponse)=>{
         this.articles = reaponse.data.postList
       })
