@@ -8,6 +8,7 @@
         <!-- movie_title을 DB에 맞게 바꾸어 주면 된다. -->
         <div class="writer"><p>{{ article.writer }}</p></div>
         <div class="description"><p>{{ article.description }}</p></div>
+        <div><articleLike  @like-change="likeChange" :isLiked="isLiked" :article="article"/></div>
         <div class="update"><router-link :to="{name:'articleUpdate', params: {ID: `${article.pid}`}}">수정</router-link></div>
       </div>
       <!-- <p>Updated at {{ udate }}/{{ utime }}</p> -->    
@@ -20,15 +21,18 @@
   const BACK_URL = "http://127.0.0.1:8080"
   import axios from "axios"
   import commentList from '@/components/comments/commentList'
+  import articleLike from '@/components/articles/articleLike'
   
   export default {
     name:'articleDetail',
     components:{
       commentList,
+      articleLike
     },
     data () {
       return {
         article: {user: {username: ''},pid:null,},
+        isLiked:null,
       }
     },
     methods: {
@@ -69,12 +73,25 @@
             console.error(err)
           })
         },
+      likeCheck(){
+        const articleId = this.$route.params.ID
+        axios.post(BACK_URL + `/articles/${articleId}/like/check/`, null, { headers: {'Authorization':`Token ${this.$cookies.get('auth-token')}`}})
+        .then(res => {
+            this.isLiked = res.data.message
+        })
+        .catch(err => console.log(err.response.data))
+      },
+      likeChange() {
+        this.getItem()
+        this.likeCheck()
+      }
     },
     created: function(){
         this.getcurrentuser()
     },
     mounted: function(){
       this.getItem()
+      this.likeCheck()
     },
   }
 </script>
