@@ -49,23 +49,30 @@ export default {
   name: "Header",
   components: {},
   props: ["isHeader","isLoggedIn"],
-  computed: {},
-  watch: {},
-  methods: {
-    logout: function() {
-      localStorage.removeItem("id");
-      var aa = localStorage.getItem("id");
-      console.log(aa);
-    }
-  },
   data: function() {
     return {
       constants,
       keyword: ""
     }
   },
-  created:function() {
-    console.log(this.isLoggedIn)
+  methods: {
+    logout: function() {
+      this.$cookies.remove('auth-token')
+      this.isLoggedIn=false
+    },
+    loginCheck:function(){
+      if (this.$cookies.isKey('auth-token')){
+        this.isLoggedIn = true
+      }else{
+        this.isLoggedIn = false
+      }
+    }
+  },
+  created:function(){
+    this.loginCheck()
+  },
+  updated:function(){
+    this.loginCheck()
   }
 };
 </script>

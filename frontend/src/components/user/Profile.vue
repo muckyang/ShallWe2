@@ -28,9 +28,12 @@ export default {
     },
     methods: {
         getUser:function(){
-            var id = localStorage.getItem('id')
-            
-            axios.get(`${BACK_URL}/info/${id}/`)
+            const config = {
+                headers: {
+                    Authorization: `${this.$cookies.get('auth-token')}`
+                }
+            }
+            axios.get(`${BACK_URL}/info/${config.headers.Authorization}`)
             .then((response)=>{
                 this.name=response.data.name
                 this.address=response.data.address
@@ -45,8 +48,12 @@ export default {
             })
         },
         deleteUser: function(){
-            var id = localStorage.getItem('id')
-             axios.get(`${BACK_URL}/account/delete/${id}`)
+            const config = {
+                headers: {
+                    Authorization: `${this.$cookies.get('auth-token')}`
+                }
+            }
+             axios.get(`${BACK_URL}/account/delete/${config.headers.Authorization}`)
             .then((response)=>{
                 console.log(response)
                 alert("회원 탈퇴가 완료되었습니다.")
