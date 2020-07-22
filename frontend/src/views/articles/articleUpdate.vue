@@ -1,16 +1,32 @@
 <template>
   <div>
-    <h1>articleUpdate</h1>
-    <p>Title</p>
-    <input type="text" id="title" v-model="article.title">
-    <p>Writer</p>
-    <!-- movie_title을 DB에 맞게 바꾸어 주면 된다. -->
-    <input type="text" id="Movie" v-model="article.writer">
-    <p>Content</p>
-    <textarea id="content" rows="10" v-model="article.description"></textarea>
-    <button type="submit" @click="updateItem">수정</button>
-    <button type="submit" @click="deleteItem">삭제</button>
-    <button @click="getItem">확인</button>
+
+   <div class="container m-5 mx-auto font-weight-bold">
+      <div class="shadow border rounded m-5">
+          <div class="form-group mb-5 w-75 mx-auto">
+            <p class="align-self-center m-1 mt-3 text-left">Image</p>
+            <input type="file" class="form-control form-control-lg" />
+            <!-- <p><button class="btn btn-dark mt-4" >찾아보기</button></p> -->
+          </div>
+
+          <div class="form-group mb-5 w-75 mx-auto">
+            <p class="align-self-center m-1 text-left">Title</p>
+            <input id="title" type="text" class="form-control form-control-lg" v-model="article.title"/>
+          </div>
+          <div class="form-group w-75 mb-5 mx-auto">
+            <p class="align-self-center m-1 text-left">Price</p>
+            <input id="writer" type="text" class="form-control form-control-lg" placeholder="작성자을 입력해 주세요." v-model="article.writer"/>
+          </div>
+          <div class="form-group w-75 mx-auto">
+            <p class="align-self-center m-1 text-left">Content</p>
+            <textarea placeholder="내용을 입력해 주세요." class="form-control form-control-lg" v-model="article.description" id="content" cols="30" rows="10"></textarea>
+          </div>
+      </div>
+    </div>
+
+    <button class="btn btn-secondary" type="submit" @click="updateItem">수정</button>
+    <button class="ml-1 btn btn-danger" type="submit" @click="deleteItem">삭제</button>
+    <!-- <button @click="getItem">확인</button> -->
   </div>
 </template>
 

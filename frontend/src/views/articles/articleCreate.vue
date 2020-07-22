@@ -1,35 +1,37 @@
 <template>
   <div>
 
-    <div class="container m-5 mx-auto w-75 font-weight-bold">
-      <div class="text-center shadow border mb-5 bg-white rounded-lg m-5">
-        <form>
-          <div class="d-flex inline">
+    <div class="container m-5 mx-auto font-weight-bold">
+      <div class="shadow border rounded m-5">
+    
+          <div class="d-flex">
             <p class="w-75 font-weight-bold h4 my-4 text-left ml-5 pl-5">New Article</p>
-
           </div>
           <hr class="mt-0"><br>
-          <div class="mt-2 mb-5 w-75 mx-auto">
+          <div class="form-group mb-5 w-75 mx-auto">
+            <p class="align-self-center m-1 text-left">Image</p>
+            <input ref="imageInput" type="file" hidden @change="imageChange" class="form-control form-control-lg" />
+            <img v-if="imageUrl" :src="imageUrl" alt="">
+            <p><button class="btn btn-dark mt-4" @click="imageUpload" >이미지 업로드</button></p>
+          </div>
+
+          <div class="form-group mb-5 w-75 mx-auto">
             <p class="align-self-center m-1 text-left">Title</p>
             <input id="title" type="text" class="form-control form-control-lg" placeholder="제목을 입력해 주세요." v-model="articleData.title"/>
           </div>
-          <div class="mt-2 mb-5 w-75 mx-auto">
-            <p class="align-self-center m-1 text-left">Writer</p>
+          <div class="form-group w-75 mb-5 mx-auto">
+            <p class="align-self-center m-1 text-left">Price</p>
             <input id="writer" type="text" class="form-control form-control-lg" placeholder="작성자을 입력해 주세요." v-model="articleData.writer"/>
           </div>
-          <div class="mt-2 mb-5 w-75 mx-auto">
+          <div class="form-group w-75 mx-auto">
             <p class="align-self-center m-1 text-left">Content</p>
             <textarea placeholder="내용을 입력해 주세요." class="form-control form-control-lg" v-model="articleData.description" id="content" cols="30" rows="10"></textarea>
           </div>
           <div class="pb-5">
             <button class="font-weight-bold btn btn-dark" type="submit" @click="createArticle" value="Submit">Submit</button>
           </div>
-        </form> 
       </div>
     </div>
-
-    <!-- <p>Writer</p>
-    <input type="text" id="title" v-model="articleData.writer"> -->
   </div>
 </template>
 
@@ -47,11 +49,20 @@
           writer : null,
           price : null,
           description: null
-
-        }
+        },
+        imageUrl: null, //다시 검토
       };
     },
     methods: {
+      imageUpload(){
+        this.$refs.imageInput.click()
+      },
+      imageChange() {
+        console.log(e.targetfiles)
+        console.log('이미지 등록 됨?')
+        const file = e.target.files[0];
+        this.imageUrl = URL.createObjectURL(file);
+      },
       createArticle(event) {
         event.preventDefault()
         const config = {
