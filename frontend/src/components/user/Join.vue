@@ -142,8 +142,7 @@ const BACK_URL = "http://127.0.0.1:8080" //로컬 주소 넣으면 되나
                 if (this.signupData.password===this.password2){
                     axios.post(`${BACK_URL}/account/signup`, this.signupData)
                     .then((res) => {
-                        this.$cookies.set('auth-token', res.data.key)
-                        console.log(res.data.key)
+                        console.log(res,"COMPLETE")
                         alert("회원가입이 완료되었습니다.");
                     })
                     .catch((err) => {
@@ -153,12 +152,8 @@ const BACK_URL = "http://127.0.0.1:8080" //로컬 주소 넣으면 되나
                 }else{
                     alert("비밀번호를 다시 설정해주세요")
                 }
-
             },
-            // SubmitUser:function(signupData){
-            //     console.log('회원가입 요청')
-                // this.$emit("submit-signupData", this.signupData)
-            },
+        },
     }
 
 </script>

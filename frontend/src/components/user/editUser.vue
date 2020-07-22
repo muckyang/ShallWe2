@@ -102,7 +102,12 @@ export default {
               birthday:this.birthday,
             } 
             if(editData.password===password2){ 
-                axios.post(`${BACK_URL}/account/update`, editData)
+                const config = {
+                    headers: {
+                        Authorization: `${this.$cookies.get('auth-token')}`
+                    }
+                }
+                axios.post(`${BACK_URL}/account/update/${config.headers.Authorization}`)
                 .then((response)=>{
                     console.log(response)
                     alert("수정이 완료되었습니다.")
@@ -115,8 +120,12 @@ export default {
             }
         },
         getUser:function(){
-          var id = localStorage.getItem('id')
-          axios.get(`${BACK_URL}/info/${id}/`)
+            const config = {
+                headers: {
+                    Authorization: `${this.$cookies.get('auth-token')}`
+                }
+            }
+          axios.get(`${BACK_URL}/info/${config.headers.Authorization}`)
             .then((response)=>{
                 this.name=response.data.name
                 this.address=response.data.address

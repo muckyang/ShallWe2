@@ -91,4 +91,28 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  //로그인 하지 않아도 되는 페이지
+  const publicPages = [constants.URL_TYPE.USER.LOGIN, constants.URL_TYPE.USER.JOIN, 'HOME', 'articleList']
+  //로그인 하면 안되는 페이지
+  const authPages = [constants.URL_TYPE.USER.LOGIN, constants.URL_TYPE.USER.JOIN]
+  
+  const authRequired = !publicPages.includes(to.name)
+  const unauthRequired = authPages.includes(to.name)
+  const isLoggedIn = Vue.$cookies.isKey('auth-token')
+
+  //로그인 하면 안되는 페이지에 로그인 상태로 접근
+  if(unauthRequired && isLoggedIn) {
+    next(from)
+  }
+
+  //로그인 해야 하는 페이지에 로그인 안한 상태로 접근
+  if (authRequired && !isLoggedIn){
+    alert('로그인 후 이용해 주세요')
+    next('/')
+  }else{
+    next()
+  }
+})
+
 export default router
