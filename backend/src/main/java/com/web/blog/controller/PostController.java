@@ -214,7 +214,7 @@ public class PostController {
 
     @GetMapping("/post/detail/{pid}/{token}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "게시물상세보기") // SWAGGER UI에 보이는 이름
-    public Object read(@PathVariable int pid, @PathVariable String token) {
+    public Object detail(@PathVariable int pid, @PathVariable String token) {
         // 토큰 받아오면 그 토큰으로 유효성 검사 후 uid 받아와서 좋아요 한지 여부 확인
         Optional<Post> postOpt = postDao.findPostByPid(pid);
         Post p = postOpt.get();
