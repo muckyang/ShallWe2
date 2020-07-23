@@ -3,6 +3,8 @@ package com.web.blog.model.like;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +22,8 @@ public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    int userid;
+    @Column(name = "userid")
+    int uid;
     int articleno;
     
 }

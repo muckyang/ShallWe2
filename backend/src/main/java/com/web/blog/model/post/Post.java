@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,5 +30,6 @@ public class Post {
     private int price;
     private String writer;
     private String description;
-
+    @Column(name = "is_temp")
+    private boolean temp;
 }

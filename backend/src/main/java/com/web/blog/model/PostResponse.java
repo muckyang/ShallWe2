@@ -11,7 +11,7 @@ public class PostResponse {
      public PostResponse(){
 
      }
-     public PostResponse(int pid,String title, int memberAmount,int price,String description,String writer){
+     public PostResponse(int pid,String title, int memberAmount,int price,String description,String writer, boolean temp){
           super();
           this.pid = pid;
           this.title = title;
@@ -19,6 +19,7 @@ public class PostResponse {
           this.description = description;
           this.price = price;
           this.writer = writer;
+          this.temp = temp;
  
      }
      // post
@@ -36,8 +37,10 @@ public class PostResponse {
      public String writer;
      @ApiModelProperty(value = "likenum", position = 7)
      public int likenum;
-     @ApiModelProperty(value = "isLike", position = 8)
-     public boolean isLike;
+     @ApiModelProperty(value = "isLiked", position = 8)
+     public boolean isLiked;
+     @ApiModelProperty(value = "temp", position = 9)
+     public boolean temp;
     
    
 }
