@@ -3,8 +3,6 @@ package com.web.blog.model;
 
 
 import io.swagger.annotations.ApiModelProperty;
-
-
 // @Data
 // @ConstructorBinding
 public class PostResponse {
@@ -41,6 +39,4 @@ public class PostResponse {
      public boolean isLiked;
      @ApiModelProperty(value = "temp", position = 9)
      public boolean temp;
-    
-   
 }

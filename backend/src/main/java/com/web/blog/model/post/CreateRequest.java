@@ -25,7 +25,5 @@ public class CreateRequest {
     String description;
     String writer;
     boolean temp;
-
-
         
 }
