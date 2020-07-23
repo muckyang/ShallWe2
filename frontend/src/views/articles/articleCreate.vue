@@ -50,6 +50,9 @@
           writer : null,
           price : null,
           description: null,
+          temptrue: true,
+          tempfalse: false
+
         },
         imageUrl: null, //다시 검토
       };
@@ -71,7 +74,7 @@
             Authorization: `${this.$cookies.get('auth-token')}`
           }
         }
-               axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/` + true ,this.articleData )
+               axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/${this.data.temptrue}` ,this.articleData )
           .then(res => { 
             console.log(res.data) 
             console.log(this.$cookies.get('auth-token'));
@@ -87,7 +90,7 @@
             Authorization: `${this.$cookies.get('auth-token')}`
           }
           }
-          axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/` + false ,this.articleData )
+          axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/${this.data.tempfalse}` ,this.articleData )
           .then(res => { 
             console.log(res.data) 
             console.log(this.$cookies.get('auth-token'));

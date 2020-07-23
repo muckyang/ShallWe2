@@ -38,34 +38,36 @@ export default {
           title: null,
           description: null,
           writer: null,
+         
         },
+         temptrue: true,
+          tempfalse: false,
         temparticle: {
-          무엇,
-
-
+          title: null
+          
         }
       }
     },
     methods: {
-        // 임시저장 받기
+        // 임시저장 리스트에서 클릭시 
         getTempItem () {
-          const config = {
-            headers: {
-              Authorization: `${this.$cookies.get('auth-token')}`
-            }
+                  const config = {
+          headers: {
+            Authorization: `${this.$cookies.get('auth-token')}`
           }
-          axios.get(`${BACK_URL}/무엇/${this.$route.params.ID}/${config.headers.Authorization}`)
+        }
+        axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}/`)
           .then((res) => {
-            this.temparticle.무엇 = res.data.무엇
+            this.temparticle.title = res.data.title
           })
           .catch((err) => {
             console.error(err)
           })
         },
-        // 임시저장 보내기
+        // 임시저장 버튼 눌렀을때
         saveTempItem () {
             event.preventDefault()
-            axios.post(BACK_URL+'/post/update/' + false, this.무엇)
+            axios.post(`${BACK_URL}/post/update/${this.data.tempfalse}`, this.temparticle)
             .then((response) => {
               this.$router.push({name:'articleDetail',params:this.$route.params.ID})
               })
@@ -76,7 +78,7 @@ export default {
 
         saveItem () {
             event.preventDefault()
-            axios.post(BACK_URL+'/post/update/' + true, this.무엇)
+            axios.post(`${BACK_URL}/post/update/${this.data.temptrue}`, this.temparticle)
             .then((response) => {
               this.$router.push({name:'articleDetail',params:this.$route.params.ID})
               })
@@ -91,7 +93,7 @@ export default {
             Authorization: `${this.$cookies.get('auth-token')}`
           }
         }
-        axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}/` + true)
+        axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}/`)
         .then((response)=>{
           console.log(response)
           this.article.pid = response.data.pid
@@ -106,7 +108,7 @@ export default {
         updateItem()
         {
           event.preventDefault()
-          axios.post(BACK_URL+'/post/update/', this.article)
+          axios.post(`${BACK_URL}/post/update/${this.data.temptrue}`, this.article)
           .then((response) => {
             this.$router.push({name:'articleDetail',params:this.$route.params.ID})
             })
@@ -126,7 +128,5 @@ export default {
     },
 }
 </script>
-
 <style>
-
 </style>
