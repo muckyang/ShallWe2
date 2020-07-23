@@ -30,9 +30,9 @@ public class Post {
     private int price;
     private String writer;
     private String description;
-    @JsonIgnore
-    private int likenum;
-    @JsonIgnore
-    private boolean isLike;
+    // @JsonIgnore
+    // private int likenum;
+    // @JsonIgnore
+    // private boolean isLike;
     
 }
