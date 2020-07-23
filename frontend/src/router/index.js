@@ -18,6 +18,9 @@ import articleDetail from '../views/articles/articleDetail.vue'
 import articleUpdate from '../views/articles/articleUpdate.vue'
 import articleList from '../views/articles/articleList.vue'
 
+//임시저장
+import tempList from '../views/articles/tempList.vue'
+
 // 에러
 import err400 from '../views/errors/err400.vue'
 import err404 from '../views/errors/err404.vue'
@@ -86,6 +89,11 @@ Vue.use(VueRouter)
       path: '/article',
       name: 'articleList',
       component: articleList
+    },
+    {
+      path: '/templist',
+      name: 'tempList',
+      component: tempList
     },
     // 에러
     {

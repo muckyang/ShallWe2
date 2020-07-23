@@ -27,6 +27,7 @@
           </li>
           <!-- Links -->
           <li class="nav-item"><router-link to="/article" class="nav-link">글보기</router-link></li>
+          <li class="nav-item"><router-link to="/templist" class="nav-link">임시저장</router-link></li>
           <li class="nav-item"><router-link to="/create" class="nav-link">글쓰기</router-link></li>
           <li class="nav-item"><router-link v-if="!duIsLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.LOGIN}" class="nav-link" data-toggle="modal" data-target="#exampleModal">로그인</router-link></li>
           <li class="nav-item"><router-link v-if="!duIsLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="nav-link">회원가입</router-link></li>
