@@ -1,7 +1,6 @@
 package com.web.blog.controller;
 
 import java.io.IOException;
-import java.lang.StackWalker.Option;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +9,7 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import com.web.blog.dao.CommentDao;
+import com.web.blog.dao.LikeDao;
 // import com.web.blog.dao.LikeDao;
 import com.web.blog.dao.PostDao;
 import com.web.blog.dao.UserDao;
@@ -51,8 +51,8 @@ public class PostController {
     @Autowired
     UserDao userDao;
 
-    // @Autowired
-    // LikeDao likeDao;
+    @Autowired
+    LikeDao likeDao;
 
     @Autowired
     CommentDao commentDao;

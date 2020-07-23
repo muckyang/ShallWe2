@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 
@@ -30,9 +29,5 @@ public class Post {
     private int price;
     private String writer;
     private String description;
-    // @JsonIgnore
-    // private int likenum;
-    // @JsonIgnore
-    // private boolean isLike;
-    
+
 }
