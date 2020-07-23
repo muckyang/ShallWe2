@@ -24,6 +24,7 @@ public class CreateRequest {
     @NotNull
     String description;
     String writer;
+    boolean temp;
 
 
         
