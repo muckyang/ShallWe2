@@ -13,17 +13,17 @@
             <form>
                 <div class="form-group">
                         <input v-model="id"
+                    
                         id="id" 
                         placeholder="아이디를 입력해주세요"
                         type="text"/>
-
                 </div>
                 <div class="form-group">
                                         <input v-model="password" type="password"
+                    
                         id="password"
                         placeholder="영문, 숫자 혼용 8자 이상"
                         @keypress.enter="login"/>
-
                 </div>
                 <button type="submit" class="btn btn-primary" @click="login" data-dismiss="modal">로그인</button>
             </form>
@@ -36,8 +36,8 @@
     </div>
     <!-- Modal -->
 </template>
-
 <script>
+                    
     const BACK_URL = 'http://127.0.0.1:8080'
     import constants from '../../lib/constants'
     import axios from 'axios'
@@ -53,6 +53,7 @@
                 event.preventDefault()
                 axios.get(`${BACK_URL}/account/login/${this.id}/${this.password}`)
                 .then(response=>{
+                    this.$cookies.set('username',this.id)
                     this.$cookies.set('auth-token', response.data);
                     this.isLoggedin = true
                     this.$emit('loginDone')
@@ -70,7 +71,6 @@
                 id: '',
                 password: '',
                 isLoggedin: false,
-
             }
         }
     }

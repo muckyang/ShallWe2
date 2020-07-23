@@ -113,7 +113,7 @@ public class CommentController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/comment/delete/{no}")
+    @PostMapping("/comment/delete/{no}")
     @ApiOperation(value = "댓글삭제하기")
     public Object delete(@Valid @PathVariable int no) {
         Comment comment = commentDao.getCommentByNo(no);
