@@ -1,12 +1,27 @@
 package com.web.blog.model;
 
-import java.util.List;
 
-import com.web.blog.model.post.Post;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
+// @Data
+// @ConstructorBinding
 public class PostResponse {
+     public PostResponse(){
+
+     }
+     public PostResponse(int pid,String title, int memberAmount,int price,String description,String writer){
+          super();
+          this.pid = pid;
+          this.title = title;
+          this.memberAmount = memberAmount;
+          this.description = description;
+          this.price = price;
+          this.writer = writer;
+ 
+     }
      // post
      @ApiModelProperty(value = "pid", position = 1)
      public int pid;
@@ -20,8 +35,10 @@ public class PostResponse {
      public String description;
      @ApiModelProperty(value = "writer", position = 6)
      public String writer;
-     @ApiModelProperty(value = "postlist", position = 7)
-     public List<Post> postList;
-     @ApiModelProperty(value = "likenum", position = 8)
+     @ApiModelProperty(value = "likenum", position = 7)
      public int likenum;
+     @ApiModelProperty(value = "isLike", position = 8)
+     public boolean isLike;
+    
+   
 }
