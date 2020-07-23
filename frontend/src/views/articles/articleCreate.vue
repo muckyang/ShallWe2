@@ -50,10 +50,11 @@
           writer : null,
           price : null,
           description: null,
-          temptrue: true,
-          tempfalse: false
+       
 
         },
+           temptrue: true,
+          tempfalse: false,
         imageUrl: null, //다시 검토
       };
     },
@@ -68,13 +69,14 @@
         this.imageUrl = URL.createObjectURL(file);
       },
       createArticle(event) {
+
         event.preventDefault()
         const config = {
           headers: {
             Authorization: `${this.$cookies.get('auth-token')}`
           }
         }
-               axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/${this.data.temptrue}` ,this.articleData )
+               axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/${this.temptrue}` ,this.articleData )
           .then(res => { 
             console.log(res.data) 
             console.log(this.$cookies.get('auth-token'));
@@ -90,12 +92,12 @@
             Authorization: `${this.$cookies.get('auth-token')}`
           }
           }
-          axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/${this.data.tempfalse}` ,this.articleData )
+          axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/${this.tempfalse}` ,this.articleData )
           .then(res => { 
             console.log(res.data) 
             console.log(this.$cookies.get('auth-token'));
 
-            this.$router.push('article')
+            this.$router.push('tempList')
           })
           .catch(err => console.log(err.response.data))
       },

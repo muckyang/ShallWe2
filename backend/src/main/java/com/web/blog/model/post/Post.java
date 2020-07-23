@@ -31,5 +31,5 @@ public class Post {
     private String writer;
     private String description;
     @Column(name = "is_temp")
-    private boolean temp;
+    private int temp;
 }

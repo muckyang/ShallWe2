@@ -67,7 +67,7 @@ export default {
         // 임시저장 버튼 눌렀을때
         saveTempItem () {
             event.preventDefault()
-            axios.post(`${BACK_URL}/post/update/${this.data.tempfalse}`, this.temparticle)
+            axios.post(`${BACK_URL}/post/update/${this.tempfalse}`, this.temparticle)
             .then((response) => {
               this.$router.push({name:'articleDetail',params:this.$route.params.ID})
               })
@@ -78,7 +78,7 @@ export default {
 
         saveItem () {
             event.preventDefault()
-            axios.post(`${BACK_URL}/post/update/${this.data.temptrue}`, this.temparticle)
+            axios.post(`${BACK_URL}/post/update/${this.temptrue}`, this.temparticle)
             .then((response) => {
               this.$router.push({name:'articleDetail',params:this.$route.params.ID})
               })
@@ -108,7 +108,7 @@ export default {
         updateItem()
         {
           event.preventDefault()
-          axios.post(`${BACK_URL}/post/update/${this.data.temptrue}`, this.article)
+          axios.post(`${BACK_URL}/post/update/${this.temptrue}`, this.article)
           .then((response) => {
             this.$router.push({name:'articleDetail',params:this.$route.params.ID})
             })

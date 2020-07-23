@@ -9,7 +9,7 @@ public class PostResponse {
      public PostResponse(){
           
      }
-     public PostResponse(int pid,String title, int memberAmount,int price,String description,String writer, boolean temp){
+     public PostResponse(int pid,String title, int memberAmount,int price,String description,String writer, int temp){
           super();
           this.pid = pid;
           this.title = title;
@@ -38,5 +38,5 @@ public class PostResponse {
      @ApiModelProperty(value = "isLiked", position = 8)
      public boolean isLiked;
      @ApiModelProperty(value = "temp", position = 9)
-     public boolean temp;
+     public int temp;
 }
