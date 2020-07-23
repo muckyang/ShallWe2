@@ -23,12 +23,15 @@ export default {
   name: 'articleList',
   data: function () {
     return {
-      articles: [],
+      articles: [
+
+      ],
+      temptrue: true
     }
   },
   methods: {
     initArticles () {
-      axios.get(`${BACK_URL}/post/read/` + true)
+      axios.get(`${BACK_URL}/post/read/${this.data.temptrue}`)
       .then((reaponse) => {
         this.articles = reaponse.data.postList
       })

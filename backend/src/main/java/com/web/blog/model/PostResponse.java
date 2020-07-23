@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 // @ConstructorBinding
 public class PostResponse {
      public PostResponse(){
-
+          
      }
      public PostResponse(int pid,String title, int memberAmount,int price,String description,String writer, boolean temp){
           super();
