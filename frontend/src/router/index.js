@@ -18,6 +18,12 @@ import articleDetail from '../views/articles/articleDetail.vue'
 import articleUpdate from '../views/articles/articleUpdate.vue'
 import articleList from '../views/articles/articleList.vue'
 
+// 에러
+import err400 from '../views/errors/err400.vue'
+import err404 from '../views/errors/err404.vue'
+import err500 from '../views/errors/err500.vue'
+
+
 //검색
 // import search from '../components/article/search.vue';
 
@@ -81,6 +87,32 @@ Vue.use(VueRouter)
       name: 'articleList',
       component: articleList
     },
+    // 에러
+    {
+      path: '*',
+      redirect: '/400',
+    },
+    {
+      path: '/400',
+      component: err400
+    },
+    {
+      path: '*',
+      redirect: '/404',
+    },
+    {
+      path: '/404',
+      component: err404
+    },
+    {
+      path: '*',
+      redirect: '/500',
+    },
+    {
+      path: '/500',
+      component: err500
+    },
+
   
   
   ]
