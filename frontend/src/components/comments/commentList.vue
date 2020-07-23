@@ -3,7 +3,7 @@
     <hr>
     <input type="text" v-model="comment_content.content"> 
     <button type="button" class="btn btn-dark" @click="createComment">댓글쓰기</button>
-    <commentListItem v-for="comment in comments" :key="comment.id" :comment="comment" @re-render="getComments" :user="comment.user.username"/>
+    <commentListItem v-for="comment in comments" :key="comment.no" :comment="comment" @re-render="getComments" :user="comment.writer"/>
   </div>
 </template>
 
@@ -19,8 +19,7 @@ export default {
   },
   data(){
     return{
-      flag:false,
-      comments:'',
+      comments:[],
       comment_content:{
         content:'',
         writer: '',
@@ -38,8 +37,8 @@ export default {
         }
         axios.post( `${BACK_URL}/comment/create/${config.headers.Authorization}` , this.comment_content)
           .then(()=>{
-            this.flag=true
             this.comment_content.content=''
+            console.log('댓글 보내기 완료')
           })
           .catch((err)=>{
             console.error(err)
@@ -47,20 +46,19 @@ export default {
       },
       getComments()
       { 
-        axios.get(BACK_URL+'/articles/'+this.$route.params.ID+'/comment-detail/')
+        axios.get(BACK_URL+'/comment/read/'+this.$route.params.ID)
             .then((response)=>{
-              this.comments=response.data
-              this.flag=false
+              // console.log('여기까지 들어옴 ?')
+              // console.log(response)
+              // console.log('잘 들어왔네!')
+              this.comments = response.data.commentList
+              // console.log(this.comments)
+              // console.log('this.comments')
             })
             .catch((err)=>{
               console.error(err)
             })       
       },
-  },
-  watch:{
-    flag(){
-      this.getComments()
-    }
   },
   created(){
     this.getComments()

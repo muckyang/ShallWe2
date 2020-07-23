@@ -28,9 +28,10 @@
           <!-- Links -->
           <li class="nav-item"><router-link to="/article" class="nav-link">글보기</router-link></li>
           <li class="nav-item"><router-link to="/create" class="nav-link">글쓰기</router-link></li>
-          <li class="nav-item"><router-link v-if="!isLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.LOGIN}" class="nav-link" data-toggle="modal" data-target="#exampleModal">로그인</router-link></li>
-          <li class="nav-item"><a class="nav-link" v-if="isLoggedIn" @click="logout">로그아웃</a></li>
-          <li class="nav-item"><router-link v-if="!isLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="nav-link">회원가입</router-link></li>
+          <li class="nav-item"><router-link v-if="!duIsLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.LOGIN}" class="nav-link" data-toggle="modal" data-target="#exampleModal">로그인</router-link></li>
+          <li class="nav-item"><router-link v-if="!duIsLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="nav-link">회원가입</router-link></li>
+          <li class="nav-item"><router-link v-if="duIsLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.PROFILE}" class="nav-link">회원정보</router-link></li>
+          <li class="nav-item"><a class="nav-link" v-if="duIsLoggedIn" @click="logout">로그아웃</a></li>
         </ul>
         <!-- Search -->
         <form class="form-inline my-2 my-lg-0">
@@ -41,10 +42,9 @@
     </nav>
   </div>
 </template>   
-
 <script>
+                    
 import constants from "../../lib/constants";
-
 export default {
   name: "Header",
   components: {},
@@ -52,21 +52,29 @@ export default {
   data: function() {
     return {
       constants,
-      keyword: ""
+      keyword: "",
+      duIsLoggedIn:this.isLoggedIn
     }
   },
   methods: {
     logout: function() {
       this.$cookies.remove('auth-token')
-      this.isLoggedIn=false
+      this.$cookies.remove('username')
+      this.duIsLoggedIn=false
+      this.$emit('logout')
     },
     loginCheck:function(){
       if (this.$cookies.isKey('auth-token')){
-        this.isLoggedIn = true
+        this.duIsLoggedIn = true
       }else{
-        this.isLoggedIn = false
+        this.duIsLoggedIn = false
       }
     }
+  },
+  watch: {
+    isLoggedIn:function(newVal, oldVal){
+      this.duIsLoggedIn = newVal
+    },
   },
   created:function(){
     this.loginCheck()
@@ -76,7 +84,5 @@ export default {
   }
 };
 </script>
-
 <style>
-
 </style>

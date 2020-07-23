@@ -15,7 +15,7 @@
           </div>
           <div class="form-group w-75 mb-5 mx-auto">
             <p class="align-self-center m-1 text-left">Price</p>
-            <input id="writer" type="text" class="form-control form-control-lg" placeholder="작성자을 입력해 주세요." v-model="article.writer"/>
+            <input id="price" type="number" class="form-control form-control-lg" placeholder="가격을 입력해 주세요." v-model="article.price"/>
           </div>
           <div class="form-group w-75 mx-auto">
             <p class="align-self-center m-1 text-left">Content</p>
@@ -47,17 +47,27 @@ export default {
       }
     },
     methods: {
-        getItem () {
-          axios.get(BACK_URL+'/post/detail/'+this.$route.params.ID)
-          .then((response)=>{
-            this.article.title = response.data.title
-            this.article.description = response.data.description
-            this.article.writer = response.data.writer
-          })
-          .catch((err)=>{
-            console.error(err)
-          })
-        },
+        getItem(){
+        const config = {
+          headers: {
+            Authorization: `${this.$cookies.get('auth-token')}`
+          }
+        }
+        axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}`)
+        .then((response)=>{
+          console.log(response)
+          this.article.pid = response.data.pid
+          this.article.title = response.data.title
+          this.article.price = response.data.price
+          this.article.description = response.data.description
+
+          // this.cdate=this.article.created_at.substr(0,10)
+          // this.ctime=this.article.created_at.substr(11,8)
+        })
+        .catch((err)=>{
+          console.error(err)
+        })
+      },
         updateItem()
         {
           event.preventDefault()

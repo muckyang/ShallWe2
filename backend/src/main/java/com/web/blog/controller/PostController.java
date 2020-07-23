@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
+import com.web.blog.dao.CommentDao;
 // import com.web.blog.dao.LikeDao;
 import com.web.blog.dao.PostDao;
 import com.web.blog.dao.UserDao;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiOperation;
+import com.web.blog.model.comment.Comment;
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = PostResponse.class),
         @ApiResponse(code = 403, message = "Forbidden", response = PostResponse.class),
@@ -48,6 +50,8 @@ public class PostController {
     // @Autowired
     // LikeDao likeDao;
 
+    @Autowired
+    CommentDao commentDao;
 
     @Autowired
     private JwtService jwtService;
@@ -178,6 +182,12 @@ public class PostController {
     @ApiOperation(value = "삭제하기")
     public Object delete(@Valid @PathVariable int pid) {
         Post post = postDao.getPostByPid(pid);
+        List<Comment> commentList=commentDao.findCommentByArticleno(pid);
+        int size =commentList.size();
+        for(int i = 0;i<size;i++){
+            Comment c = commentList.get(i);
+            commentDao.delete(c);
+        }
         postDao.delete(post);
         System.out.println("삭제하기!! ");
         PostResponse result = new PostResponse();
