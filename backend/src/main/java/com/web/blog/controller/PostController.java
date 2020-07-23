@@ -64,8 +64,10 @@ public class PostController {
     @ApiOperation(value = "게시글및임시글등록")
     // public Object create(@Valid @RequestBody CreateRequest request ,
     // HttpServletRequest req) throws MessagingException, IOException {
-    public Object create(@Valid @RequestBody CreateRequest request, @PathVariable String token, @PathVariable boolean temp) throws MessagingException, IOException {
-        if (temp == true) {
+    public Object create(@Valid @RequestBody CreateRequest request, @PathVariable String token,
+            @PathVariable boolean temp) throws MessagingException, IOException {
+        if (temp) {
+            int tnum = 1;
             String title = request.getTitle();
             int memberAmount = request.getMemberAmount();
             int price = request.getPrice();
@@ -83,7 +85,7 @@ public class PostController {
                 post.setPrice(price);
                 post.setDescription(description);
                 post.setWriter(userOpt.get().getId()); // token값으로 id 받아옴
-                post.setTemp(temp);
+                post.setTemp(tnum);
                 System.out.println(post.getPid());
                 System.out.println();
                 postDao.save(post);
@@ -95,8 +97,9 @@ public class PostController {
             }
             String message = "로그인을 확인하세요";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-            
+
         } else {
+            int tnum = 0;
             String title = request.getTitle();
             int memberAmount = request.getMemberAmount();
             int price = request.getPrice();
@@ -114,7 +117,7 @@ public class PostController {
                 post.setPrice(price);
                 post.setDescription(description);
                 post.setWriter(userOpt.get().getId()); // token값으로 id 받아옴
-                post.setTemp(temp);
+                post.setTemp(tnum);
                 System.out.println(post.getPid());
                 System.out.println();
                 postDao.save(post);
@@ -128,88 +131,98 @@ public class PostController {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
     }
-  // @GetMapping("/post/read/{token}/{temp}")
-  // @ApiOperation(value = "게시글및임시글목록")
-  // public Object read(@PathVariable boolean temp) throws MessagingException, IOException {
-    @GetMapping("/post/read/{temp}")
+
+    // @GetMapping("/post/read/{token}/{temp}")
+    // @ApiOperation(value = "게시글및임시글목록")
+    // public Object read(@PathVariable boolean temp) throws MessagingException,
+    // IOException {
+    @GetMapping("/post/read/{temp}/{token}")
     @ApiOperation(value = "게시글및임시글목록")
-    public Object read(@PathVariable boolean temp) throws MessagingException, IOException {
-  
-        if (temp == true) {
-        System.out.println("게시물 목록 출력!!");
-        List<Post> plist = postDao.findAll();
-        PostListResponse result = new PostListResponse();
-        result.postList = new LinkedList<>();
-        for (int i = 0; i < plist.size(); i++) { // 각 게시물 마다 좋아요 수 가져오기
-            Post p = plist.get(i);
-            int articleno = p.getPid();
-            result.postList.add(new PostResponse(p.getPid(), p.getTitle(), p.getMemberAmount(), p.getPrice(),
-                    p.getDescription(), p.getWriter(), p.isTemp()));
+    public Object read(@PathVariable boolean temp, @PathVariable String token) throws MessagingException, IOException {
 
-            // Optional<Like> llist = likeDao.findLikeByArticleno(articleno);
-            List<Like> llist = likeDao.findLikeByArticleno(articleno);
-            System.out.println("list return success");
-            int likenum = llist.size();
-            System.out.println(likenum);
-            result.postList.get(i).likenum = likenum;
+        if (temp) {
+            System.out.println("게시물 목록 출력!!");
 
-            // // / 토큰받아서 id 추출 id 와 게시물 번호로 쿼리 , 좋아요 여부 확인
-            // User jwtuser = jwtService.getUser(token);
-            // Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(),
-            // jwtuser.getPassword());
-            // if (userOpt.isPresent()) {// 로그인 상태일때
-            // Optional<Like> isILiked =
-            // likeDao.findLikeByUidAndArticleno(userOpt.get().getUid(), articleno);
-            // if (isILiked.isPresent()) {// 좋아요 한 경우
-            // result.postList.get(i).isLiked = true;
-            // } else {// 좋아요 하지 않은경우
-            // result.postList.get(i).isLiked = false;
-            // }
-            // } else {// 비 로그인 경우 / 좋아요 안한 상태!
-            // result.postList.get(i).isLiked = false;
-            // }
+            int tnum = 1;
+            List<Post> plist = postDao.findPostByTemp(tnum);
+            System.out.println(plist.get(0).getTitle());
+            PostListResponse result = new PostListResponse();
+            result.postList = new LinkedList<>();
+            for (int i = 0; i < plist.size(); i++) { // 각 게시물 마다 좋아요 수 가져오기
+                Post p = plist.get(i);
+                int articleno = p.getPid();
+                result.postList.add(new PostResponse(p.getPid(), p.getTitle(), p.getMemberAmount(), p.getPrice(),
+                        p.getDescription(), p.getWriter(), p.getTemp()));
 
+                // Optional<Like> llist = likeDao.findLikeByArticleno(articleno);
+                List<Like> llist = likeDao.findLikeByArticleno(articleno);
+                System.out.println("list return success");
+                int likenum = llist.size();
+                System.out.println(likenum);
+                result.postList.get(i).likenum = likenum;
+
+                // / 토큰받아서 id 추출 id 와 게시물 번호로 쿼리 , 좋아요 여부 확인
+                User jwtuser = jwtService.getUser(token);
+                Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+
+                // if (userOpt.isPresent()) {// 로그인 상태일때
+                // Optional<Like> isILiked =
+                // likeDao.findLikeByUidAndArticleno(userOpt.get().getUid(), articleno);
+                // if (isILiked.isPresent()) {// 좋아요 한 경우
+                // result.postList.get(i).isLiked = true;
+                // } else {// 좋아요 하지 않은경우
+                // result.postList.get(i).isLiked = false;
+                // }
+                // } else {// 비 로그인 경우 / 좋아요 안한 상태!
+                // result.postList.get(i).isLiked = false;
+                // }
+
+            }
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            System.out.println("임시글 목록 출력!!");
+            int tnum = 0;
+
+
+            
+            User jwtuser = jwtService.getUser(token);
+            Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+
+            String writer = userOpt.get().getId();
+            List<Post> plist = postDao.findPostByTempAndWriter(tnum , writer);
+
+            PostListResponse result = new PostListResponse();
+            result.postList = new LinkedList<>();
+            for (int i = 0; i < plist.size(); i++) { // 각 게시물 마다 좋아요 수 가져오기
+                Post p = plist.get(i);
+                // int articleno = p.getPid();
+                result.postList.add(new PostResponse(p.getPid(), p.getTitle(), p.getMemberAmount(), p.getPrice(),
+                        p.getDescription(), p.getWriter(), p.getTemp()));
+
+            //     // Optional<Like> llist = likeDao.findLikeByArticleno(articleno);
+            //     // List<Like> llist = postDao.findLikeByArticleno(articleno);
+            //     // System.out.println("list return success");
+            //     // int likenum = llist.size();
+            //     // System.out.println(likenum);
+            //     // result.postList.get(i).likenum = likenum;
+
+
+            //     // if (userOpt.isPresent()) {// 로그인 상태일때
+            //     //     Optional<Like> isILike = likeDao.findLikeByUseridArticleno(userOpt.get().getId(), articleno);
+            //     //     if (isILike.isPresent()) {// 좋아요 한 경우
+            //     //         result.postList.get(i).isLike = true;
+            //     //     } else {// 좋아요 하지 않은경우
+            //     //         result.postList.get(i).isLike = false;
+            //     //     }
+            //     // } else {// 비 로그인 경우 좋아요 안한 상태!
+            //     //     result.postList.get(i).isLike = false;
+            //     // }
+
+            }
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    } else {
-        System.out.println("임시글 목록 출력!!");
-        List<Post> plist = postDao.findPostByTemp(temp);
-        PostListResponse result = new PostListResponse();
-        result.postList = new LinkedList<>();
-        for (int i = 0; i < plist.size(); i++) { // 각 게시물 마다 좋아요 수 가져오기
-            Post p = plist.get(i);
-            int articleno = p.getPid();
-            result.postList.add(new PostResponse(p.getPid(), p.getTitle(), p.getMemberAmount(), p.getPrice(),
-                    p.getDescription(), p.getWriter(), p.isTemp()));
-
-            // Optional<Like> llist = likeDao.findLikeByArticleno(articleno);
-            List<Like> llist = likeDao.findLikeByArticleno(articleno);
-            System.out.println("list return success");
-            int likenum = llist.size();
-            System.out.println(likenum);
-            result.postList.get(i).likenum = likenum;
-
-            /// 토큰받아서 id 추출 id 와 게시물 번호로 쿼리 , 좋아요 여부 확인
-            // User jwtuser = jwtService.getUser(token);
-            // Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(),
-            /// jwtuser.getPassword());
-            // if (userOpt.isPresent()) {// 로그인 상태일때
-            // Optional<Like> isILike =
-            /// likeDao.findLikeByUseridArticleno(userOpt.get().getId(), articleno);
-            // if (isILike.isPresent()) {// 좋아요 한 경우
-            // result.postList.get(i).isLike = true;
-            // } else {//좋아요 하지 않은경우
-            // result.postList.get(i).isLike = false;
-            // }
-            // } else {//비 로그인 경우 좋아요 안한 상태!
-            // result.postList.get(i).isLike = false;
-            // }
-
-        }
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
     }
 
     @GetMapping("/post/detail/{pid}/{token}") // SWAGGER UI에 보이는 REQUEST명
@@ -223,7 +236,7 @@ public class PostController {
             User jwtuser = jwtService.getUser(token);
             Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
             PostResponse result = new PostResponse(p.getPid(), p.getTitle(), p.getMemberAmount(), p.getPrice(),
-                    p.getDescription(), p.getWriter(), p.isTemp());
+                    p.getDescription(), p.getWriter(), p.getTemp());
             if (userOpt.isPresent()) {// 로그인 상태일때
 
                 Optional<Like> isILiked = likeDao.findLikeByUidAndArticleno(userOpt.get().getUid(), pid);
@@ -247,21 +260,22 @@ public class PostController {
     @PostMapping("/post/update/{temp}")
     @ApiOperation(value = "게시글및임시글수정")
     public Object update(@Valid @RequestBody CreateRequest request, @PathVariable boolean temp) {
-        if (temp == true) {
+        if (temp) {
+            int tnum = 1;
             // 이메일, 닉네임 중복처리
             int pid = request.getPid();
             String title = request.getTitle();
             int memberAmount = request.getMemberAmount();
             int price = request.getPrice();
             String description = request.getDescription();
-            
+
             Post post = postDao.getPostByPid(pid);
 
             post.setTitle(title);
             post.setMemberAmount(memberAmount);
             post.setPrice(price);
             post.setDescription(description);
-            post.setTemp(temp);
+            post.setTemp(tnum);
             System.out.println(post.getPid());
             System.out.println();
 
@@ -273,9 +287,11 @@ public class PostController {
             result.memberAmount = memberAmount;
             result.price = price;
             result.description = description;
-            result.temp = temp;
+            result.temp = tnum;
             return new ResponseEntity<>(result, HttpStatus.OK);
         } else {
+
+            int tnum = 0;
             int pid = request.getPid();
             String title = request.getTitle();
             int memberAmount = request.getMemberAmount();
@@ -287,7 +303,7 @@ public class PostController {
             post.setMemberAmount(memberAmount);
             post.setPrice(price);
             post.setDescription(description);
-            post.setTemp(temp);
+            post.setTemp(tnum);
             System.out.println(post.getPid());
             System.out.println();
 
@@ -299,7 +315,7 @@ public class PostController {
             result.memberAmount = memberAmount;
             result.price = price;
             result.description = description;
-            result.temp = temp;
+            result.temp = tnum;
 
             return new ResponseEntity<>(result, HttpStatus.OK);
         }

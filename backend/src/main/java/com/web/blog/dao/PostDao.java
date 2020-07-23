@@ -12,7 +12,8 @@ public interface PostDao extends JpaRepository<Post, String> {
     // Post getUserByEmail(String email);
     Post getPostByPid(int pid);
     // Post getUserByNickname(String nickname);
-    List<Post> findPostByTemp(boolean temp);
+    List<Post> findPostByTemp(int temp);
+    List<Post> findPostByTempAndWriter(int temp, String writer);
     Optional<Post> findPostByPid(int pid);
 
 

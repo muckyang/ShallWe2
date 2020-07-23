@@ -18,6 +18,6 @@ public class PostingRequest {
     String description;
     String writer;
     LocalDateTime create_time;
-    boolean temp;
+    int temp;
 
 }

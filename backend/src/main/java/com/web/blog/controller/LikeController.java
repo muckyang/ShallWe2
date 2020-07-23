@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiResponse;
@@ -40,7 +41,7 @@ public class LikeController {
     @Autowired
     private JwtService jwtService;
 
-    @GetMapping("/like/{pid}/{token}") // SWAGGER UI에 보이는 REQUEST명
+    @PostMapping("/like/{pid}/{token}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "좋아요 / 좋아요 취소")
     public Object Like(@Valid @PathVariable int pid, @PathVariable String token) {
         String message = "";
@@ -58,6 +59,7 @@ public class LikeController {
                  
                 int Uid = userOpt.get().getUid();
                 Like like = new Like();
+                like.setId(likeOpt.get().getId());
                 like.setArticleno(pid);
                 like.setUid(Uid);
                 likeDao.delete(like);
@@ -84,7 +86,7 @@ public class LikeController {
         }
     }
 
-    @GetMapping("/likedcheck/{pid}/{token}") // SWAGGER UI에 보이는 REQUEST명
+    @PostMapping("/likedcheck/{pid}/{token}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "좋아요여부 확인")
     public Object LikeCheck(@Valid @PathVariable int pid, @PathVariable String token) {
         String message = "";
@@ -101,7 +103,6 @@ public class LikeController {
             LikeResponse result = new LikeResponse();
         
             if (likeOpt.isPresent()) {// 좋아요 상태일때
-    
                 result.isLiked = true;
                 return new ResponseEntity<>(result, HttpStatus.OK);
             } else {

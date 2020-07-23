@@ -31,9 +31,14 @@ export default {
     },
     methods: {
         getTempsList () {
-            axios.get(`${BACK_URL}/post/read/${this.data.tempfalse}`)
+           const config = {
+          headers: {
+            Authorization: `${this.$cookies.get('auth-token')}`
+          }
+        }
+            axios.get(`${BACK_URL}/post/read/${this.tempfalse}/${config.headers.Authorization}`)
             .then((res) => {
-                this.tempsList = res.data.result
+                this.tempsList = res.data.postList
             })
             .catch((err) => {
                 console.log(err)

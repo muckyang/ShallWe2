@@ -31,7 +31,12 @@ export default {
   },
   methods: {
     initArticles () {
-      axios.get(`${BACK_URL}/post/read/${this.data.temptrue}`)
+       const config = {
+          headers: {
+            Authorization: `${this.$cookies.get('auth-token')}`
+          }
+        }
+      axios.get(`${BACK_URL}/post/read/${this.temptrue}/${config.headers.Authorization}`)
       .then((reaponse) => {
         this.articles = reaponse.data.postList
       })
