@@ -2,8 +2,6 @@
   <div id="app">
     <Header :isHeader="isHeader" :isLoggedIn="isLoggedin"/>
     <router-view @loginDone="login" />
-    <!-- Temp div -->
-    <div style="height: 500px"></div>
     <Footer />
   </div>
 </template>

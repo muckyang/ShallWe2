@@ -29,6 +29,7 @@
           </div>
           <div class="pb-5">
             <button class="font-weight-bold btn btn-dark" type="submit" @click="createArticle" value="Submit">Submit</button>
+            <button @click="tempArticle">임시저장</button>
           </div>
       </div>
     </div>
@@ -48,7 +49,7 @@
           memberAmount : null,
           writer : null,
           price : null,
-          description: null
+          description: null,
         },
         imageUrl: null, //다시 검토
       };
@@ -70,7 +71,7 @@
             Authorization: `${this.$cookies.get('auth-token')}`
           }
         }
-               axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}` ,this.articleData )
+               axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/` + true ,this.articleData )
           .then(res => { 
             console.log(res.data) 
             console.log(this.$cookies.get('auth-token'));
@@ -79,7 +80,23 @@
           })
           .catch(err => console.log(err.response.data))
       },
-    },
+      tempArticle(event) {
+        event.preventDefault()
+        const config = {
+          headers: {
+            Authorization: `${this.$cookies.get('auth-token')}`
+          }
+          }
+          axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/` + false ,this.articleData )
+          .then(res => { 
+            console.log(res.data) 
+            console.log(this.$cookies.get('auth-token'));
+
+            this.$router.push('article')
+          })
+          .catch(err => console.log(err.response.data))
+      },
+    }
   }
 </script>
 
