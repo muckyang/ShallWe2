@@ -36,8 +36,8 @@ public class PostResponse {
      public String writer;
      @ApiModelProperty(value = "likenum", position = 7)
      public int likenum;
-     @ApiModelProperty(value = "isLike", position = 8)
-     public boolean isLike;
+     @ApiModelProperty(value = "isLiked", position = 8)
+     public boolean isLiked;
     
    
 }
