@@ -1,10 +1,9 @@
 package com.web.blog.model;
 
 
-import org.springframework.boot.context.properties.ConstructorBinding;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+
 
 // @Data
 // @ConstructorBinding
