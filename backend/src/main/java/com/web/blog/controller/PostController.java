@@ -137,7 +137,7 @@ public class PostController {
     // public Object read(@PathVariable boolean temp) throws MessagingException,
     // IOException {
     @GetMapping("/post/read/{temp}/{token}")
-    @ApiOperation(value = "게시글및임시글목록")
+    @ApiOperation(value = "임시글목록")
     public Object read(@PathVariable boolean temp, @PathVariable String token) throws MessagingException, IOException {
 
         if (temp) {
@@ -184,13 +184,11 @@ public class PostController {
             System.out.println("임시글 목록 출력!!");
             int tnum = 0;
 
-
-            
             User jwtuser = jwtService.getUser(token);
             Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
 
             String writer = userOpt.get().getId();
-            List<Post> plist = postDao.findPostByTempAndWriter(tnum , writer);
+            List<Post> plist = postDao.findPostByTempAndWriter(tnum, writer);
 
             PostListResponse result = new PostListResponse();
             result.postList = new LinkedList<>();
@@ -200,28 +198,62 @@ public class PostController {
                 result.postList.add(new PostResponse(p.getPid(), p.getTitle(), p.getMemberAmount(), p.getPrice(),
                         p.getDescription(), p.getWriter(), p.getTemp()));
 
-            //     // Optional<Like> llist = likeDao.findLikeByArticleno(articleno);
-            //     // List<Like> llist = postDao.findLikeByArticleno(articleno);
-            //     // System.out.println("list return success");
-            //     // int likenum = llist.size();
-            //     // System.out.println(likenum);
-            //     // result.postList.get(i).likenum = likenum;
+                // // Optional<Like> llist = likeDao.findLikeByArticleno(articleno);
+                // // List<Like> llist = postDao.findLikeByArticleno(articleno);
+                // // System.out.println("list return success");
+                // // int likenum = llist.size();
+                // // System.out.println(likenum);
+                // // result.postList.get(i).likenum = likenum;
 
-
-            //     // if (userOpt.isPresent()) {// 로그인 상태일때
-            //     //     Optional<Like> isILike = likeDao.findLikeByUseridArticleno(userOpt.get().getId(), articleno);
-            //     //     if (isILike.isPresent()) {// 좋아요 한 경우
-            //     //         result.postList.get(i).isLike = true;
-            //     //     } else {// 좋아요 하지 않은경우
-            //     //         result.postList.get(i).isLike = false;
-            //     //     }
-            //     // } else {// 비 로그인 경우 좋아요 안한 상태!
-            //     //     result.postList.get(i).isLike = false;
-            //     // }
+                // // if (userOpt.isPresent()) {// 로그인 상태일때
+                // // Optional<Like> isILike =
+                // likeDao.findLikeByUseridArticleno(userOpt.get().getId(), articleno);
+                // // if (isILike.isPresent()) {// 좋아요 한 경우
+                // // result.postList.get(i).isLike = true;
+                // // } else {// 좋아요 하지 않은경우
+                // // result.postList.get(i).isLike = false;
+                // // }
+                // // } else {// 비 로그인 경우 좋아요 안한 상태!
+                // // result.postList.get(i).isLike = false;
+                // // }
 
             }
 
             return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/post/read/{temp}")
+    @ApiOperation(value = "비로그인 게시물 목록")
+    public Object read(@PathVariable boolean temp) throws MessagingException, IOException {
+
+        if (temp) {
+            System.out.println("게시물 목록 출력!!");
+
+            int tnum = 1;
+            List<Post> plist = postDao.findPostByTemp(tnum);
+            System.out.println(plist.get(0).getTitle());
+            PostListResponse result = new PostListResponse();
+            result.postList = new LinkedList<>();
+            for (int i = 0; i < plist.size(); i++) { // 각 게시물 마다 좋아요 수 가져오기
+                Post p = plist.get(i);
+                int articleno = p.getPid();
+                result.postList.add(new PostResponse(p.getPid(), p.getTitle(), p.getMemberAmount(), p.getPrice(),
+                        p.getDescription(), p.getWriter(), p.getTemp()));
+
+                List<Like> llist = likeDao.findLikeByArticleno(articleno);
+                System.out.println("list return success");
+                int likenum = llist.size();
+                System.out.println(likenum);
+                result.postList.get(i).likenum = likenum;
+
+            }
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+           
+
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
