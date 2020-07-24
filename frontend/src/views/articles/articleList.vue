@@ -35,14 +35,24 @@ export default {
           headers: {
             Authorization: `${this.$cookies.get('auth-token')}`
           }
-        }
-      axios.get(`${BACK_URL}/post/read/${this.temptrue}/${config.headers.Authorization}`)
-      .then((reaponse) => {
-        this.articles = reaponse.data.postList
-      })
-      .catch((err) => {
-        console.error(err)
-      })
+       }
+       if (headers.Authorization===null) {
+        axios.get(`${BACK_URL}/post/read/${this.temptrue}/${config.headers.Authorization}`)
+          .then((reaponse) => {
+            this.articles = reaponse.data.postList
+          })
+          .catch((err) => {
+            console.error(err)
+          })         
+       }else{
+         axios.get(`${BACK_URL}/post/read/${this.temptrue}`)
+        .then((reaponse) => {
+          this.articles = reaponse.data.postList
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+       }
     },
   },
     created () {
