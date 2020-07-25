@@ -18,8 +18,7 @@
           <img src="../../assets/img/kakao_btn.png">
         </a>
 
-      </div>
-      <!-- <p>Updated at {{ udate }}/{{ utime }}</p> -->    
+      </div> 
     </div>
     <commentList/>
   </div>
@@ -46,9 +45,7 @@
           title: null,
           price: null,
           description: null,
-
-          
-          },
+        },
         isLiked:null,
       }
     },
