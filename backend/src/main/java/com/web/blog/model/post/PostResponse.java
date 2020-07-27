@@ -5,8 +5,8 @@ package com.web.blog.model.post;
 import java.time.LocalDateTime;
 
 import io.swagger.annotations.ApiModelProperty;
-// @Data
-// @ConstructorBinding
+
+
 public class PostResponse {
      public PostResponse(){
           
@@ -60,4 +60,6 @@ public class PostResponse {
      public int likenum;
      @ApiModelProperty(value = "isLiked", position = 14)
      public boolean isLiked;
+     @ApiModelProperty(value = "sumPrice", position = 15)
+     public int sumPrice;
 }

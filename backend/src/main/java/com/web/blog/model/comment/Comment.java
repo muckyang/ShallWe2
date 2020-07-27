@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,11 +24,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int no;
-    
+    private int commentId;
+    private int articleId;
+    private int userId;
     private String content;
-    private String writer;
-
-    private int articleno;
+    private LocalDateTime createTime;
     
 }
