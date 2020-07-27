@@ -100,6 +100,7 @@ public class AccountController {
         String message = "";
         User isEmail = userDao.getUserByEmail(request.getEmail());
         User isNickname = userDao.getUserByNickname(request.getNickname());
+
         if (isEmail != null) { // 메일 중복
             message = "이메일 중복 입니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -108,6 +109,7 @@ public class AccountController {
             message = "닉네임 중복 입니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
+
         String id = request.getId();
         String password = request.getPassword();
         String email = request.getEmail();
@@ -232,7 +234,7 @@ public class AccountController {
             result.data = "success";
 
             return new ResponseEntity<>(result, HttpStatus.OK);
-        }else{
+        } else {
             message = "로그인 된 아이디가 없습니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
@@ -240,11 +242,11 @@ public class AccountController {
 
     @GetMapping("/account/update/{id}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "프로필 수정")
-    public Object info(@PathVariable  String id){
+    public Object info(@PathVariable String id) {
 
         Optional<User> userOpt = userDao.findById(id);
         ResponseEntity<Object> response = null;
-        
+
         if (userOpt.isPresent()) {
             UserResponse result = new UserResponse();
             result.email = userOpt.get().getEmail();
@@ -255,7 +257,7 @@ public class AccountController {
             result.nickname = userOpt.get().getNickname();
             result.birthday = userOpt.get().getBirthday();
             response = new ResponseEntity<>(result, HttpStatus.OK);
-        
+
         } else {
 
             response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
