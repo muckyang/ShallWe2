@@ -4,7 +4,7 @@ import java.util.Optional;
 
 
 import com.web.blog.dao.UserDao;
-import com.web.blog.model.BasicResponse;
+import com.web.blog.model.user.UserResponse;
 import com.web.blog.model.user.User;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -21,10 +21,10 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiOperation;
 
 
-@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
-        @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-        @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-        @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
+@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = UserResponse.class),
+        @ApiResponse(code = 403, message = "Forbidden", response = UserResponse.class),
+        @ApiResponse(code = 404, message = "Not Found", response = UserResponse.class),
+        @ApiResponse(code = 500, message = "Failure", response = UserResponse.class) })
 
 @CrossOrigin(origins = { "*" })
 @RestController
@@ -47,7 +47,7 @@ public class UserController {
              String upassword = userOpt.get().getPassword();
              LocalDate ubirthday = userOpt.get().getBirthday();
 
-             BasicResponse result = new BasicResponse();
+             UserResponse result = new UserResponse();
             result.email = uemail;
             result.password = upassword;
             result.name = uname;

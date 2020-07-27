@@ -9,7 +9,7 @@ import javax.validation.Valid;
 
 import com.web.blog.dao.CommentDao;
 import com.web.blog.dao.UserDao;
-import com.web.blog.model.CommentResponse;
+import com.web.blog.model.comment.CommentResponse;
 import com.web.blog.model.comment.CommentCreateRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;

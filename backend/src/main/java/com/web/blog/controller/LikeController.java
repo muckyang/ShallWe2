@@ -6,7 +6,7 @@ import javax.validation.Valid;
 
 import com.web.blog.dao.LikeDao;
 import com.web.blog.dao.UserDao;
-import com.web.blog.model.PostResponse;
+import com.web.blog.model.post.PostResponse;
 import com.web.blog.model.like.Like;
 import com.web.blog.model.like.LikeResponse;
 import com.web.blog.model.user.User;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
