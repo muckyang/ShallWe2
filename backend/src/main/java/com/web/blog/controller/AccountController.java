@@ -238,4 +238,30 @@ public class AccountController {
         }
     }
 
+    @GetMapping("/account/update/{id}") // SWAGGER UI에 보이는 REQUEST명
+    @ApiOperation(value = "프로필 수정")
+    public Object info(@PathVariable  String id){
+
+        Optional<User> userOpt = userDao.findById(id);
+        ResponseEntity<Object> response = null;
+        
+        if (userOpt.isPresent()) {
+            UserResponse result = new UserResponse();
+            result.email = userOpt.get().getEmail();
+            result.password = userOpt.get().getPassword();
+            result.name = userOpt.get().getName();
+            result.id = userOpt.get().getId();
+            result.address = userOpt.get().getAddress();
+            result.nickname = userOpt.get().getNickname();
+            result.birthday = userOpt.get().getBirthday();
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        
+        } else {
+
+            response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
 }

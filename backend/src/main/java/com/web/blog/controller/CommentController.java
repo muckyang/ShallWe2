@@ -6,17 +6,14 @@ import java.util.List;
 import java.util.Optional;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
-
 import com.web.blog.dao.CommentDao;
 import com.web.blog.dao.UserDao;
 import com.web.blog.model.comment.CommentResponse;
-import com.web.blog.model.comment.CommentCreateRequest;
+import com.web.blog.model.comment.CommentRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
 import com.web.blog.model.comment.Comment;
-
 import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,80 +42,73 @@ public class CommentController {
     @Autowired
     UserDao userDao;
 
-
     @Autowired
     private JwtService jwtService;
 
     @PostMapping("/comment/create/{token}")
     @ApiOperation(value = "댓글등록")
-    public Object create(@Valid @RequestBody CommentCreateRequest request, @PathVariable String token) throws MessagingException, IOException {
-        System.out.println("00000000");
-        System.out.println(request.getArticleno());
+    public Object create(@Valid @RequestBody CommentRequest request, @PathVariable String token) throws MessagingException, IOException {
+        System.out.println("댓글등록");
+        System.out.println(request.getArticleId());
 
         String content = request.getContent();
-        int articleno = request.getArticleno();
+        int articleId = request.getArticleId();
         User jwtuser = jwtService.getUser(token);
         
         Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
        if(userOpt.isPresent()){
-
-
         Comment comment = new Comment();
-       
-        comment.setArticleno(articleno);
+        comment.setArticleId(articleId);
         comment.setContent(content);
-        comment.setWriter(userOpt.get().getId()); //token값으로  id 받아옴
+        comment.setUserId(userOpt.get().getUserId()); //token값으로  id 받아옴
         commentDao.save(comment);
 
         System.out.println("댓글 등록!!");
-        final CommentResponse result = new CommentResponse();
-
+        CommentResponse result = new CommentResponse();
         return new ResponseEntity<>(result, HttpStatus.OK);
        }else{
         String message = "로그인 상태를 확인하세요"; 
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-           
        }
 
     }
 
-    @GetMapping("/comment/read/{articleno}")
+    @GetMapping("/comment/read/{articleId}")
     @ApiOperation(value = "댓글 목록")
-    public Object read(@PathVariable int articleno) throws MessagingException, IOException {
+    public Object read(@PathVariable int articleId) throws MessagingException, IOException {
 
-        List<Comment> clist = commentDao.findCommentByArticleno(articleno);
+        List<Comment> clist = commentDao.findCommentByArticleId(articleId);
 
         System.out.println("댓글 목록!!");
-        final CommentResponse result = new CommentResponse();
+        CommentResponse result = new CommentResponse();
         result.commentList = clist;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+
+
     @PostMapping("/comment/update/")
     @ApiOperation(value = "댓글수정")
-    public Object update(@Valid @RequestBody CommentCreateRequest request) {
+    public Object update(@Valid @RequestBody CommentRequest request) {
 
-        int no=request.getNo();
-        String content = request.getContent();
-        // String writer = request.getWriter();
-        // int articleno = request.getArticleno();
-        
-        Comment comment = commentDao.getCommentByNo(no);
-        comment.setContent(content);
+        int commentId=request.getCommentId();
+        Comment comment = commentDao.getCommentByCommentId(commentId);
+        comment.setContent(request.getContent());
         commentDao.save(comment);
 
         System.out.println("댓글 수정");
         CommentResponse result = new CommentResponse();
-        result.content = content;
+        result.content = request.getContent();
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/comment/delete/{no}")
     @ApiOperation(value = "댓글삭제하기")
-    public Object delete(@Valid @PathVariable int no) {
-        Comment comment = commentDao.getCommentByNo(no);
+    public Object delete(@Valid @PathVariable int commentId) {
+        Comment comment = commentDao.getCommentByCommentId(commentId);
         commentDao.delete(comment);
-        System.out.println("댓글 삭제하기!! ");
+        System.out.println("댓글 삭제하기!!");
         CommentResponse result = new CommentResponse();
 
         return new ResponseEntity<>(result, HttpStatus.OK);

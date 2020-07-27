@@ -60,24 +60,21 @@ public class PostController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/post/create/{token}/{temp}")
+    @PostMapping("/post/create/{temp}/{token}")
     @ApiOperation(value = "게시글및임시글등록")
     // public Object create(@Valid @RequestBody CreateRequest request ,
     // HttpServletRequest req) throws MessagingException, IOException {
-    public Object create(@Valid @RequestBody PostRequest request, @PathVariable String token,
-            @PathVariable boolean temp) throws MessagingException, IOException {
+    public Object create(@Valid @RequestBody PostRequest request, 
+            @PathVariable boolean temp,@PathVariable String token) throws MessagingException, IOException {
         if (temp) {
             int tnum = 1;
             // int categoryId = 0; // request.getCategory();
-
-
             User jwtuser = jwtService.getUser(token);
             Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
 
             if (userOpt.isPresent()) {
 
                 Post post = new Post();
-
                 //articleId 자동생성
                 post.setUserId(userOpt.get().getUserId()); // token값으로 user_id 받아옴
                 post.setWriter(userOpt.get().getId());//작성자 ID 입력 
@@ -165,7 +162,7 @@ public class PostController {
                 p.getMinPrice(),p.getDescription(), p.getWriter(), p.getUrlLink(),p.getImage(),p.getBillImage(),p.getTemp(),p.getEndTime()));
                 
                 // Optional<Like> llist = likeDao.findLikeByArticleno(articleno);
-                List<Like> llist = likeDao.findLikeByArticleno(articleno);
+                List<Like> llist = likeDao.findLikeByArticleId(articleno);
                 System.out.println("list return success");
                 int likenum = llist.size();
                 System.out.println(likenum);
@@ -234,7 +231,7 @@ public class PostController {
     @ApiOperation(value = "게시물상세보기") // SWAGGER UI에 보이는 이름
     public Object detail(@PathVariable int pid, @PathVariable String token) {
         // 토큰 받아오면 그 토큰으로 유효성 검사 후 uid 받아와서 좋아요 한지 여부 확인
-        Optional<Post> postOpt = postDao.findPostByPid(pid);
+        Optional<Post> postOpt = postDao.findPostByArticleId(pid);
         Post p = postOpt.get();
         if (postOpt.isPresent()) {
 
@@ -244,7 +241,7 @@ public class PostController {
             p.getMinPrice(),p.getDescription(), p.getWriter(), p.getUrlLink(),p.getImage(),p.getBillImage(),p.getTemp(),p.getEndTime());
               if (userOpt.isPresent()) {// 로그인 상태일때
 
-                Optional<Like> isILiked = likeDao.findLikeByUserIdAndArticleno(userOpt.get().getUserId(), pid);
+                Optional<Like> isILiked = likeDao.findLikeByUserIdAndArticleId(userOpt.get().getUserId(), pid);
                 if (isILiked.isPresent()) // 좋아요 한 경우
                     result.isLiked = true;
                 else // 좋아요 하지 않은경우
@@ -336,7 +333,7 @@ public class PostController {
     @ApiOperation(value = "삭제하기")
     public Object delete(@Valid @PathVariable int pid) {
         Post post = postDao.getPostByArticleId(pid);
-        List<Comment> commentList = commentDao.findCommentByArticleno(pid);
+        List<Comment> commentList = commentDao.findCommentByArticleId(pid);
         int size = commentList.size();
         for (int i = 0; i < size; i++) {
             Comment c = commentList.get(i);

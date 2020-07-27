@@ -3,11 +3,7 @@ package com.web.blog.model.like;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,10 +16,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @Table(name = "like_table") // 이어줄 테이블명 지정
 public class Like {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
-    @Column(name = "userid")
-    int uid;
-    int articleno;
-    
+    int no;
+    int userId;
+    int articleId;
 }

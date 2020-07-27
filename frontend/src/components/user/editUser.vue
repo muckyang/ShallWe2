@@ -125,7 +125,7 @@ export default {
                     Authorization: `${this.$cookies.get('auth-token')}`
                 }
             }
-          axios.get(`${BACK_URL}/info/${config.headers.Authorization}`)
+          axios.get(`${BACK_URL}/account/update/${config.headers.Authorization}`)
             .then((response)=>{
                 this.name=response.data.name
                 this.address=response.data.address

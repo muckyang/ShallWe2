@@ -39,22 +39,14 @@ public class UserController {
         ResponseEntity<Object> response = null;
         
         if (userOpt.isPresent()) {
-             String uname = userOpt.get().getName();
-             String uaddress = userOpt.get().getAddress();
-             String uemail = userOpt.get().getEmail();
-             String unickname = userOpt.get().getNickname();
-             String uid = userOpt.get().getId();
-             String upassword = userOpt.get().getPassword();
-             LocalDate ubirthday = userOpt.get().getBirthday();
-
-             UserResponse result = new UserResponse();
-            result.email = uemail;
-            result.password = upassword;
-            result.name = uname;
-            result.id = uid;
-            result.address = uaddress;
-            result.nickname = unickname;
-            result.birthday = ubirthday;
+            UserResponse result = new UserResponse();
+            result.email = userOpt.get().getEmail();
+            result.password = userOpt.get().getPassword();
+            result.name = userOpt.get().getName();
+            result.id = userOpt.get().getId();
+            result.address = userOpt.get().getAddress();
+            result.nickname = userOpt.get().getNickname();
+            result.birthday = userOpt.get().getBirthday();
             response = new ResponseEntity<>(result, HttpStatus.OK);
         
         } else {

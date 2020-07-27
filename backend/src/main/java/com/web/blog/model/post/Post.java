@@ -32,7 +32,7 @@ public class Post {
     private String address;
     private String description;
     private int minPrice;
-    private int nowPrice;
+    private int sumPrice;
     private String urlLink;
     private String image;
     private String billImage;
