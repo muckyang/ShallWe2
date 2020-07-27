@@ -9,7 +9,7 @@ import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 
 import com.web.blog.dao.UserDao;
-import com.web.blog.model.BasicResponse;
+import com.web.blog.model.user.UserResponse;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
@@ -35,10 +35,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.thymeleaf.context.Context;
 
-@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
-        @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-        @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-        @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
+@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = UserResponse.class),
+        @ApiResponse(code = 403, message = "Forbidden", response = UserResponse.class),
+        @ApiResponse(code = 404, message = "Not Found", response = UserResponse.class),
+        @ApiResponse(code = 500, message = "Failure", response = UserResponse.class) })
 
 @CrossOrigin(origins = { "*" })
 @RestController
@@ -152,7 +152,7 @@ public class AccountController {
         }
 
         System.out.println("가입하기 들어옴!! ");
-        final BasicResponse result = new BasicResponse();
+        final UserResponse result = new UserResponse();
         result.status = true;
         result.data = "success";
 
@@ -203,7 +203,7 @@ public class AccountController {
 
             userDao.save(user);
             System.out.println("수정하기 들어옴!! ");
-            BasicResponse result = new BasicResponse();
+            UserResponse result = new UserResponse();
             result.status = true;
             result.data = "success";
 
@@ -227,7 +227,7 @@ public class AccountController {
 
             userDao.delete(user);
             System.out.println("삭제하기!! ");
-            BasicResponse result = new BasicResponse();
+            UserResponse result = new UserResponse();
             result.status = true;
             result.data = "success";
 

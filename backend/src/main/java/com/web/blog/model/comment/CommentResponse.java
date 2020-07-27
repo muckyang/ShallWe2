@@ -1,9 +1,5 @@
-package com.web.blog.model;
-
+package com.web.blog.model.comment;
 import java.util.List;
-
-import com.web.blog.model.comment.Comment;
-
 import io.swagger.annotations.ApiModelProperty;
 
 public class CommentResponse {
