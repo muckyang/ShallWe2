@@ -12,20 +12,18 @@
         <div class="modal-body">
             <form>
                 <div class="form-group">
-                        <input v-model="id"
-                    
-                        id="id" 
-                        placeholder="아이디를 입력해주세요"
-                        type="text"/>
+                    <input v-model="loginData.id"
+                    id="id" 
+                    placeholder="아이디를 입력해주세요"
+                    type="text"/>
                 </div>
                 <div class="form-group">
-                                        <input v-model="password" type="password"
-                    
-                        id="password"
-                        placeholder="영문, 숫자 혼용 8자 이상"
-                        @keypress.enter="login"/>
+                    <input v-model="loginData.password" type="password"
+                    id="password"
+                    placeholder="영문, 숫자 혼용 8자 이상"
+                    @keypress.enter="login"/>
                 </div>
-                <button type="submit" class="btn btn-primary" @click="login" data-dismiss="modal">로그인</button>
+                <button type="submit" class="btn btn-primary" @click="login(loginData)" data-dismiss="modal">로그인</button>
             </form>
         </div>
         <div class="modal-footer">
@@ -36,42 +34,25 @@
     </div>
     <!-- Modal -->
 </template>
+
 <script>
-                    
     const BACK_URL = 'http://127.0.0.1:8080'
     import constants from '../../lib/constants'
-    import axios from 'axios'
+    import { mapActions } from 'vuex'
+
     export default {
-        components: {
-        },
-        created(){
-        },
-        watch: {
-        },
-        methods: {
-            login:function(){
-                event.preventDefault()
-                axios.get(`${BACK_URL}/account/login/${this.id}/${this.password}`)
-                .then(response=>{
-                    this.$cookies.set('username',this.id)
-                    this.$cookies.set('auth-token', response.data);
-                    this.isLoggedin = true
-                    this.$emit('loginDone')
-                    alert("login success");
-                    this.$router.push("/");
-                })
-                .catch(err=>{
-                    console.log(err)
-                });
-            }
-        },
         data: () => {
             return {
                 constants,
-                id: '',
-                password: '',
+                loginData:{
+                    id: '',
+                    password: '',
+                },
                 isLoggedin: false,
             }
-        }
+        },
+        methods: {
+            ...mapActions(['login'])
+        },
     }
 </script>

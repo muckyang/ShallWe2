@@ -17,48 +17,20 @@
 
 <script>
 const BACK_URL = "http://127.0.0.1:8080"
-import axios from "axios"
+import {mapState,mapActions} from 'vuex'
 
 export default {
   name: 'articleList',
-  data: function () {
-    return {
-      articles: [
-
-      ],
-      temptrue: true
-    }
-  },
   methods: {
-    initArticles () {
-       const config = {
-          headers: {
-            Authorization: `${this.$cookies.get('auth-token')}`
-          }
-       }
-       if (headers.Authorization===null) {
-        axios.get(`${BACK_URL}/post/read/${this.temptrue}/${config.headers.Authorization}`)
-          .then((reaponse) => {
-            this.articles = reaponse.data.postList
-          })
-          .catch((err) => {
-            console.error(err)
-          })         
-       }else{
-         axios.get(`${BACK_URL}/post/read/${this.temptrue}`)
-        .then((reaponse) => {
-          this.articles = reaponse.data.postList
-        })
-        .catch((err) => {
-          console.error(err)
-        })
-       }
-    },
+    ...mapActions(['getArticles'])
   },
-    created () {
-      this.initArticles()
-    },
-  }
+  computed:{
+    ...mapState(['articles'])
+  },
+  created () {
+    this.getArticles(true)
+  },
+}
 </script>
 
 <style>

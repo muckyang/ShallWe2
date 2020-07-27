@@ -29,10 +29,10 @@
           <li class="nav-item"><router-link to="/article" class="nav-link">글보기</router-link></li>
           <li class="nav-item"><router-link to="/templist" class="nav-link">임시저장</router-link></li>
           <li class="nav-item"><router-link to="/create" class="nav-link">글쓰기</router-link></li>
-          <li class="nav-item"><router-link v-if="!duIsLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.LOGIN}" class="nav-link" data-toggle="modal" data-target="#exampleModal">로그인</router-link></li>
-          <li class="nav-item"><router-link v-if="!duIsLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="nav-link">회원가입</router-link></li>
-          <li class="nav-item"><router-link v-if="duIsLoggedIn" v-bind:to="{name:constants.URL_TYPE.USER.PROFILE}" class="nav-link">회원정보</router-link></li>
-          <li class="nav-item"><a class="nav-link" v-if="duIsLoggedIn" @click="logout">로그아웃</a></li>
+          <li class="nav-item"><router-link v-if="!isLoggedin" v-bind:to="{name:constants.URL_TYPE.USER.LOGIN}" class="nav-link" data-toggle="modal" data-target="#exampleModal">로그인</router-link></li>
+          <li class="nav-item"><router-link v-if="!isLoggedin" v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="nav-link">회원가입</router-link></li>
+          <li class="nav-item"><router-link v-if="isLoggedin" v-bind:to="{name:constants.URL_TYPE.USER.PROFILE}" class="nav-link">회원정보</router-link></li>
+          <li class="nav-item"><a class="nav-link" v-if="isLoggedin" @click="REMOVE_TOKEN">로그아웃</a></li>
         </ul>
         <!-- Search -->
         <form class="form-inline my-2 my-lg-0">
@@ -46,43 +46,27 @@
 <script>
                     
 import constants from "../../lib/constants";
+import {mapState, mapMutations} from 'vuex'
+
 export default {
   name: "Header",
   components: {},
-  props: ["isHeader","isLoggedIn"],
+  props: ["isHeader"],
   data: function() {
     return {
       constants,
       keyword: "",
-      duIsLoggedIn:this.isLoggedIn
     }
   },
   methods: {
-    logout: function() {
-      this.$cookies.remove('auth-token')
-      this.$cookies.remove('username')
-      this.duIsLoggedIn=false
-      this.$emit('logout')
-    },
-    loginCheck:function(){
-      if (this.$cookies.isKey('auth-token')){
-        this.duIsLoggedIn = true
-      }else{
-        this.duIsLoggedIn = false
-      }
-    }
+    ...mapMutations(['REMOVE_TOKEN','loginCheck']),
   },
-  watch: {
-    isLoggedIn:function(newVal, oldVal){
-      this.duIsLoggedIn = newVal
-    },
+  computed:{
+    ...mapState(['isLoggedin'])
   },
   created:function(){
     this.loginCheck()
   },
-  updated:function(){
-    this.loginCheck()
-  }
 };
 </script>
 <style>

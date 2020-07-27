@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row">
         <!-- Card -->
-        <div class="card col-3" style="width: 18rem;" v-for="temp in tempsList" :key="temp.pid">
+        <div class="card col-3" style="width: 18rem;" v-for="temp in articles" :key="temp.pid">
           <!-- 사진들은 다시 고를 겁니다. 현재는 랜덤 사진입니다. -->
           <img src="https://source.unsplash.com/random" class="card-img-top" alt="...">
           <div class="card-body">
@@ -19,34 +19,18 @@
 
 <script>
 const BACK_URL = "http://127.0.0.1:8080"
-import axios from "axios"
+import {mapActions, mapState} from 'vuex'
 
 export default {
     name: 'tempList',
-    data: function () {
-        return {
-            tempsList: [],
-          tempfalse :false
-        }
-    },
     methods: {
-        getTempsList () {
-           const config = {
-          headers: {
-            Authorization: `${this.$cookies.get('auth-token')}`
-          }
-        }
-            axios.get(`${BACK_URL}/post/read/${this.tempfalse}/${config.headers.Authorization}`)
-            .then((res) => {
-                this.tempsList = res.data.postList
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        },
+      ...mapActions(['getArticles']),
+    },
+    computed:{
+      ...mapState(['articles'])
     },
     created () {
-        this.getTempsList()
+        this.getArticles(false)
     }
 }
 </script>

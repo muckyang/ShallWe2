@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <Header :isHeader="isHeader" :isLoggedIn="isLoggedin"/>
-    <router-view @loginDone="login" />
-    <Footer />
+    <Header :isHeader="isHeader"/>
+    <router-view/>
+    <Footer/>
   </div>
 </template>
 
@@ -24,14 +24,10 @@ export default {
   },
   watch: {
       $route (to){
-
           this.checkUrl(to.name);
       }
   },
   methods : {
-    login(){
-      this.isLoggedin = true
-    },
       checkUrl(url) { 
 
           let array = [
@@ -45,15 +41,12 @@ export default {
                   isHeader = false;
           })
           this.isHeader = isHeader;
-
       },
-
   },
   data: function () {
         return {
             isHeader: true,
             constants,
-            isLoggedin: false,
         } 
     },
 }

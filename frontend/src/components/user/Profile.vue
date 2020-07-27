@@ -8,7 +8,7 @@
                         <div class="media">
                             <img src="https://source.unsplash.com/random" class="mr-3 align-self-center" alt="..." style="height: 100px; width: 100px;">
                             <div class="media-body">
-                                <h5 class="mt-2">이름{{ name }}</h5>
+                                <h5 class="mt-2">이름{{ userData.name }}</h5>
                                 <p>자기소개</p>
                                 <div class="intro">자기소개 내용</div>
                             </div>
@@ -56,61 +56,23 @@
 <script>
 const BACK_URL = 'http://127.0.0.1:8080'
 import constants from '../../lib/constants'
-import axios from 'axios'
+import {mapState, mapActions} from 'vuex'
 
 export default {
     name:'Profile',
     data: function () {
         return {
             constants,
-            name:'',
-            address:'',
-            email:'',
-            nickname:'',
-            id:'',
-            password:'',
-            birthday:'',
         }
     },
     methods: {
-        getUser:function(){
-            const config = {
-                headers: {
-                    Authorization: `${this.$cookies.get('auth-token')}`
-                }
-            }
-            axios.get(`${BACK_URL}/info/${config.headers.Authorization}`)
-            .then((response)=>{
-                this.name=response.data.name
-                this.address=response.data.address
-                this.email=response.data.email
-                this.nickname=response.data.nickname
-                this.id=response.data.id
-                this.password=response.data.password
-                this.birthday=response.data.birthday
-            })
-            .catch((err)=>{
-                console.error(err)
-            })
-        },
-        deleteUser: function(){
-            const config = {
-                headers: {
-                    Authorization: `${this.$cookies.get('auth-token')}`
-                }
-            }
-             axios.get(`${BACK_URL}/account/delete/${config.headers.Authorization}`)
-            .then((response)=>{
-                console.log(response)
-                alert("회원 탈퇴가 완료되었습니다.")
-            })
-            .catch((err)=>{
-                console.error(err)
-            })
-        }
+        ...mapActions(['getUserData','deleteUser']),
+    },
+    computed:{
+        ...mapState(['userData'])
     },
     created: function(){
-        this.getUser()
+        this.getUserData()
     }
 }
 </script>

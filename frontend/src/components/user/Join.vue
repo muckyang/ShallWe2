@@ -9,8 +9,7 @@
                         <div class="p-2">
                             <i class="fas fa-user"></i>
                         </div>
-                        
-                        <input v-model="signupData.nickname"
+                        <input v-model="signUpData.signUpDataForSend.nickname"
                             id="nickname"
                             placeholder="닉네임을 입력해주세요" type="text"/>
                     </div>
@@ -19,8 +18,7 @@
                         <div class="p-2">
                             <i class="fas fa-envelope"></i>
                         </div>
-                        
-                        <input v-model="signupData.email" 
+                        <input v-model="signUpData.signUpDataForSend.email" 
                             id="email"
                             placeholder="이메일을 입력해주세요"
                             type="text"/>
@@ -28,10 +26,9 @@
 
                     <div class="input-wrap id-warp">
                         <div class="p-2">
-                            <!-- <i class="fas fa-id-badge"></i> -->
                             <i class="fas fa-user"></i>
                         </div>
-                        <input v-model="signupData.id" 
+                        <input v-model="signUpData.signUpDataForSend.id" 
                             id="id"
                             placeholder="id를 입력해주세요"
                             type="text"/>
@@ -39,10 +36,9 @@
 
                     <div class="input-wrap name-warp">
                         <div class="p-2">
-                            <!-- <i class="fas fa-id-badge"></i> -->
                             <i class="fas fa-user"></i>
                         </div>
-                        <input v-model="signupData.name" 
+                        <input v-model="signUpData.signUpDataForSend.name" 
                             id="name"
                             placeholder="이름을 입력해주세요"
                             type="text"/>
@@ -52,7 +48,7 @@
                         <div class="p-2">
                             <i class="fas fa-home"></i>
                         </div>
-                        <input v-model="signupData.address" 
+                        <input v-model="signUpData.signUpDataForSend.address" 
                             id="address"
                             style="font-family:FontAwesome;"
                             placeholder="주소를 입력해주세요"
@@ -63,7 +59,7 @@
                         <div class="p-2">
                             <i class="fas fa-birthday-cake"></i>
                         </div>
-                        <input v-model="signupData.birthday" 
+                        <input v-model="signUpData.signUpDataForSend.birthday" 
                             id="birthday"
                             placeholder="생일을 입력해주세요"
                             type="text"/>
@@ -73,37 +69,39 @@
                         <div class="p-2">
                             <i class="fas fa-key"></i>
                         </div>
-                        <input v-model="signupData.password"
+                        <input v-model="signUpData.signUpDataForSend.password"
                             id="password" 
                             type="password"
                             placeholder="비밀번호를 입력해주세요"/>
-                        <span :class="{active : signupData.passwordType==='text'}">
-                                <i class="fas fa-eye"></i>
-                            </span>
+                        <span :class="{active : signUpData.passwordType==='text'}">
+                            <i class="fas fa-eye"></i>
+                        </span>
                     </div>
 
                     <div class="input-wrap password-wrap">
                         <div class="p-2">
                             <i class="fas fa-key"></i>
                         </div>
-                        <input v-model="password2" 
+                        <input v-model="signUpData.password2" 
                             id="password-confirm"
                             type="password"
                             placeholder="비밀번호를 한번 더 입력해주세요"/>
-                        <span :class="{active : signupData.passwordConfirmType==='text'}">
-                                <i class="fas fa-eye"></i> 
-                            </span>
+                        <span :class="{active : signUpData.passwordConfirmType==='text'}">
+                            <i class="fas fa-eye"></i> 
+                        </span>
                     </div>
                 </div>
+                
 
-                <label>
-                    <input v-model="signupData.isTerm" type="checkbox" id="term"/>
+                
+                <!-- <label>
+                    <input v-model="signUpData.isTerm" type="checkbox" id="term"/>
                     <span>약관에 동의합니다</span>
                 </label>
+                <span class="go-term">약관 보기</span><br><br>-->
 
-                <span class="go-term">약관 보기</span><br><br>
 
-                <button v-on:click="signUp" class="btn">
+                <button @click="signUp(signUpData)" class="btn">
                     <span>
                         작성완료
                     </span>
@@ -116,7 +114,8 @@
 
 <script>
 import axios from "axios"
-const BACK_URL = "http://127.0.0.1:8080" //로컬 주소 넣으면 되나
+import {mapActions} from 'vuex'
+const BACK_URL = "http://127.0.0.1:8080"
 
     export default {
         name: "Signup",
@@ -124,35 +123,23 @@ const BACK_URL = "http://127.0.0.1:8080" //로컬 주소 넣으면 되나
         },
         data: () => {
             return {
-                signupData:{
-                    address:'',
-                    birthday:'',
-                    email: '',
-                    id: '',
-                    name:'', 
-                    nickname: '',
-                    password:''       
+                signUpData:{
+                    signUpDataForSend:{
+                        address:'',
+                        birthday:'',
+                        email: '',
+                        id: '',
+                        name:'', 
+                        nickname: '',
+                        password:''
+                    },
+                    password2:''       
                 },
-                isTerm: false,
-                password2:''
+                // isTerm: false,
             }
         },
         methods: {
-            signUp: function() {
-                if (this.signupData.password===this.password2){
-                    axios.post(`${BACK_URL}/account/signup`, this.signupData)
-                    .then((res) => {
-                        console.log(res,"COMPLETE")
-                        alert("회원가입이 완료되었습니다.");
-                    })
-                    .catch((err) => {
-                      console.log(err)
-                        alert("입력 값을 다시 확인해주세요");
-                    });
-                }else{
-                    alert("비밀번호를 다시 설정해주세요")
-                }
-            },
+            ...mapActions(["signUp"])
         },
     }
 
@@ -163,5 +150,4 @@ const BACK_URL = "http://127.0.0.1:8080" //로컬 주소 넣으면 되나
     display: flex;
     justify-content: flex-start;
 }
-
 </style>
