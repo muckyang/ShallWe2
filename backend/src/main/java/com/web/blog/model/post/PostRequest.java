@@ -10,9 +10,10 @@ import javax.validation.constraints.NotNull;
 @Data
 @Valid
 public class PostRequest {
-  
+
     int articleId;
     int categoryId;
+    int userId;
  
     @ApiModelProperty(required = true)
     @NotNull
@@ -27,7 +28,6 @@ public class PostRequest {
     @ApiModelProperty(required = true)
     @NotNull
     String description;
-
     String urlLink;
     String image;
     String billImage;

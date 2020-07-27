@@ -76,7 +76,7 @@
             Authorization: `${this.$cookies.get('auth-token')}`
           }
         }
-               axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/${this.temptrue}` ,this.articleData )
+        axios.post(`${BACK_URL}/post/create/${this.temptrue}/${config.headers.Authorization}` ,this.articleData )
           .then(res => { 
             console.log(res.data) 
             console.log(this.$cookies.get('auth-token'));
