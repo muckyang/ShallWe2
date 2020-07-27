@@ -3,27 +3,35 @@ package com.web.blog.model.post;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 @Data
 @Valid
-public class CreateRequest {
+public class PostRequest {
   
-    int pid;
+    int articleId;
+    int categoryId;
+ 
     @ApiModelProperty(required = true)
     @NotNull
     String title;
+    String writer;
     @ApiModelProperty(required = true)
     @NotNull
-    int memberAmount;
+    String address;
     @ApiModelProperty(required = true)
     @NotNull
-    int price;
+    int minPrice;
     @ApiModelProperty(required = true)
     @NotNull
     String description;
-    String writer;
+
+    String urlLink;
+    String image;
+    String billImage;
     int temp;
+    LocalDateTime endTime;
         
 }

@@ -1,10 +1,10 @@
-package com.web.blog.model;
+package com.web.blog.model.user;
 
 import java.time.LocalDate;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class BasicResponse {
+public class UserResponse {
     // user
     @ApiModelProperty(value = "status", position = 1)
     public boolean status;
