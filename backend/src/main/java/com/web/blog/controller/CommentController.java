@@ -38,38 +38,37 @@ public class CommentController {
 
     @Autowired
     CommentDao commentDao;
-
     @Autowired
     UserDao userDao;
-
     @Autowired
     private JwtService jwtService;
 
     @PostMapping("/comment/create/{token}")
     @ApiOperation(value = "댓글등록")
-    public Object create(@Valid @RequestBody CommentRequest request, @PathVariable String token) throws MessagingException, IOException {
+    public Object create(@Valid @RequestBody CommentRequest request, @PathVariable String token)
+            throws MessagingException, IOException {
         System.out.println("댓글등록");
         System.out.println(request.getArticleId());
 
         String content = request.getContent();
         int articleId = request.getArticleId();
         User jwtuser = jwtService.getUser(token);
-        
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
-       if(userOpt.isPresent()){
-        Comment comment = new Comment();
-        comment.setArticleId(articleId);
-        comment.setContent(content);
-        comment.setUserId(userOpt.get().getUserId()); //token값으로  id 받아옴
-        commentDao.save(comment);
 
-        System.out.println("댓글 등록!!");
-        CommentResponse result = new CommentResponse();
-        return new ResponseEntity<>(result, HttpStatus.OK);
-       }else{
-        String message = "로그인 상태를 확인하세요"; 
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-       }
+        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        if (userOpt.isPresent()) {
+            Comment comment = new Comment();
+            comment.setArticleId(articleId);
+            comment.setContent(content);
+            comment.setUserId(userOpt.get().getUserId()); // token값으로 id 받아옴
+            commentDao.save(comment);
+
+            System.out.println("댓글 등록!!");
+            CommentResponse result = new CommentResponse();
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            String message = "로그인 상태를 확인하세요";
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
 
     }
 
@@ -85,13 +84,11 @@ public class CommentController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-
-
     @PostMapping("/comment/update/")
     @ApiOperation(value = "댓글수정")
     public Object update(@Valid @RequestBody CommentRequest request) {
 
-        int commentId=request.getCommentId();
+        int commentId = request.getCommentId();
         Comment comment = commentDao.getCommentByCommentId(commentId);
         comment.setContent(request.getContent());
         commentDao.save(comment);
@@ -103,7 +100,7 @@ public class CommentController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/comment/delete/{no}")
+    @PostMapping("/comment/delete/{commentId}")
     @ApiOperation(value = "댓글삭제하기")
     public Object delete(@Valid @PathVariable int commentId) {
         Comment comment = commentDao.getCommentByCommentId(commentId);
@@ -113,5 +110,5 @@ public class CommentController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-   
+
 }

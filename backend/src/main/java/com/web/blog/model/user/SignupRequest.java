@@ -12,7 +12,6 @@ import javax.validation.constraints.Pattern;
 @Valid
 public class SignupRequest {
   
-    int uid;
     @ApiModelProperty(required = true)
     @NotNull
     String id;
@@ -23,10 +22,10 @@ public class SignupRequest {
     @ApiModelProperty(required = true)
     @NotNull
     String email;
+    String name;
     @ApiModelProperty(required = true)
     @NotNull
     String nickname;
-    String name;
     String address;
     LocalDate birthday;
 

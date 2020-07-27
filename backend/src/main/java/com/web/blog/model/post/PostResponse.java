@@ -58,8 +58,10 @@ public class PostResponse {
      public String billImage;
      @ApiModelProperty(value = "likenum", position = 13)
      public int likenum;
-     @ApiModelProperty(value = "isLiked", position = 14)
+     @ApiModelProperty(value = "commentnum", position = 14)
+     public int commentnum;
+     @ApiModelProperty(value = "isLiked", position = 15)
      public boolean isLiked;
-     @ApiModelProperty(value = "sumPrice", position = 15)
+     @ApiModelProperty(value = "sumPrice", position = 16)
      public int sumPrice;
 }
