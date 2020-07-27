@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CommentDao extends JpaRepository<Comment, String> {
    
     List<Comment> findCommentByArticleId(int articleId);
-    Comment getCommentByCommentId(int no);
+    Comment getCommentByCommentId(int commentId);
 
 }

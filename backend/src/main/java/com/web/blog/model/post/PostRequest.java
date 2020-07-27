@@ -14,7 +14,6 @@ public class PostRequest {
     int articleId;
     int categoryId;
     int userId;
- 
     @ApiModelProperty(required = true)
     @NotNull
     String title;

@@ -41,9 +41,9 @@ public class LikeController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/like/{pid}/{token}") // SWAGGER UI에 보이는 REQUEST명
+    @PostMapping("/like/{articleId}/{token}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "좋아요 / 좋아요 취소")
-    public Object Like(@Valid @PathVariable int pid, @PathVariable String token) {
+    public Object Like(@Valid @PathVariable int articleId, @PathVariable String token) {
         String message = "";
         User jwtuser = jwtService.getUser(token);
         Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
@@ -54,14 +54,14 @@ public class LikeController {
         if (userOpt.isPresent()) {
             System.out.println("Like in!! ");
             // Post post = postDao.getPostByPid(pid);// 게시물 가져옴
-            Optional<Like> likeOpt = likeDao.findLikeByUserIdAndArticleId(userOpt.get().getUserId(), pid);
+            Optional<Like> likeOpt = likeDao.findLikeByUserIdAndArticleId(userOpt.get().getUserId(), articleId);
             if (likeOpt.isPresent()) {// 좋아요 상태일때
                  
-                int Uid = userOpt.get().getUserId();
+                int UserId = userOpt.get().getUserId();
                 Like like = new Like();
                 like.setUserId(likeOpt.get().getUserId());
-                like.setArticleId(pid);
-                like.setUserId(Uid);
+                like.setArticleId(articleId);
+                like.setUserId(UserId);
                 likeDao.delete(like);
 
                 message = "좋아요 취소 !!";
@@ -69,10 +69,10 @@ public class LikeController {
                 return new ResponseEntity<>(message, HttpStatus.OK);
             } else {
            
-                int Uid = userOpt.get().getUserId();
+                int UserId = userOpt.get().getUserId();
                 Like like = new Like();
-                like.setArticleId(pid);
-                like.setUserId(Uid);
+                like.setArticleId(articleId);
+                like.setUserId(UserId);
                 likeDao.save(like);
 
                 message = "좋아요!!"; 
@@ -86,9 +86,9 @@ public class LikeController {
         }
     }
 
-    @PostMapping("/likedcheck/{pid}/{token}") // SWAGGER UI에 보이는 REQUEST명
+    @PostMapping("/likedcheck/{articleId}/{token}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "좋아요여부 확인")
-    public Object LikeCheck(@Valid @PathVariable int pid, @PathVariable String token) {
+    public Object LikeCheck(@Valid @PathVariable int articleId, @PathVariable String token) {
         String message = "";
         User jwtuser = jwtService.getUser(token);
         Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
@@ -97,9 +97,9 @@ public class LikeController {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
         if (userOpt.isPresent()) {
-            System.out.println("Like in!! ");
+            System.out.println("Like Number Check ");
             // Post post = postDao.getPostByPid(pid);// 게시물 가져옴
-            Optional<Like> likeOpt = likeDao.findLikeByUserIdAndArticleId(userOpt.get().getUserId(), pid);
+            Optional<Like> likeOpt = likeDao.findLikeByUserIdAndArticleId(userOpt.get().getUserId(), articleId);
             LikeResponse result = new LikeResponse();
         
             if (likeOpt.isPresent()) {// 좋아요 상태일때
