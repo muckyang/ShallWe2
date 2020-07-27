@@ -1,6 +1,7 @@
 package com.web.blog.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
@@ -100,10 +101,7 @@ public class AccountController {
         User isEmail = userDao.getUserByEmail(request.getEmail());
         User isNickname = userDao.getUserByNickname(request.getNickname());
 
-<<<<<<< HEAD
-=======
 
->>>>>>> f4e4bf08cea2855a5f0433e607cb626d92cc42ae
         if (isEmail != null) { // 메일 중복
             message = "이메일 중복 입니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -112,7 +110,6 @@ public class AccountController {
             message = "닉네임 중복 입니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
-<<<<<<< HEAD
 
         String id = request.getId();
         String password = request.getPassword();
@@ -130,8 +127,6 @@ public class AccountController {
         user.setNickname(nickname);
         user.setAddress(address);
         user.setBirthday(birthday);
-=======
->>>>>>> f4e4bf08cea2855a5f0433e607cb626d92cc42ae
 
         int authNumber = (int)(Math.random() * 1000000); //난수 생성
         Optional<Auth> OptionalAuth = authDao.getAuthByEmail(request.getEmail());
@@ -286,12 +281,6 @@ public class AccountController {
             result.nickname = userOpt.get().getNickname();
             result.birthday = userOpt.get().getBirthday();
             response = new ResponseEntity<>(result, HttpStatus.OK);
-<<<<<<< HEAD
-
-        } else {
-=======
->>>>>>> f4e4bf08cea2855a5f0433e607cb626d92cc42ae
-
         } else {
             response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
