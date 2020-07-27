@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface LikeDao extends JpaRepository<Like, String> {
     List<Like> findLikeByArticleno(int articleno);  //게시물  좋아요 수 리턴 
 
-    Optional<Like> findLikeByUidAndArticleno(int uid, int articleno); // 계정 좋아요 여부 확인
+    Optional<Like> findLikeByUserIdAndArticleno(int userid, int articleno); // 계정 좋아요 여부 확인
 }

@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,13 +24,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int pid;
-
+    private int articleId;
+    private int categoryId;
+    private int userId;
     private String title;
-    private int memberAmount;
-    private int price;
     private String writer;
+    private String address;
     private String description;
-    @Column(name = "is_temp")
+    private int minPrice;
+    private int nowPrice;
+    private String urlLink;
+    private String image;
+    private String billImage;
     private int temp;
+     // 생성시간은 자동생성
+    private LocalDateTime createTime;
+    private LocalDateTime endTime;
+    
 }
