@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -25,15 +26,17 @@ public class User  {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int uid;
-
+    private int userId;
     private String id;
     private String password;
     private String email;
     private String name;
     private String nickname;
     private String address;
+    private int userPoint;
     private LocalDate birthday;
+    // 생성시간은 자동생성
+    private LocalDateTime createTime;
 
 
 }

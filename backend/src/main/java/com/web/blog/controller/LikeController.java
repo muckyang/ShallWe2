@@ -54,10 +54,10 @@ public class LikeController {
         if (userOpt.isPresent()) {
             System.out.println("Like in!! ");
             // Post post = postDao.getPostByPid(pid);// 게시물 가져옴
-            Optional<Like> likeOpt = likeDao.findLikeByUidAndArticleno(userOpt.get().getUid(), pid);
+            Optional<Like> likeOpt = likeDao.findLikeByUserIdAndArticleno(userOpt.get().getUserId(), pid);
             if (likeOpt.isPresent()) {// 좋아요 상태일때
                  
-                int Uid = userOpt.get().getUid();
+                int Uid = userOpt.get().getUserId();
                 Like like = new Like();
                 like.setId(likeOpt.get().getId());
                 like.setArticleno(pid);
@@ -69,7 +69,7 @@ public class LikeController {
                 return new ResponseEntity<>(message, HttpStatus.OK);
             } else {
            
-                int Uid = userOpt.get().getUid();
+                int Uid = userOpt.get().getUserId();
                 Like like = new Like();
                 like.setArticleno(pid);
                 like.setUid(Uid);
@@ -99,7 +99,7 @@ public class LikeController {
         if (userOpt.isPresent()) {
             System.out.println("Like in!! ");
             // Post post = postDao.getPostByPid(pid);// 게시물 가져옴
-            Optional<Like> likeOpt = likeDao.findLikeByUidAndArticleno(userOpt.get().getUid(), pid);
+            Optional<Like> likeOpt = likeDao.findLikeByUserIdAndArticleno(userOpt.get().getUserId(), pid);
             LikeResponse result = new LikeResponse();
         
             if (likeOpt.isPresent()) {// 좋아요 상태일때
