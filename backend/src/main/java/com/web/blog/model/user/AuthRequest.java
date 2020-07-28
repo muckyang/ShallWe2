@@ -9,13 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthenticationRequest {
-    int uid;
-    String id;
+public class AuthRequest {
     String email;
-    String password;
-    String name;
-    String nickname;
-    LocalDate birthday;
-
 }

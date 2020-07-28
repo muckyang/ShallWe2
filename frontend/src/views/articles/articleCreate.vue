@@ -20,8 +20,8 @@
             <input id="title" type="text" class="form-control form-control-lg" placeholder="제목을 입력해 주세요." v-model="articleData.title"/>
           </div>
           <div class="form-group w-75 mb-5 mx-auto">
-            <p class="align-self-center m-1 text-left">Price</p>
-            <input id="price" type="number" class="form-control form-control-lg" placeholder="가격을 입력해 주세요." v-model="articleData.price"/>
+            <p class="align-self-center m-1 text-left">minPrice</p>
+            <input id="minPrice" type="number" class="form-control form-control-lg" placeholder="가격을 입력해 주세요." v-model="articleData.minPrice"/>
           </div>
           <div class="form-group w-75 mx-auto">
             <p class="align-self-center m-1 text-left">Content</p>
@@ -45,8 +45,9 @@
     data() {
       return {
         articleData: {
+          categoryId : 1, 
           title: null,
-          minPrice : 10000,
+          minPrice : null, 
           address : "덕명동",
           writer : null,
           description: null,
