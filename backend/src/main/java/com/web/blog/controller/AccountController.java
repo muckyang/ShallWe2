@@ -12,6 +12,7 @@ import com.web.blog.dao.AuthDao;
 import com.web.blog.dao.UserDao;
 import com.web.blog.model.user.UserResponse;
 import com.web.blog.model.auth.Auth;
+import com.web.blog.model.user.AuthRequest;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
@@ -95,38 +96,9 @@ public class AccountController {
 
     @PostMapping("/account/sendmail")
     @ApiOperation(value = "인증메일 발송")
-    public Object sendmail(@Valid @RequestBody SignupRequest request) throws MessagingException, IOException {
-        
-        String message = "";
-        User isEmail = userDao.getUserByEmail(request.getEmail());
-        User isNickname = userDao.getUserByNickname(request.getNickname());
-
-
-        if (isEmail != null) { // 메일 중복
-            message = "이메일 중복 입니다.";
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-        }
-        if (isNickname != null) { // 닉네임 중복
-            message = "닉네임 중복 입니다.";
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-        }
-
-        String id = request.getId();
-        String password = request.getPassword();
+    public Object sendmail(@Valid @RequestBody AuthRequest request) throws MessagingException, IOException {
         String email = request.getEmail();
-        String name = request.getName();
-        String nickname = request.getNickname();
-        String address = request.getAddress();
-        LocalDate birthday = request.getBirthday();
-
-        User user = new User();
-        user.setId(id);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setName(name);
-        user.setNickname(nickname);
-        user.setAddress(address);
-        user.setBirthday(birthday);
+        
 
         int authNumber = (int)(Math.random() * 1000000); //난수 생성
         Optional<Auth> OptionalAuth = authDao.getAuthByEmail(request.getEmail());
@@ -166,6 +138,7 @@ public class AccountController {
         
         System.out.println("메일전송 성공!");
         return new ResponseEntity<>("success", HttpStatus.OK);
+    
 
     }
 
@@ -181,7 +154,7 @@ public class AccountController {
         user.setName(request.getName());
         user.setNickname(request.getNickname());
         user.setAddress(request.getAddress());
-        user.setUserPoint(0);
+        user.setUserPoint(1000);//최초 가입시 1000점으로 
         user.setBirthday(request.getBirthday());
 
         userDao.save(user);
@@ -205,9 +178,10 @@ public class AccountController {
         if (userOpt.isPresent()) {
             // 이메일, 닉네임 중복처리
             System.out.println("token으로 찾기 완료 ");
-            User user = userDao.getOne(request.getId());
+            User user = userDao.getUserById(request.getId());
+            System.out.println("id로 검색");
 
-            User isNickname = userDao.getUserByNickname(request.getNickname());
+            Optional<User> isNickname = userDao.getUserByNickname(request.getNickname());
 
             user.setPassword(request.getPassword());
             user.setName(request.getName());
@@ -216,11 +190,11 @@ public class AccountController {
             user.setBirthday(request.getBirthday());
 
       
-            if (isNickname != null && !isNickname.getNickname().equals(user.getNickname())) { // 닉네임 중복
-                message = "닉네임 중복 입니다.";
-                System.out.println("중복입니다.");
-                return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-            }
+            // if (isNickname.isPresent() && !isNickname.get().getNickname().equals(user.getNickname())) { // 닉네임 중복
+            //     message = "닉네임 중복 입니다.";
+            //     System.out.println("중복입니다.");
+            //     return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+            // }
 
             userDao.save(user); // 수정내용 저장
             System.out.println("수정하기 완료!! ");
@@ -244,7 +218,7 @@ public class AccountController {
         Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
         String message = "";
         if (userOpt.isPresent()) {
-            User user = userDao.getOne(jwtuser.getId());
+            User user = userDao.getUserById(jwtuser.getId());
 
 
             // FK 연동된것 삭제  /// 완료테이블 있어야 할 것 같음
