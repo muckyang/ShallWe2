@@ -30,7 +30,6 @@ public class PostRequest {
     String urlLink;
     String image;
     String billImage;
-    int temp;
     LocalDateTime endTime;
         
 }

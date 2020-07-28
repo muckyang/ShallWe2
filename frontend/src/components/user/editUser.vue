@@ -101,13 +101,15 @@ export default {
               password:this.password,
               birthday:this.birthday,
             } 
+            console.log("if문 전")
             if(editData.password===password2){ 
+                console.log("if")
                 const config = {
                     headers: {
                         Authorization: `${this.$cookies.get('auth-token')}`
                     }
                 }
-                axios.post(`${BACK_URL}/account/update/${config.headers.Authorization}`)
+                axios.post(`${BACK_URL}/account/update/${config.headers.Authorization}`,editData)
                 .then((response)=>{
                     console.log(response)
                     alert("수정이 완료되었습니다.")
@@ -116,6 +118,7 @@ export default {
                     console.error(err)
                 })
             }else{
+                console.log("else")
                 alert("비밀번호를 확인해 주세요")
             }
         },
@@ -125,7 +128,7 @@ export default {
                     Authorization: `${this.$cookies.get('auth-token')}`
                 }
             }
-          axios.get(`${BACK_URL}/account/update/${config.headers.Authorization}`)
+          axios.get(`${BACK_URL}/account/read/${config.headers.Authorization}`)
             .then((response)=>{
                 this.name=response.data.name
                 this.address=response.data.address
