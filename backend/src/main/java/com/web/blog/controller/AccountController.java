@@ -1,6 +1,7 @@
 package com.web.blog.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
@@ -109,6 +110,23 @@ public class AccountController {
             message = "닉네임 중복 입니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
+
+        String id = request.getId();
+        String password = request.getPassword();
+        String email = request.getEmail();
+        String name = request.getName();
+        String nickname = request.getNickname();
+        String address = request.getAddress();
+        LocalDate birthday = request.getBirthday();
+
+        User user = new User();
+        user.setId(id);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setName(name);
+        user.setNickname(nickname);
+        user.setAddress(address);
+        user.setBirthday(birthday);
 
         int authNumber = (int)(Math.random() * 1000000); //난수 생성
         Optional<Auth> OptionalAuth = authDao.getAuthByEmail(request.getEmail());
@@ -269,7 +287,6 @@ public class AccountController {
             result.nickname = userOpt.get().getNickname();
             result.birthday = userOpt.get().getBirthday();
             response = new ResponseEntity<>(result, HttpStatus.OK);
-
         } else {
             response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
