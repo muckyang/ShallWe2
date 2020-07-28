@@ -46,15 +46,12 @@
       return {
         articleData: {
           title: null,
-          memberAmount : null,
+          minPrice : 10000,
+          address : "덕명동",
           writer : null,
-          price : null,
           description: null,
-       
-
         },
-           temptrue: true,
-          tempfalse: false,
+        temp:1,
         imageUrl: null, //다시 검토
       };
     },
@@ -76,7 +73,7 @@
             Authorization: `${this.$cookies.get('auth-token')}`
           }
         }
-        axios.post(`${BACK_URL}/post/create/${this.temptrue}/${config.headers.Authorization}` ,this.articleData )
+        axios.post(`${BACK_URL}/post/create/${this.temp}/${config.headers.Authorization}` ,this.articleData )
           .then(res => { 
             console.log(res.data) 
             console.log(this.$cookies.get('auth-token'));

@@ -177,14 +177,16 @@ public class AccountController {
     @PostMapping("/account/update/{token}")
     @ApiOperation(value = "수정하기")
     public Object update(@Valid @RequestBody SignupRequest request, @PathVariable String token) {
-
+        
         // 복호화
         User jwtuser = jwtService.getUser(token);
-
         Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
         String message = "";
+        
+        System.out.println("수정하기 - token 검색");
         if (userOpt.isPresent()) {
             // 이메일, 닉네임 중복처리
+            System.out.println("token으로 찾기 완료 ");
             User user = userDao.getOne(request.getId());
 
             User isNickname = userDao.getUserByNickname(request.getNickname());
@@ -198,11 +200,12 @@ public class AccountController {
       
             if (isNickname != null && !isNickname.getNickname().equals(user.getNickname())) { // 닉네임 중복
                 message = "닉네임 중복 입니다.";
+                System.out.println("중복입니다.");
                 return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
             }
 
             userDao.save(user); // 수정내용 저장
-            System.out.println("수정하기 들어옴!! ");
+            System.out.println("수정하기 완료!! ");
             UserResponse result = new UserResponse();
             result.status = true;
             result.data = "success";
@@ -246,12 +249,15 @@ public class AccountController {
         }
     }
 
-    @GetMapping("/account/update/{id}") // SWAGGER UI에 보이는 REQUEST명
-    @ApiOperation(value = "프로필 수정")
-    public Object info(@PathVariable String id) {
+    @GetMapping("/account/read/{token}") // SWAGGER UI에 보이는 REQUEST명
+    @ApiOperation(value = "프로필 조회")
+    public Object info( @Valid @PathVariable String token) {
 
-        Optional<User> userOpt = userDao.findById(id);
+        // Optional<User> userOpt = userDao.findById(id);
         ResponseEntity<Object> response = null;
+        System.out.println("프로필 조회 ! ");
+        User jwtuser = jwtService.getUser(token);
+        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
 
         if (userOpt.isPresent()) {
             UserResponse result = new UserResponse();

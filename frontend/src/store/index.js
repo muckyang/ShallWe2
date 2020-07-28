@@ -105,7 +105,7 @@ export default new Vuex.Store({
             Authorization: state.authToken
         }
       }
-      axios.get(`${BACK_URL}/info/${config.headers.Authorization}`)
+      axios.get(`${BACK_URL}/account/read/${config.headers.Authorization}`)
       .then((response)=>{
         commit('GET_USERDATA',response.data)
       })

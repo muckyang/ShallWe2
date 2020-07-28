@@ -278,7 +278,7 @@ public class PostController {
             post.setMinPrice(request.getMinPrice());
             post.setUrlLink(request.getUrlLink());
             post.setImage(request.getImage());
-            post.setTemp(request.getTemp());
+            post.setTemp(temp);
             post.setEndTime(request.getEndTime());
             // post.setBillImage(request.getBillImage());
 
@@ -309,7 +309,7 @@ public class PostController {
             post.setUrlLink(request.getUrlLink());
             post.setImage(request.getImage());
             post.setBillImage(request.getBillImage());
-            post.setTemp(request.getTemp());
+            post.setTemp(temp);
             post.setEndTime(request.getEndTime());
 
             System.out.println(post.getArticleId());
