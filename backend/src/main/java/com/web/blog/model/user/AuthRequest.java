@@ -1,6 +1,5 @@
 package com.web.blog.model.user;
 
-import java.time.LocalDate;
 
 import lombok.*;
 
