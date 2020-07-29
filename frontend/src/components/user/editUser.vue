@@ -98,77 +98,45 @@
 <script>
 const BACK_URL = 'http://127.0.0.1:8080'
 import axios from 'axios'
+import { mapState, mapActions } from 'vuex'
 
 export default {
     name:"editUser",
     data: function () {
         return {
-            name:'',
-            address:'',
-            email:'',
-            nickname:'',
-            id:'',
-            password:'',
-            birthday:'',
-            password2:'',
-            passwordType:"password",
-            passwordConfirmType:"password",
+            editData:{
+                editDataForSend:{
+                    name:'',
+                    address:'',
+                    email:'',
+                    nickname:'',
+                    id:'',
+                    password:'',
+                    birthday:'',
+                },
+                password2:'',
+            },
+            passwordType:"text",
+            passwordConfirmType:"text",
         }
     },
     methods:{
-        editUser:function(){
-            const password2 = this.password2
-            const editData={
-              name: this.name,
-              address:this.address,
-              email:this.email,
-              nickname:this.nickname,
-              id:this.id,
-              password:this.password,
-              birthday:this.birthday,
-            } 
-            if(editData.password===password2){ 
-                const config = {
-                    headers: {
-                        Authorization: `${this.$cookies.get('auth-token')}`
-                    }
-                }
-                axios.post(`${BACK_URL}/account/update/${config.headers.Authorization}`)
-                .then((response)=>{
-                    console.log(response)
-                    alert("수정이 완료되었습니다.")
-                })
-                .catch((err)=>{
-                    console.error(err)
-                })
-            }else{
-                alert("비밀번호를 확인해 주세요")
-            }
-        },
-        getUser:function(){
-            const config = {
-                headers: {
-                    Authorization: `${this.$cookies.get('auth-token')}`
-                }
-            }
-          axios.get(`${BACK_URL}/info/${config.headers.Authorization}`)
-            .then((response)=>{
-                this.name=response.data.name
-                this.address=response.data.address
-                this.email=response.data.email
-                this.nickname=response.data.nickname
-                this.id=response.data.id
-                this.password=response.data.password
-                this.birthday=response.data.birthday
-            })
-            .catch((err)=>{
-                console.error(err)
-            })
-        }
+        ...mapActions(['editUser','getUserData'])
     },
     created: function(){
-        this.getUser()
-    }
+        this.getUserData()
+        console.log(this.userData)
+        this.editData.editDataForSend.name=this.userData.name
+        this.editData.editDataForSend.address=this.userData.address
+        this.editData.editDataForSend.email=this.userData.email
+        this.editData.editDataForSend.nickname=this.userData.nickname
+        this.editData.editDataForSend.id=this.userData.id
+        this.editData.editDataForSend.password=this.userData.password
+        this.editData.editDataForSend.birthday=this.userData.birthday
+    },
+    computed:{
+        ...mapState(["userData"]),
+    },
 }
 </script>
 
