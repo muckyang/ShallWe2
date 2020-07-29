@@ -95,7 +95,7 @@ public class AccountController {
     @ApiOperation(value = "인증메일 발송")
     public Object sendmail(@Valid @RequestBody AuthRequest request) throws MessagingException, IOException {
 
-        int authNumber = (int) (Math.random() * 1000000); // 난수 생성
+        int authNumber = (int) (Math.random() * 900000) +100000 ; // 난수 생성
         Optional<Auth> OptionalAuth = authDao.getAuthByEmail(request.getEmail());
         if (OptionalAuth.isPresent()) {
             Auth auth = OptionalAuth.get();
