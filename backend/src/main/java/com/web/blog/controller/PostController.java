@@ -22,6 +22,7 @@ import com.web.blog.model.tag.Tag;
 import com.web.blog.model.like.Like;
 import com.web.blog.model.post.PostRequest;
 import com.web.blog.model.post.Post;
+import com.web.blog.model.user.TokenRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
 
@@ -73,19 +74,20 @@ public class PostController {
 
     @PostMapping("/post/create/{temp}")
     @ApiOperation(value = "게시글및임시글등록")
-    public Object create(@Valid @RequestBody PostRequest request, @PathVariable int temp ,@RequestHeader(value = "Authorization") String token)
+    public Object create(@Valid @RequestBody PostRequest request, @PathVariable int temp)
             throws MessagingException, IOException {
+              String token =   request.getToken();
         if (temp == 0) {// 임시저장
             System.out.println(token);
             User jwtuser = jwtService.getUser(token);
 
-            Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+            Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
             if (userOpt.isPresent()) {
 
                 Post post = new Post();
 
                 post.setUserId(userOpt.get().getUserId()); // token값으로 user_id 받아옴
-                post.setWriter(userOpt.get().getId());// 작성자 ID 입력
+                post.setWriter(userOpt.get().getName());// 작성자 이름? Email
                 post.setTemp(temp);
                 post.setCategoryId(request.getCategoryId());
                 post.setTitle(request.getTitle());
@@ -95,7 +97,7 @@ public class PostController {
                 post.setUrlLink(request.getUrlLink());
                 post.setImage(request.getImage());
                 post.setEndTime(request.getEndTime());
-                // post.setBillImage(request.getBillImage());
+            
 
                 System.out.println(post.getArticleId());
                 System.out.println();
@@ -110,14 +112,14 @@ public class PostController {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         } else if (temp == 1) {
             User jwtuser = jwtService.getUser(token);
-            Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+            Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
 
             if (userOpt.isPresent()) {
 
                 Post post = new Post();
                 // articleId 자동생성
                 post.setUserId(userOpt.get().getUserId()); // token값으로 user_id 받아옴
-                post.setWriter(userOpt.get().getId());// 작성자 ID 입력
+                post.setWriter(userOpt.get().getName());// 작성자 이름 ? 이메일? 
                 post.setTemp(temp);
                 post.setCategoryId(request.getCategoryId());
                 post.setTitle(request.getTitle());
@@ -149,14 +151,14 @@ public class PostController {
 
     @PostMapping("/post/read/{temp}/{categoryId}") // temp 값 int 로 변경예정
     @ApiOperation(value = "게시글 및 임시글 목록")
-    public Object read(@PathVariable int temp,@PathVariable int categoryId, @RequestHeader String token) throws MessagingException, IOException {
+    public Object read(@RequestBody TokenRequest request, @PathVariable int temp,@PathVariable int categoryId) throws MessagingException, IOException {
         if (temp == 0) {
             System.out.println("임시글 목록 출력!!");
-
+            String token = request.getToken();
             User jwtuser = jwtService.getUser(token);
-            Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+            Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
 
-            String writer = userOpt.get().getId();
+            String writer = userOpt.get().getEmail();
             List<Post> plist = postDao.findPostByTempAndWriter(temp, writer);
 
             PostListResponse result = new PostListResponse();
@@ -226,14 +228,14 @@ public class PostController {
     }
 
     @PostMapping("/post/search/{temp}/{categoryId}") 
-    @ApiOperation(value = "검색 목록")
-    public Object search(@RequestBody PostSearchRequest request , @PathVariable int temp , int categoryId) throws MessagingException, IOException {
+    @ApiOperation(value = "구매게시판 검색 목록")
+    public Object search(@RequestBody PostSearchRequest request ,int temp, int categoryId) throws MessagingException, IOException {
         String subject = request.getSubject();
         String word = request.getWord();
 
         if (subject.equals("title")) {
             word = "%" + word + "%";
-            List<Post> tlist = postDao.findPostByTitleLike(word);
+            List<Post> tlist = postDao.findPostByTempAndTitleLike(temp , word);
 
             PostListResponse result = new PostListResponse();
             result.postList = new LinkedList<>();
@@ -247,7 +249,7 @@ public class PostController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } else if (subject.equals("writer")) {
             word = "%" + word + "%";
-            List<Post> tlist = postDao.findPostByWriterLike(word);
+            List<Post> tlist = postDao.findPostByTempAndWriterLike(temp,word);
 
             PostListResponse result = new PostListResponse();
             result.postList = new LinkedList<>();
@@ -268,7 +270,7 @@ public class PostController {
             result.postList = new LinkedList<>();
             for (int i = 0; i < atlist.size(); i++) {
                 int aId = atlist.get(i).getArticleId();
-                Optional<Post> article = postDao.findPostByArticleId(aId);
+                Optional<Post> article = postDao.findPostByArticleIdAndTemp(aId,temp);
                 Post p = article.get();
                 result.postList.add(new PostResponse(p.getArticleId(), p.getCategoryId(), p.getUserId(), p.getTitle(),
                         p.getAddress(), p.getMinPrice(), p.getDescription(), p.getWriter(), p.getUrlLink(),
@@ -285,14 +287,14 @@ public class PostController {
 
     @PostMapping("/post/detail/{articleId}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "게시물상세보기") // SWAGGER UI에 보이는 이름
-    public Object detail(@PathVariable int articleId, @RequestHeader String token) {
+    public Object detail(@PathVariable int articleId, @RequestHeader(value = "Authorization") String token) {
         // 토큰 받아오면 그 토큰으로 유효성 검사 후 uid 받아와서 좋아요 한지 여부 확인
         Optional<Post> postOpt = postDao.findPostByArticleId(articleId);
         Post p = postOpt.get();
         if (postOpt.isPresent()) {
 
             User jwtuser = jwtService.getUser(token);
-            Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+            Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
             PostResponse result = new PostResponse(p.getArticleId(), p.getCategoryId(), p.getUserId(), p.getTitle(),
                     p.getAddress(), p.getMinPrice(), p.getDescription(), p.getWriter(), p.getUrlLink(), p.getImage(),
                     p.getBillImage(), p.getTemp(), p.getEndTime());

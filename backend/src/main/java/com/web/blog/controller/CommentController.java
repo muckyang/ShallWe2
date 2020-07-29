@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -46,16 +45,16 @@ public class CommentController {
 
     @PostMapping("/comment/create")
     @ApiOperation(value = "댓글등록")
-    public Object create(@Valid @RequestBody CommentRequest request, @RequestHeader String token)
-            throws MessagingException, IOException {
+    public Object create(@Valid @RequestBody CommentRequest request)throws MessagingException, IOException {
         System.out.println("댓글등록");
         System.out.println(request.getArticleId());
+        String token = request.getToken();
 
         String content = request.getContent();
         int articleId = request.getArticleId();
         User jwtuser = jwtService.getUser(token);
 
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
         if (userOpt.isPresent()) {
             Comment comment = new Comment();
             comment.setArticleId(articleId);

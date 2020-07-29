@@ -3,11 +3,6 @@
         <div class="wrapC table">
             <div class="middle">
                 <h2>회원가입</h2>
-                <input v-model="signUpData.signUpDataForSend.id" 
-                            id="id"
-                            name="id"
-                            placeholder=" id를 입력해주세요"
-                            type="text"/>
                 <hr class="line">
                 <div class="form-wrap ">
                     <div class="input-wrap">
