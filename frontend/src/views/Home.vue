@@ -26,96 +26,185 @@
             </a>
         </div>
         <!-- 섹션1 -->
+        <hr>
         <div class="blank-section d-flex align-items-center justify-content-center">
-            <h1>섹션1</h1>
+            <h5 style="color: #fec9c9;">- 실시간 게시물 -</h5>
         </div>
-        <!-- 셀프마진 -->
-        <div style="background-color: powderblue; height: 50px"></div>
-        <section style="background-color: powderblue;">
+        <hr>
+        <section style="background-color: white;">
             <div class="container">
-                <div class="row">
-                    <!-- 섹션1 - 아이템1 -->
-                    <div class="card col-3" style="width: 18rem;">
-                        <img src="https://source.unsplash.com/random" style="height: 300px" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">제목</h5>
-                            <p class="card-text">내용</p>
-                            <a href="#" class="btn btn-primary">보러 가기</a>
-                        </div>
-                    </div>
-                    <!-- 섹션1 - 아이템2 -->
-                    <div class="card col-3" style="width: 18rem;">
-                        <img src="https://source.unsplash.com/random" style="height: 300px" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">제목</h5>
-                            <p class="card-text">내용</p>
-                            <a href="#" class="btn btn-primary">보러 가기</a>
-                        </div>
-                    </div>
-                    <!-- 섹션1 - 아이템3 -->
-                    <div class="card col-3" style="width: 18rem;">
-                        <img src="https://source.unsplash.com/random" style="height: 300px" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">제목</h5>
-                            <p class="card-text">내용</p>
-                            <a href="#" class="btn btn-primary">보러 가기</a>
-                        </div>
-                    </div>
-                    <!-- 인기 상품2 -->
-                    <div class="card col-3" style="width: 18rem;">
-                        <img src="https://source.unsplash.com/random" style="height: 300px" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">제목</h5>
-                            <p class="card-text">내용</p>
-                            <a href="#" class="btn btn-primary">보러 가기</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- 셀프마진 -->
-        <div style="background-color: powderblue; height: 50px"></div>
-        <!-- 섹션2 -->
-        <div class="blank-section d-flex align-items-center justify-content-center">
-            <h1>섹션2</h1>
-        </div>
-        <!-- 셀프마진 -->
-        <div style="background-color: powderblue; height: 50px"></div>
-        <section style="background-color: powderblue;">
-            <div class="container">
-            <div class="row">
-                <div class="card col-12">
-                    <div class="row no-gutters">
-                        <div class="col-md-4">
-                            <div class="card-body">
-                                <h5 class="card-title">섹션2 - Title</h5>
-                                <p class="card-text">섹션2 - Content</p>
-                                <p class="card-text"><small class="text-muted">섹션3 - Footer</small></p>
+                <div class="container">
+                    <div class="row">
+                        <!-- 섹션1 - 아이템1 -->
+                        <div class="col-4">
+                            <div class="card mb-4" style="width: 18rem;">
+                                <img src="https://source.unsplash.com/random" style="height: 300px" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">제목</h5>
+                                    <p class="card-text">내용</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-8">
-                            <img src="https://source.unsplash.com/random" class="card-img" alt="..." style="height: 400px">
+                        <!-- 섹션1 - 아이템2 -->
+                        <div class="col-4">
+                            <div class="card mb-4" style="width: 18rem;">
+                                <img src="https://source.unsplash.com/random" style="height: 300px" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">제목</h5>
+                                    <p class="card-text">내용</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션1 - 아이템3 -->
+                        <div class="col-4">
+                            <div class="card mb-4" style="width: 18rem;">
+                                <img src="https://source.unsplash.com/random" style="height: 300px" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">제목</h5>
+                                    <p class="card-text">내용</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션1 - 아이템4 -->
+                        <div class="col-4">
+                            <div class="card mb-4" style="width: 18rem;">
+                                <img src="https://source.unsplash.com/random" style="height: 300px" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">제목</h5>
+                                    <p class="card-text">내용</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션1 - 아이템5 -->
+                        <div class="col-4">
+                            <div class="card mb-4" style="width: 18rem;">
+                                <img src="https://source.unsplash.com/random" style="height: 300px" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">제목</h5>
+                                    <p class="card-text">내용</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션1 - 아이템6 -->
+                        <div class="col-4">
+                            <div class="card mb-4" style="width: 18rem;">
+                                <img src="https://source.unsplash.com/random" style="height: 300px" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">제목</h5>
+                                    <p class="card-text">내용</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </section>
+        <hr>
+        <!-- 섹션2 -->
+        <div class="blank-section d-flex align-items-center justify-content-center">
+            <h5 style="color: #6d9d88;">- 베스트 후기 -</h5>
+        </div>
+        <hr>
+        <section style="background-color: white;">
+            <div class="container">
+                <div class="container">
+                    <div class="row">
+                        <!-- 섹션2 - 아이템1 -->
+                        <div class="col-4">
+                            <div class="card text-center mb-2" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션2 - 아이템2 -->
+                        <div class="col-4">
+                            <div class="card text-center mb-2" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션2 - 아이템3 -->
+                        <div class="col-4">
+                            <div class="card text-center mb-2" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션2 - 아이템4 -->
+                        <div class="col-4">
+                            <div class="card text-center mb-2" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션2 - 아이템5 -->
+                        <div class="col-4">
+                            <div class="card text-center mb-2" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션2 - 아이템6 -->
+                        <div class="col-4">
+                            <div class="card text-center mb-2" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션2 - 아이템7 -->
+                        <div class="col-4">
+                            <div class="card text-center mb-2" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션2 - 아이템8 -->
+                        <div class="col-4">
+                            <div class="card text-center mb-2" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 섹션2 - 아이템9 -->
+                        <div class="col-4">
+                            <div class="card text-center mb-2" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
+        <hr>
         <!-- 셀프마진 -->
-        <div style="background-color: powderblue; height: 50px"></div>
-        <!-- 마무리 -->
-        <div class="blank-section d-flex align-items-center justify-content-center">
-            <h1>마무리</h1>
-        </div>
+        <div style="background-color: white; height: 50px"></div>
     </div>
 </template>
 
 <script>
 export default {
     name:'Home',
-    data: function(){
+    data: function () {
         return{
-
         }
     }
 }
@@ -129,6 +218,7 @@ export default {
         height: 400px;
     }
     .blank-section {
-        height: 300px;
+        background-color: white;
+        height: 150px;
     }
 </style>
