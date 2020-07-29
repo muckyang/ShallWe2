@@ -101,7 +101,7 @@ export default {
             Authorization : `${this.$cookies.get('auth-token')}`
           }
         }
-        axios.get(`${BACK_URL}/post/read/1/${config.headers.Authorization}`, this.searchData)
+        axios.post(`${BACK_URL}/post/read/1/${config.headers.Authorization}`, this.searchData)
           .then((res) =>{
             console.log(res.data)
             this.$router.push('/search')

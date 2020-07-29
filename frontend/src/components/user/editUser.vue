@@ -3,7 +3,7 @@
         <div class="wrapC table">
             <div class="middle">
                 <h2>개인정보 수정</h2>
-                <hr>
+                <hr class="line">
                 <div class="form-wrap">                                    
 
                     <div class="input-wrap password-wrap">
@@ -85,6 +85,7 @@
                     </div>
 
                 </div>
+                <hr class="line">
                 <button v-on:click="editUser" class="submitButton">
                     <span>
                         작성완료
@@ -185,7 +186,7 @@ export default {
     /* justify-content: flex-start; */
     margin-bottom: 10px;
 }
-hr{
+.line{
     width:40%;
     margin-bottom: 20px;
     height:3px;

@@ -3,7 +3,12 @@
         <div class="wrapC table">
             <div class="middle">
                 <h2>회원가입</h2>
-                <hr>
+                <input v-model="signUpData.signUpDataForSend.id" 
+                            id="id"
+                            name="id"
+                            placeholder=" id를 입력해주세요"
+                            type="text"/>
+                <hr class="line">
                 <div class="form-wrap ">
                     <div class="input-wrap">
                         <div class="p-2">
@@ -96,7 +101,6 @@
 
                     
                 </div>
-                
 
                 <div class="seeModal">
                     <!-- Button trigger modal -->
@@ -314,7 +318,7 @@
                 </label>
                 <span class="go-term">약관 보기</span><br><br>-->
 
-                <hr>
+                <hr class="line">
                 <button @click="signUp(signUpData)" class="submitButton">
                     <span>
                         작성완료
@@ -381,7 +385,7 @@ const BACK_URL = "http://127.0.0.1:8080"
     /* justify-content: flex-start; */
     margin-bottom: 10px;
 }
-hr{
+.line{
     width:40%;
     margin-bottom: 20px;
     height:3px;
