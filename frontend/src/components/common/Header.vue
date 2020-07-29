@@ -47,7 +47,8 @@
       </div>
     </nav>
   </div>
-</template>  
+</template>
+
 <script>
                     
 import constants from "../../lib/constants";
@@ -74,5 +75,7 @@ export default {
   },
 };
 </script>
+
 <style>
+
 </style>
