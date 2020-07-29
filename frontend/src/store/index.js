@@ -25,6 +25,7 @@ export default new Vuex.Store({
       password:'',
       birthday:'',
     },
+    isTerm:false,
     artcileData:{
       articleId:'',
       userId:'',
@@ -76,6 +77,15 @@ export default new Vuex.Store({
     sendCheck(state){
       state.isSended=true
     },
+    termCheck(state){
+      
+      if(state.isTerm){
+        state.isTerm = false
+      }else{
+        state.isTerm = true
+      }
+      console.log(state.isTerm)
+    },
     GET_USERDATA(state,userData){
       state.userData.name=userData.name
       state.userData.address=userData.address
@@ -112,19 +122,23 @@ export default new Vuex.Store({
 
   actions: {
     //사용자 인증
-    sendEmail(context,data){
-      if (data.signUpDataForSend.password===data.password2){
-        console.log(data.signUpDataForSend.email)
-        axios.post(`${BACK_URL}/account/sendmail`, data.signUpDataForSend)
-        .then((res)=>{
-          this.commit('sendCheck')
-          alert("메일로 인증 코드가 발송되었습니다.")
-        })
-        .catch((err)=>{
-          console.log(err)
-        })
+    sendEmail({state},data){
+      if(state.isTerm){
+        if (data.signUpDataForSend.password===data.password2){
+          console.log(data.signUpDataForSend.email)
+          axios.post(`${BACK_URL}/account/sendmail`, data.signUpDataForSend)
+          .then((res)=>{
+            this.commit('sendCheck')
+            alert("메일로 인증 코드가 발송되었습니다.")
+          })
+          .catch((err)=>{
+            console.log(err)
+          })
+        }else{
+          alert("비밀번호를 다시 설정해주세요")
+        }
       }else{
-        alert("비밀번호를 다시 설정해주세요")
+        alert("약관에 동의해주세요")
       }
     },
     signUp({commit},signUpData){
