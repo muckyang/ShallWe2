@@ -28,8 +28,8 @@
             <textarea placeholder="내용을 입력해 주세요." class="form-control form-control-lg" v-model="articleData.description" id="content" cols="30" rows="10"></textarea>
           </div>
           <div class="pb-5">
-            <button class="font-weight-bold btn btn-dark" type="submit" @click="createArticle" value="Submit">Submit</button>
-            <button @click="tempArticle">임시저장</button>
+            <button class="font-weight-bold btn btn-dark" type="submit" @click="createArticle({articleData,temp:1})" value="Submit">Submit</button>
+            <button @click="tempSaveArticle({articleData,temp:0})">임시저장</button>
           </div>
       </div>
     </div>
@@ -39,6 +39,8 @@
 <script>
   const BACK_URL = 'http://127.0.0.1:8080'
   import axios from 'axios'
+    import {mapActions} from 'vuex'
+
 
   export default {
     name: "CreateView",
@@ -52,11 +54,11 @@
           writer : null,
           description: null,
         },
-        temp:1,
         imageUrl: null, //다시 검토
       };
     },
     methods: {
+      ...mapActions(['createArticle','tempSaveArticle']),
       imageUpload(){
         this.$refs.imageInput.click()
       },
@@ -65,39 +67,6 @@
         console.log('이미지 등록 됨?')
         const file = e.target.files[0];
         this.imageUrl = URL.createObjectURL(file);
-      },
-      createArticle(event) {
-
-        event.preventDefault()
-        const config = {
-          headers: {
-            Authorization: `${this.$cookies.get('auth-token')}`
-          }
-        }
-        axios.post(`${BACK_URL}/post/create/${this.temp}/${config.headers.Authorization}` ,this.articleData )
-          .then(res => { 
-            console.log(res.data) 
-            console.log(this.$cookies.get('auth-token'));
-
-            this.$router.push('article')
-          })
-          .catch(err => console.log(err.response.data))
-      },
-      tempArticle(event) {
-        event.preventDefault()
-        const config = {
-          headers: {
-            Authorization: `${this.$cookies.get('auth-token')}`
-          }
-          }
-          axios.post(`${BACK_URL}/post/create/${config.headers.Authorization}/${this.tempfalse}` ,this.articleData )
-          .then(res => { 
-            console.log(res.data) 
-            console.log(this.$cookies.get('auth-token'));
-
-            this.$router.push('tempList')
-          })
-          .catch(err => console.log(err.response.data))
       },
     }
   }

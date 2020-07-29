@@ -1,8 +1,18 @@
 <template>
   <div id="app">
-    <Header :isHeader="isHeader"/>
-    <router-view/>
-    <Footer/>
+    <!-- 헤더 -->
+    <div class="container">
+      <Header :isHeader="isHeader"/>
+    </div>
+    <!-- 메인 -->
+    <div class="container">
+      <router-view/>
+    </div>
+    <div style="background-color: #fec9c9;">
+      <div class="container">
+        <Footer/>
+      </div>
+    </div>
   </div>
 </template>
 

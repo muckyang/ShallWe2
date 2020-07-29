@@ -11,6 +11,7 @@ import Join from '../components/user/Join.vue'
 import editUser from '../components/user/editUser.vue'
 import Profile from '../components/user/Profile.vue'
 import emailAuthenticate from '../components/user/emailAuthenticate.vue'
+import SignUpComplete from '../components/user/SignUpComplete.vue'
 
 // 아티클
 import articleCreate from '../views/articles/articleCreate.vue'
@@ -28,7 +29,7 @@ import err500 from '../views/errors/err500.vue'
 
 
 //검색
-// import search from '../components/article/search.vue';
+import searchList from '../views/searchList.vue';
 
 Vue.use(VueRouter)
 
@@ -120,7 +121,17 @@ Vue.use(VueRouter)
       path: '/500',
       component: err500
     },
-
+    // 회원가입 완료
+    {
+      path: '/user/signupcomplete',
+      name: SignUpComplete,
+      component: SignUpComplete
+    },
+    {
+      path:'/search',
+      name: 'searchList',
+      component: searchList
+    }
   
   
   ]
