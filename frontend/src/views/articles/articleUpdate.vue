@@ -20,7 +20,7 @@
           </div>
       </div>
     </div>
-    <button class="btn btn-secondary" type="submit" @click="updateItem">수정</button>
+    <button class="btn btn-secondary" type="submit" @click="updateArticle({articleUpdateData,temp:1})">수정</button>
     <button class="ml-1 btn btn-danger" type="submit" @click="deleteItem">삭제</button>
   </div>
 </template>
@@ -33,19 +33,16 @@ export default {
     name:'articleUpdate',
     data () {
       return {
-        article: {
-          pid: this.$route.params.ID,
+        articleUpdateData: {
+          articleId: this.$route.params.ID,
+          categoryId:null,
           title: null,
-          description: null,
-          writer: null,
-         
+          address:null,
+          description:null,
+          MinPrice:null,
+          urlLink:null,
+          endTime:null,
         },
-         temptrue: true,
-          tempfalse: false,
-        temparticle: {
-          title: null
-          
-        }
       }
     },
     methods: {
@@ -56,7 +53,7 @@ export default {
             Authorization: `${this.$cookies.get('auth-token')}`
           }
         }
-        axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}/`)
+        axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}`)
           .then((res) => {
             this.temparticle.title = res.data.title
           })
@@ -88,39 +85,26 @@ export default {
         },
         
         getItem () {
-        const config = {
-          headers: {
-            Authorization: `${this.$cookies.get('auth-token')}`
+          const config = {
+            headers: {
+              Authorization: `${this.$cookies.get('auth-token')}`
+            }
           }
-        }
-        axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}/`)
-        .then((response)=>{
-          console.log(response)
-          this.article.pid = response.data.pid
-          this.article.title = response.data.title
-          this.article.price = response.data.price
-          this.article.description = response.data.description
-        })
-        .catch((err)=>{
-          console.error(err)
-        })
-        },
-        updateItem()
-        {
-          event.preventDefault()
-          axios.post(`${BACK_URL}/post/update/${this.temptrue}`, this.article)
-          .then((response) => {
-            this.$router.push({name:'articleDetail',params:this.$route.params.ID})
-            })
+          axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}/`)
+          .then((response)=>{
+            console.log(response)
+            this.article.pid = response.data.pid
+            this.article.title = response.data.title
+            this.article.price = response.data.price
+            this.article.description = response.data.description
+          })
           .catch((err)=>{
             console.error(err)
           })
         },
-        deleteItem()
-        {
-          event.preventDefault()
-          axios.get(BACK_URL+'/post/delete/'+this.$route.params.ID)
-          this.$router.push({name:'articleList'})
+
+        deleteItem(){
+          
         },    
     },
     created: function(){
