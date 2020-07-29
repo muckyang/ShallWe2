@@ -77,5 +77,15 @@ export default {
 </script>
 
 <style>
-
+  .navbar1 {
+    height: 30px; 
+    
+  }
+  .navbar1-item {
+    font-size: 12px;
+  }
+  .dropdown-toggle {
+    background-color: white;
+    border: white;
+  }
 </style>
