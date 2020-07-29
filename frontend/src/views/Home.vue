@@ -1,5 +1,6 @@
 <template>
     <div>
+        <hr class="mt-2 mb-2">
         <!-- Carousel -->
         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
@@ -26,9 +27,9 @@
             </a>
         </div>
         <!-- 섹션1 -->
-        <hr>
-        <div class="blank-section d-flex align-items-center justify-content-center">
-            <h5 style="color: #fec9c9;">- 실시간 게시물 -</h5>
+        <hr class="mt-2">
+        <div class="homeMenu blank-section d-flex align-items-center justify-content-center ">
+            <h2 style="color: #fec9c9;"> 실시간 게시물 </h2>
         </div>
         <hr>
         <section style="background-color: white;">
@@ -101,8 +102,8 @@
         </section>
         <hr>
         <!-- 섹션2 -->
-        <div class="blank-section d-flex align-items-center justify-content-center">
-            <h5 style="color: #6d9d88;">- 베스트 후기 -</h5>
+        <div class="homeMenu blank-section d-flex align-items-center justify-content-center">
+            <h2 style="color: #6d9d88;"> 베스트 후기 </h2>
         </div>
         <hr>
         <section style="background-color: white;">
@@ -211,14 +212,25 @@ export default {
 </script>
 
 <style>
-    .words {
-        color: wheat;
-    }
-    .carousel-item {
-        height: 400px;
-    }
-    .blank-section {
-        background-color: white;
-        height: 150px;
-    }
+
+@font-face { font-family: 'BMJUA'; 
+src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff'); 
+font-weight: normal; 
+font-style: normal; }
+.homeMenu{
+font-family: BMJUA;
+font-weight: normal;
+font-style: normal;
+font-size: 1.2em;
+}
+.words {
+    color: wheat;
+}
+.carousel-item {
+    height: 500px;
+}
+.blank-section {
+    background-color: white;
+    height: 130px;
+}
 </style>
