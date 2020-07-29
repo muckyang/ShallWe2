@@ -1,27 +1,26 @@
 <template>
   <div>
-    <label for="">Title</label>
-    <input type="text" v-model="articleData.title">
-    <label for="">writer</label>
-    <input type="text" v-model="articleData.writer">
-    <label for="">address</label>
-    <input type="text" v-model="articleData.address">
-    <label for="">description</label>
-    <input type="text" v-model="articleData.description">
-    <label for="">minPrice</label>
-    <input type="number" v-model="articleData.minPrice">
-    <label for="">sumPrice</label>
-    <input type="number" v-model="articleData.sumPrice">
-    <label for="">urlLink</label>
-    <input type="text" v-model="articleData.urlLink">
-    <label for="">Image</label>
-    <input type="image" v-model="articleData.Image">
-    <label for="">Temp</label>
+    <hr>
+    <label for="">카테고리</label>
     <input type="number" v-model="articleData.Temp">
-    <button class="font-weight-bold btn btn-dark" type="submit" @click="createArticle({articleData,temp:1})" value="Submit">Submit</button>
-    <button @click="tempSaveArticle({articleData,temp:0})">임시저장</button>
-
-
+    <hr>
+    <label for="">제목</label>
+    <input type="text" v-model="articleData.title">
+    <hr>
+    <label for="">작성자</label>
+    <input type="text" v-model="articleData.writer">
+    <hr>
+    <label for="">주소</label>
+    <input type="text" v-model="articleData.address">
+    <hr>
+    <label for="">내용</label>
+    <input type="text" v-model="articleData.description">
+    <hr>
+    <label for="">최소주문금액</label>
+    <input type="number" v-model="articleData.minPrice">
+    <hr>
+    <button class="btn btn-primary" type="submit" @click="createArticle({articleData,temp:1})" value="Submit">작성완료</button>
+    <button class="btn btn-info" @click="tempSaveArticle({articleData,temp:0})">임시저장</button>
 
     <!-- <div class="container m-5 mx-auto font-weight-bold">
       <div class="shadow border rounded m-5">
