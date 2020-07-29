@@ -30,19 +30,28 @@
 <script>
 export default {
     name: 'Footer',
-
 }
 </script>
 
 <style>
     .sub-footer {
-        height: 200px;
-        background-color: black;
-    }
-    .sub-footer-h1 {
-        color: white;
+        height: 250px;
+        background-color: #fec9c9;
     }
     .sub-footer-p {
         color: white;
+    }
+    .insta {
+        color: white;
+        font-size: 50px;
+    }
+    .footer-blank {
+        height: 30px;
+    }
+    .my-board {
+        font-stretch: extra-condensed;
+    }
+    .footer {
+        background-color: #fec9c9;
     }
 </style>
