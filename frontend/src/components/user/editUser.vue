@@ -113,6 +113,8 @@ export default {
                 .then((response)=>{
                     console.log(response)
                     alert("수정이 완료되었습니다.")
+                     axios.defaults.headers.common['Authorization'] = "null";
+
                 })
                 .catch((err)=>{
                     console.error(err)

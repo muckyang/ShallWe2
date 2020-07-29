@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -43,9 +44,9 @@ public class CommentController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/comment/create/{token}")
+    @PostMapping("/comment/create")
     @ApiOperation(value = "댓글등록")
-    public Object create(@Valid @RequestBody CommentRequest request, @PathVariable String token)
+    public Object create(@Valid @RequestBody CommentRequest request, @RequestHeader String token)
             throws MessagingException, IOException {
         System.out.println("댓글등록");
         System.out.println(request.getArticleId());
@@ -84,7 +85,7 @@ public class CommentController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/comment/update/")
+    @PostMapping("/comment/update")
     @ApiOperation(value = "댓글수정")
     public Object update(@Valid @RequestBody CommentRequest request) {
 

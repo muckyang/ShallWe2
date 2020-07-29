@@ -13,9 +13,12 @@ import com.web.blog.dao.CommentDao;
 import com.web.blog.dao.LikeDao;
 // import com.web.blog.dao.LikeDao;
 import com.web.blog.dao.PostDao;
+import com.web.blog.dao.TagDao;
 import com.web.blog.dao.UserDao;
 import com.web.blog.model.post.PostListResponse;
 import com.web.blog.model.post.PostResponse;
+import com.web.blog.model.post.PostSearchRequest;
+import com.web.blog.model.tag.Tag;
 import com.web.blog.model.like.Like;
 import com.web.blog.model.post.PostRequest;
 import com.web.blog.model.post.Post;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -61,13 +65,15 @@ public class PostController {
     CommentDao commentDao;
     @Autowired
     ArticleTagDao articleTagDao;
+    @Autowired
+    TagDao tagDao;
 
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/post/create/{temp}/{token}")
+    @PostMapping("/post/create/{temp}")
     @ApiOperation(value = "게시글및임시글등록")
-    public Object create(@Valid @RequestBody PostRequest request, @PathVariable int temp, @PathVariable String token)
+    public Object create(@Valid @RequestBody PostRequest request, @PathVariable int temp ,@RequestHeader(value = "Authorization") String token)
             throws MessagingException, IOException {
         if (temp == 0) {// 임시저장
             System.out.println(token);
@@ -141,9 +147,9 @@ public class PostController {
         }
     }
 
-    @GetMapping("/post/read/{temp}/{token}") // temp 값 int 로 변경예정
+    @PostMapping("/post/read/{temp}/{categoryId}") // temp 값 int 로 변경예정
     @ApiOperation(value = "게시글 및 임시글 목록")
-    public Object read(@PathVariable int temp, @PathVariable String token) throws MessagingException, IOException {
+    public Object read(@PathVariable int temp,@PathVariable int categoryId, @RequestHeader String token) throws MessagingException, IOException {
         if (temp == 0) {
             System.out.println("임시글 목록 출력!!");
 
@@ -162,30 +168,16 @@ public class PostController {
                         p.getAddress(), p.getMinPrice(), p.getDescription(), p.getWriter(), p.getUrlLink(),
                         p.getImage(), p.getBillImage(), p.getTemp(), p.getEndTime()));
 
-                // Optional<Like> llist = likeDao.findLikeByArticleno(articleno);
-                // List<Like> llist = postDao.findLikeByArticleno(articleno);
-                // System.out.println("list return success");
-                // int likenum = llist.size();
-                // System.out.println(likenum);
-                // result.postList.get(i).likenum = likenum;
-                // if (userOpt.isPresent()) {// 로그인 상태일때
-                // Optional<Like> isILike =
-                // likeDao.findLikeByUseridArticleno(userOpt.get().getId(), articleno);
-                // if (isILike.isPresent()) {// 좋아요 한 경우
-                // result.postList.get(i).isLike = true;
-                // } else {// 좋아요 하지 않은경우
-                // result.postList.get(i).isLike = false;
-                // }
-                // } else {// 비 로그인 경우 좋아요 안한 상태!
-                // result.postList.get(i).isLike = false;
-                // }
             }
             return new ResponseEntity<>(result, HttpStatus.OK);
         } else if (temp == 1) {
+            List<Post> plist;
             System.out.println("게시물 목록 출력!!");
-
-            List<Post> plist = postDao.findPostByTemp(temp);
-            // System.out.println(plist.get(0).getTitle());
+            if(categoryId == 0 )// 전체 게시물 출력
+                plist = postDao.findPostByTemp(temp);
+            else 
+                plist = postDao.findPostByTempAndCategoryId(temp,categoryId);
+                // System.out.println(plist.get(0).getTitle());
             PostListResponse result = new PostListResponse();
             result.postList = new LinkedList<>();
             for (int i = 0; i < plist.size(); i++) { // 각 게시물 마다 좋아요 수 가져오기
@@ -233,9 +225,67 @@ public class PostController {
         }
     }
 
-    @GetMapping("/post/detail/{articleId}/{token}") // SWAGGER UI에 보이는 REQUEST명
+    @PostMapping("/post/search/{temp}/{categoryId}") 
+    @ApiOperation(value = "검색 목록")
+    public Object search(@RequestBody PostSearchRequest request , @PathVariable int temp , int categoryId) throws MessagingException, IOException {
+        String subject = request.getSubject();
+        String word = request.getWord();
+
+        if (subject.equals("title")) {
+            word = "%" + word + "%";
+            List<Post> tlist = postDao.findPostByTitleLike(word);
+
+            PostListResponse result = new PostListResponse();
+            result.postList = new LinkedList<>();
+            for (int i = 0; i < tlist.size(); i++) { // 각 게시물 마다 좋아요 수 가져오기
+                Post p = tlist.get(i);
+                // int articleno = p.getPid();
+                result.postList.add(new PostResponse(p.getArticleId(), p.getCategoryId(), p.getUserId(), p.getTitle(),
+                        p.getAddress(), p.getMinPrice(), p.getDescription(), p.getWriter(), p.getUrlLink(),
+                        p.getImage(), p.getBillImage(), p.getTemp(), p.getEndTime()));
+            }
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else if (subject.equals("writer")) {
+            word = "%" + word + "%";
+            List<Post> tlist = postDao.findPostByWriterLike(word);
+
+            PostListResponse result = new PostListResponse();
+            result.postList = new LinkedList<>();
+            for (int i = 0; i < tlist.size(); i++) { // 각 게시물 마다 좋아요 수 가져오기
+                Post p = tlist.get(i);
+                // int articleno = p.getPid();
+                result.postList.add(new PostResponse(p.getArticleId(), p.getCategoryId(), p.getUserId(), p.getTitle(),
+                        p.getAddress(), p.getMinPrice(), p.getDescription(), p.getWriter(), p.getUrlLink(),
+                        p.getImage(), p.getBillImage(), p.getTemp(), p.getEndTime()));
+            }
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else if (subject.equals("tag")) {
+            Optional<Tag> tag = tagDao.findTagByName(word);// 해당 태그의 tagId가져옴
+            int tId = tag.get().getTagId();
+
+            List<ArticleTag> atlist = articleTagDao.findArticleTagByTagId(tId);// 해당 tagId의 articleId들 가져옴
+            PostListResponse result = new PostListResponse();
+            result.postList = new LinkedList<>();
+            for (int i = 0; i < atlist.size(); i++) {
+                int aId = atlist.get(i).getArticleId();
+                Optional<Post> article = postDao.findPostByArticleId(aId);
+                Post p = article.get();
+                result.postList.add(new PostResponse(p.getArticleId(), p.getCategoryId(), p.getUserId(), p.getTitle(),
+                        p.getAddress(), p.getMinPrice(), p.getDescription(), p.getWriter(), p.getUrlLink(),
+                        p.getImage(), p.getBillImage(), p.getTemp(), p.getEndTime()));
+            }
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("temp 해당 없음", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @PostMapping("/post/detail/{articleId}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "게시물상세보기") // SWAGGER UI에 보이는 이름
-    public Object detail(@PathVariable int articleId, @PathVariable String token) {
+    public Object detail(@PathVariable int articleId, @RequestHeader String token) {
         // 토큰 받아오면 그 토큰으로 유효성 검사 후 uid 받아와서 좋아요 한지 여부 확인
         Optional<Post> postOpt = postDao.findPostByArticleId(articleId);
         Post p = postOpt.get();
@@ -308,7 +358,6 @@ public class PostController {
             post.setDescription(request.getDescription());
             post.setUrlLink(request.getUrlLink());
             post.setImage(request.getImage());
-            post.setBillImage(request.getBillImage());
             post.setTemp(temp);
             post.setEndTime(request.getEndTime());
 

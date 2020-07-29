@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 // import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiResponse;
@@ -41,9 +42,9 @@ public class LikeController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/like/{articleId}/{token}") // SWAGGER UI에 보이는 REQUEST명
+    @PostMapping("/like/{articleId}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "좋아요 / 좋아요 취소")
-    public Object Like(@Valid @PathVariable int articleId, @PathVariable String token) {
+    public Object Like(@Valid @PathVariable int articleId, @RequestHeader String token) {
         String message = "";
         User jwtuser = jwtService.getUser(token);
         Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
@@ -86,9 +87,9 @@ public class LikeController {
         }
     }
 
-    @PostMapping("/likedcheck/{articleId}/{token}") // SWAGGER UI에 보이는 REQUEST명
+    @PostMapping("/likedcheck/{articleId}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "좋아요여부 확인")
-    public Object LikeCheck(@Valid @PathVariable int articleId, @PathVariable String token) {
+    public Object LikeCheck(@Valid @PathVariable int articleId, @RequestHeader String token) {
         String message = "";
         User jwtuser = jwtService.getUser(token);
         Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
