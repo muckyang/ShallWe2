@@ -6,11 +6,7 @@
     <hr>
     <label for="">제목</label>
     <input type="text" v-model="articleData.title">
-    <hr>
-    <label for="">작성자</label>
-    <input type="text" v-model="articleData.writer">
-    <hr>
-    <label for="">주소</label>
+    <label for="">address</label>
     <input type="text" v-model="articleData.address">
     <hr>
     <label for="">내용</label>
@@ -18,9 +14,18 @@
     <hr>
     <label for="">최소주문금액</label>
     <input type="number" v-model="articleData.minPrice">
-    <hr>
-    <button class="btn btn-primary" type="submit" @click="createArticle({articleData,temp:1})" value="Submit">작성완료</button>
-    <button class="btn btn-info" @click="tempSaveArticle({articleData,temp:0})">임시저장</button>
+    <label for="">urlLink</label>
+    <input type="text" v-model="articleData.urlLink">
+    <label for="">Image</label>
+    <input type="image" v-model="articleData.Image">
+    <label for="">Temp</label>
+    <input type="number" v-model="articleData.temp">
+    <label for="">category</label>
+    <input type="number" v-model="articleData.categoryId">
+    <button class="font-weight-bold btn btn-dark" type="submit" @click="createArticle({articleData,temp:1})" value="Submit">Submit</button>
+    <button @click="tempSaveArticle({articleData,temp:0})">임시저장</button>
+
+
 
     <!-- <div class="container m-5 mx-auto font-weight-bold">
       <div class="shadow border rounded m-5">
@@ -76,6 +81,7 @@
           urlLink: null,
           imgae: null,
           temp: null,
+          token:this.$cookies.get('auth-token')
         },
         imageUrl: null, //다시 검토
       };

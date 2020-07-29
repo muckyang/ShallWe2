@@ -74,8 +74,7 @@ public class PostController {
 
     @PostMapping("/post/create/{temp}")
     @ApiOperation(value = "게시글및임시글등록")
-    public Object create(@Valid @RequestBody PostRequest request, @PathVariable int temp)
-            throws MessagingException, IOException {
+    public Object create(@Valid @RequestBody PostRequest request, @PathVariable int temp) throws MessagingException, IOException {
               String token =   request.getToken();
         if (temp == 0) {// 임시저장
             System.out.println(token);
@@ -287,12 +286,12 @@ public class PostController {
 
     @PostMapping("/post/detail/{articleId}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "게시물상세보기") // SWAGGER UI에 보이는 이름
-    public Object detail(@PathVariable int articleId, @RequestHeader(value = "Authorization") String token) {
+    public Object detail(@PathVariable int articleId, @RequestBody TokenRequest request) {
         // 토큰 받아오면 그 토큰으로 유효성 검사 후 uid 받아와서 좋아요 한지 여부 확인
         Optional<Post> postOpt = postDao.findPostByArticleId(articleId);
         Post p = postOpt.get();
         if (postOpt.isPresent()) {
-
+            String token = request.getToken();
             User jwtuser = jwtService.getUser(token);
             Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
             PostResponse result = new PostResponse(p.getArticleId(), p.getCategoryId(), p.getUserId(), p.getTitle(),

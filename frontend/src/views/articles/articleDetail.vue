@@ -5,14 +5,14 @@
       <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
         <img class="MyImage" src="https://source.unsplash.com/random" alt="...">
         <div class="articleInfo">
-          <div class="title"><p>{{ article.title }}</p></div>
+          <div class="title"><p>{{ articleData.title }}</p></div>
           <div><p>가격 들어갈 자리</p></div>
-          <div class="writer"><p>{{ article.price }}</p></div>
-          <div class="description" id="item-1"><p>{{ article.description }}</p></div>
-          <div class="update btn btn-secondary"><router-link class="text-white text-decoration-none" :to="{name:'articleUpdate', params: {ID: `${article.pid}`}}">수정</router-link></div>
+          <div class="minPrice"><p>{{ articleData.minPrice }}</p></div>
+          <div class="description" id="item-1"><p>{{ articleData.description }}</p></div>
+          <div class="update btn btn-secondary"><router-link class="text-white text-decoration-none" :to="{name:'articleUpdate', params: {ID: `${articleData.articleId}`}}">수정</router-link></div>
         </div> 
-        <div><articleLike  @like-change="likeChange" :isLiked="isLiked" :article="article"/></div>
-        <div class="update"><router-link :to="{name:'articleUpdate', params: {ID: `${article.pid}`}}">수정</router-link></div>
+        <!-- <div><articleLike  @like-change="likeChange" :isLiked="isLiked" :articleData="articleData"/></div> -->
+        <div class="update"><router-link :to="{name:'articleUpdate', params: {ID: `${articleData.articleId}`}}">수정</router-link></div>
 
         <a href="javascript:;" @click="shareContent" id="kakao-link">
           <img src="../../assets/img/kakao_btn.png">
@@ -20,7 +20,7 @@
 
       </div> 
     </div>
-    <commentList/>
+    <!-- <commentList/> -->
   </div>
 </template>
 
@@ -29,7 +29,7 @@
 <script>
   const BACK_URL = "http://127.0.0.1:8080"
   import axios from "axios"
-  import {mapActions} from 'vuex'
+  import {mapState,mapActions} from 'vuex'
   import commentList from '@/components/comments/commentList'
   import articleLike from '@/components/articles/articleLike'
   
@@ -41,12 +41,6 @@
     },
     data () {
       return {
-        article: {
-          pid:null,
-          title: null,
-          price: null,
-          description: null,
-        },
         isLiked:null,
       }
     },
@@ -109,6 +103,10 @@
     created: function(){
       this.getArticle(this.$route.params.ID)
     },
+    computed:{
+      ...mapState(['articleData'])
+      
+    }
   }
 </script>
 
