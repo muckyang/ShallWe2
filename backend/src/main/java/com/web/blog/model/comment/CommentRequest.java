@@ -14,5 +14,6 @@ public class CommentRequest {
     @ApiModelProperty(required = true)
     @NotNull
     String content;
+    String token;
         
 }

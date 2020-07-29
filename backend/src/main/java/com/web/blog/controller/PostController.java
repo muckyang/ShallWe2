@@ -22,6 +22,7 @@ import com.web.blog.model.tag.Tag;
 import com.web.blog.model.like.Like;
 import com.web.blog.model.post.PostRequest;
 import com.web.blog.model.post.Post;
+import com.web.blog.model.user.TokenRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
 
@@ -73,8 +74,9 @@ public class PostController {
 
     @PostMapping("/post/create/{temp}")
     @ApiOperation(value = "게시글및임시글등록")
-    public Object create(@Valid @RequestBody PostRequest request, @PathVariable int temp ,@RequestHeader(value = "Authorization") String token)
+    public Object create(@Valid @RequestBody PostRequest request, @PathVariable int temp)
             throws MessagingException, IOException {
+              String token =   request.getToken();
         if (temp == 0) {// 임시저장
             System.out.println(token);
             User jwtuser = jwtService.getUser(token);
@@ -149,10 +151,10 @@ public class PostController {
 
     @PostMapping("/post/read/{temp}/{categoryId}") // temp 값 int 로 변경예정
     @ApiOperation(value = "게시글 및 임시글 목록")
-    public Object read(@PathVariable int temp,@PathVariable int categoryId, @RequestHeader(value = "Authorization")  String token) throws MessagingException, IOException {
+    public Object read(@RequestBody TokenRequest request, @PathVariable int temp,@PathVariable int categoryId) throws MessagingException, IOException {
         if (temp == 0) {
             System.out.println("임시글 목록 출력!!");
-
+            String token = request.getToken();
             User jwtuser = jwtService.getUser(token);
             Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
 
