@@ -1,7 +1,6 @@
 package com.web.blog.controller;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
@@ -14,6 +13,7 @@ import com.web.blog.model.user.UserResponse;
 import com.web.blog.model.auth.Auth;
 import com.web.blog.model.user.AuthRequest;
 import com.web.blog.model.user.SignupRequest;
+import com.web.blog.model.user.TokenRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
 
@@ -26,7 +26,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,7 +34,6 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.thymeleaf.context.Context;
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = UserResponse.class),
@@ -62,23 +60,22 @@ public class AccountController {
     @Autowired
     private JwtService jwtService;
 
-    @GetMapping("/account/login/{id}/{password}") // SWAGGER UI에 보이는 REQUEST명
+    @GetMapping("/account/login/{email}/{password}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "로그인") // SWAGGER UI에 보이는 이름
     // public Object login(@RequestParam(required = true) final String id,
     // @RequestParam(required = true) final String password) {
-    public Object login(@PathVariable String id, @PathVariable String password) {
+    public Object login(@PathVariable String email, @PathVariable String password) {
 
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(id, password);
+        Optional<User> userOpt = userDao.findUserByEmailAndPassword(email, password);
         ResponseEntity<Object> response = null;
 
         if (userOpt.isPresent()) {
 
             System.out.println("로그인성공");
-            System.out.println(id);
+            System.out.println(email);
             User user = new User();
-            user.setId(id);
+            user.setEmail(email);
             user.setPassword(password);
-            user.setEmail(userOpt.get().getEmail());
             // 토큰 생성
             String token = jwtService.createLoginToken(user);
             // 복호화
@@ -97,7 +94,6 @@ public class AccountController {
     @PostMapping("/account/sendmail")
     @ApiOperation(value = "인증메일 발송")
     public Object sendmail(@Valid @RequestBody AuthRequest request) throws MessagingException, IOException {
-        String email = request.getEmail();
 
         int authNumber = (int) (Math.random() * 1000000); // 난수 생성
         Optional<Auth> OptionalAuth = authDao.getAuthByEmail(request.getEmail());
@@ -146,7 +142,6 @@ public class AccountController {
         // 이메일, 닉네임 중복처리
 
         User user = new User();
-        user.setId(request.getId());
         user.setPassword(request.getPassword());
         user.setEmail(request.getEmail());
         user.setName(request.getName());
@@ -166,23 +161,26 @@ public class AccountController {
 
     @PostMapping("/account/read") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "프로필 조회")
-    public Object info(@RequestHeader(value = "Authorization") String token) {
+    public Object info(@RequestBody TokenRequest request) {
+    // @RequestHeader(value = "Authorization") String token
+    
+        String token = request.getToken(); 
+        System.out.println(token);
 
         // Optional<User> userOpt = userDao.findById(id);
         ResponseEntity<Object> response = null;
         System.out.println("프로필 조회 ! ");
 
 
-        
+
         User jwtuser = jwtService.getUser(token);
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
 
         if (userOpt.isPresent()) {
             UserResponse result = new UserResponse();
             result.email = userOpt.get().getEmail();
             result.password = userOpt.get().getPassword();
             result.name = userOpt.get().getName();
-            result.id = userOpt.get().getId();
             result.address = userOpt.get().getAddress();
             result.nickname = userOpt.get().getNickname();
             result.birthday = userOpt.get().getBirthday();
@@ -198,24 +196,22 @@ public class AccountController {
 
     @PostMapping("/account/update")
     @ApiOperation(value = "수정하기")
-    public Object update(@Valid @RequestBody SignupRequest request, @RequestHeader(value = "Authorization") String token) {
-        if (token == "null") // 비로그인 상태일 때 
-            System.out.println("null");
-        else
-            System.out.println(" token : " + token);
+    public Object update(@Valid @RequestBody SignupRequest request) {
+        String token = request.getToken();
+       
         // 복호화
         User jwtuser = jwtService.getUser(token);
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
         String message = "";
 
         System.out.println("수정하기 - token 검색");
         if (userOpt.isPresent()) {
             // 이메일, 닉네임 중복처리
             System.out.println("token으로 찾기 완료 ");
-            User user = userDao.getUserById(request.getId());
+            User user = userDao.getUserByEmail(request.getEmail());
             System.out.println("id로 검색");
 
-            Optional<User> isNickname = userDao.getUserByNickname(request.getNickname());
+            // Optional<User> isNickname = userDao.getUserByNickname(request.getNickname());
 
             user.setPassword(request.getPassword());
             user.setName(request.getName());
@@ -245,14 +241,14 @@ public class AccountController {
 
     @PostMapping("/account/delete")
     @ApiOperation(value = "삭제하기")
-    public Object delete( @RequestHeader(value = "Authorization") String token) {
-
+    public Object delete( @RequestBody TokenRequest request) {
+        String token = request.getToken();
         User jwtuser = jwtService.getUser(token);
 
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
         String message = "";
         if (userOpt.isPresent()) {
-            User user = userDao.getUserById(jwtuser.getId());
+            User user = userDao.getUserByEmail(jwtuser.getEmail());
 
             // FK 연동된것 삭제 /// 완료테이블 있어야 할 것 같음
             // 1. 거래참가자 테이블에 없어야 됨 (존재한다면 alert 표시)
