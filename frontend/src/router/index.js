@@ -29,7 +29,7 @@ import err500 from '../views/errors/err500.vue'
 
 
 //검색
-// import search from '../components/article/search.vue';
+import searchList from '../views/searchList.vue';
 
 Vue.use(VueRouter)
 
@@ -127,6 +127,11 @@ Vue.use(VueRouter)
       name: SignUpComplete,
       component: SignUpComplete
     },
+    {
+      path:'/search',
+      name: 'searchList',
+      component: searchList
+    }
   
   
   ]

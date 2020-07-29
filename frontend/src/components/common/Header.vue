@@ -26,24 +26,28 @@
           <li class="nav-item"><router-link to="#" class="nav-link">CommunityList</router-link></li>
         </ul>
         <!-- Search -->
-        <div class="dropdown">
-          <button class="btn btn btn-light dropdown-toggle mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            선택
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">제목</a>
-            <a class="dropdown-item" href="#">작성자</a>
-            <a class="dropdown-item" href="#">태그</a>
+        <div class="form-inline my-2 my-lg-0">
+          <div class="dropdown mr-1">
+            <button class="btn btn-secondary dropdown-toggle" 
+            type="button" id="dropdownMenuButton" 
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{item}}  
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#" @click="selectTitle">제목</a>
+              <a class="dropdown-item" href="#" @click="selectWriter">작성자</a>
+              <a class="dropdown-item" href="#" @click="selectTag">태그</a>
+            
           </div>
         </div>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" 
-          type="search" placeholder="검색" 
+          <input class="form-control d-inline mr-1" type="search" 
+          style="font-family: FontAwesome;" 
+          :placeholder="icon" v-model="searchData.word" 
+          @keypress.enter="search" 
           aria-label="Search">
 
           <button class="btn btn-outline-secondary my-2 my-sm-0" 
-          type="submit"><i class="fas fa-search"></i></button>
-        </form>
+          type="submit" @click="search">검색</button>
+        </div>
       </div>
     </nav>
   </div>
@@ -53,6 +57,9 @@
                     
 import constants from "../../lib/constants";
 import {mapState, mapMutations} from 'vuex'
+import router from '@/router'
+import axios from "axios"
+const BACK_URL = "http://127.0.0.1:8080"
 
 export default {
   name: "Header",
@@ -61,11 +68,52 @@ export default {
   data: function() {
     return {
       constants,
-      keyword: "",
+      icon:'\uf002',
+      searchData:{
+        subject:'',
+        word:'',
+      },
+      item:'',
     }
   },
   methods: {
     ...mapMutations(['REMOVE_TOKEN','loginCheck']),
+    selectTitle(){
+      this.searchData.subject = 'title'
+      this.item = '제목'
+    },
+    selectWriter(){
+      this.searchData.subject = 'writer'
+      this.item = '작성자'
+    },
+    selectTag(){
+      this.searchData.subject = 'tag'
+      this.item = '태그'
+    },
+    search(){
+      if(this.searchData.word&&this.searchData.subject){
+        console.log(this.searchData.word)
+        console.log(this.searchData.subject)
+        
+        console.log('데이터', this.searchData)
+        const config = {
+          headers: {
+            Authorization : `${this.$cookies.get('auth-token')}`
+          }
+        }
+        axios.get(`${BACK_URL}/post/read/1/${config.headers.Authorization}`, this.searchData)
+          .then((res) =>{
+            console.log(res.data)
+            this.$router.push('/search')
+          })
+        router.push('/search')
+        this.keyword=''
+      }else if(this.searchData.word){
+        alert('카테고리를 선택하세요!')
+      }else if(this.searchData.subject){
+        alert('검색어를 입력하세요!')
+      }
+    }
   },
   computed:{
     ...mapState(['isLoggedin'])
