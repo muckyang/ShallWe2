@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface ArticleTagDao extends JpaRepository<ArticleTag, String>{
-    List<ArticleTag> findArticleTagByArticleId(int ariticleId);
+    List<ArticleTag> findArticleTagByArticleId(int articleId);
+    List<ArticleTag> findArticleTagByTagId(int tagId);
 }

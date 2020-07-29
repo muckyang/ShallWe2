@@ -108,6 +108,7 @@ export default new Vuex.Store({
       axios.get(`${BACK_URL}/account/read/${config.headers.Authorization}`)
       .then((response)=>{
         commit('GET_USERDATA',response.data)
+        axios.defaults.headers.common['Authorization'] = config.headers.Authorization;
       })
       .catch((err)=>{
           console.error(err)

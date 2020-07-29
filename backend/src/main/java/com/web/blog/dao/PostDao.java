@@ -13,8 +13,12 @@ public interface PostDao extends JpaRepository<Post, String> {
     // Post getUserByNickname(String nickname);
     Post getPostByArticleId(int articleId);
     List<Post> findPostByTemp(int temp);
+    List<Post> findPostByTempAndCategoryId(int temp,int categoryId);
     List<Post> findPostByTempAndWriter(int temp, String writer);
     Optional<Post> findPostByArticleId(int articleId);
+    
+    List<Post> findPostByTitleLike(String word);
+    List<Post> findPostByWriterLike(String word);
 
 
 }

@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.thymeleaf.context.Context;
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = UserResponse.class),
@@ -98,9 +98,8 @@ public class AccountController {
     @ApiOperation(value = "인증메일 발송")
     public Object sendmail(@Valid @RequestBody AuthRequest request) throws MessagingException, IOException {
         String email = request.getEmail();
-        
 
-        int authNumber = (int)(Math.random() * 1000000); //난수 생성
+        int authNumber = (int) (Math.random() * 1000000); // 난수 생성
         Optional<Auth> OptionalAuth = authDao.getAuthByEmail(request.getEmail());
         if (OptionalAuth.isPresent()) {
             Auth auth = OptionalAuth.get();
@@ -130,15 +129,14 @@ public class AccountController {
             String html = TemplateEngine.process("mail-template", context);
             helper.setText(html, true);
             javaMailSender.send(mailmessage);
-            
+
         } catch (Exception e) {
             System.out.println("메일전송 실패!");
             return new ResponseEntity<>("error", HttpStatus.BAD_REQUEST);
         }
-        
+
         System.out.println("메일전송 성공!");
         return new ResponseEntity<>("success", HttpStatus.OK);
-    
 
     }
 
@@ -154,100 +152,28 @@ public class AccountController {
         user.setName(request.getName());
         user.setNickname(request.getNickname());
         user.setAddress(request.getAddress());
-        user.setUserPoint(1000);//최초 가입시 1000점으로 
+        user.setUserPoint(1000);// 최초 가입시 1000점으로
         user.setBirthday(request.getBirthday());
 
         userDao.save(user);
 
         System.out.println("가입하기 성공!");
         final UserResponse result = new UserResponse();
-        
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/account/update/{token}")
-    @ApiOperation(value = "수정하기")
-    public Object update(@Valid @RequestBody SignupRequest request, @PathVariable String token) {
-        
-        // 복호화
-        User jwtuser = jwtService.getUser(token);
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
-        String message = "";
-        
-        System.out.println("수정하기 - token 검색");
-        if (userOpt.isPresent()) {
-            // 이메일, 닉네임 중복처리
-            System.out.println("token으로 찾기 완료 ");
-            User user = userDao.getUserById(request.getId());
-            System.out.println("id로 검색");
 
-            Optional<User> isNickname = userDao.getUserByNickname(request.getNickname());
-
-            user.setPassword(request.getPassword());
-            user.setName(request.getName());
-            user.setNickname(request.getNickname());// 삭제보류 
-            user.setAddress(request.getAddress());
-            user.setBirthday(request.getBirthday());
-
-      
-            // if (isNickname.isPresent() && !isNickname.get().getNickname().equals(user.getNickname())) { // 닉네임 중복
-            //     message = "닉네임 중복 입니다.";
-            //     System.out.println("중복입니다.");
-            //     return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-            // }
-
-            userDao.save(user); // 수정내용 저장
-            System.out.println("수정하기 완료!! ");
-            UserResponse result = new UserResponse();
-            result.status = true;
-            result.data = "success";
-
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            message = "로그인 된 계정이 없습니다.";
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/account/delete/{token}")
-    @ApiOperation(value = "삭제하기")
-    public Object delete(@Valid @PathVariable String token) {
-
-        User jwtuser = jwtService.getUser(token);
-
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
-        String message = "";
-        if (userOpt.isPresent()) {
-            User user = userDao.getUserById(jwtuser.getId());
-
-
-            // FK 연동된것 삭제  /// 완료테이블 있어야 할 것 같음
-            // 1. 거래참가자 테이블에 없어야 됨 (존재한다면 alert 표시)
-            // 2. like_tabel, comment 테이블에서 해당 id 삭제 
-            // 3. article 테이블에서 해당아이디 게시물 삭제 
-            
-
-            userDao.delete(user);
-            
-            System.out.println("삭제하기!!");
-            UserResponse result = new UserResponse();
-            result.status = true;
-            result.data = "success";
-
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            message = "로그인 된 아이디가 없습니다.";
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/account/read/{token}") // SWAGGER UI에 보이는 REQUEST명
+    @PostMapping("/account/read") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "프로필 조회")
-    public Object info( @Valid @PathVariable String token) {
+    public Object info(@RequestHeader(value = "Authorization") String token) {
 
         // Optional<User> userOpt = userDao.findById(id);
         ResponseEntity<Object> response = null;
         System.out.println("프로필 조회 ! ");
+
+
+        
         User jwtuser = jwtService.getUser(token);
         Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
 
@@ -266,6 +192,85 @@ public class AccountController {
         }
 
         return response;
+    }
+
+
+
+    @PostMapping("/account/update")
+    @ApiOperation(value = "수정하기")
+    public Object update(@Valid @RequestBody SignupRequest request, @RequestHeader(value = "Authorization") String token) {
+        if (token == "null") // 비로그인 상태일 때 
+            System.out.println("null");
+        else
+            System.out.println(" token : " + token);
+        // 복호화
+        User jwtuser = jwtService.getUser(token);
+        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        String message = "";
+
+        System.out.println("수정하기 - token 검색");
+        if (userOpt.isPresent()) {
+            // 이메일, 닉네임 중복처리
+            System.out.println("token으로 찾기 완료 ");
+            User user = userDao.getUserById(request.getId());
+            System.out.println("id로 검색");
+
+            Optional<User> isNickname = userDao.getUserByNickname(request.getNickname());
+
+            user.setPassword(request.getPassword());
+            user.setName(request.getName());
+            user.setNickname(request.getNickname());// 삭제보류
+            user.setAddress(request.getAddress());
+            user.setBirthday(request.getBirthday());
+
+            // if (isNickname.isPresent() &&
+            // !isNickname.get().getNickname().equals(user.getNickname())) { // 닉네임 중복
+            // message = "닉네임 중복 입니다.";
+            // System.out.println("중복입니다.");
+            // return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+            // }
+
+            userDao.save(user); // 수정내용 저장
+            System.out.println("수정하기 완료!! ");
+            UserResponse result = new UserResponse();
+            result.status = true;
+            result.data = "success";
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            message = "로그인 된 계정이 없습니다.";
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/account/delete")
+    @ApiOperation(value = "삭제하기")
+    public Object delete( @RequestHeader(value = "Authorization") String token) {
+
+        User jwtuser = jwtService.getUser(token);
+
+        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        String message = "";
+        if (userOpt.isPresent()) {
+            User user = userDao.getUserById(jwtuser.getId());
+
+            // FK 연동된것 삭제 /// 완료테이블 있어야 할 것 같음
+            // 1. 거래참가자 테이블에 없어야 됨 (존재한다면 alert 표시)
+            // 2. like_tabel, comment 테이블에서 해당 id 삭제
+            // 3. article 테이블에서 해당아이디 게시물 삭제
+
+            userDao.delete(user);
+
+            System.out.println("삭제하기!!");
+            UserResponse result = new UserResponse();
+            result.status = true;
+            result.data = "success";
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            message = "로그인 된 아이디가 없습니다.";
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
