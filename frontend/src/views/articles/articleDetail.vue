@@ -29,6 +29,7 @@
 <script>
   const BACK_URL = "http://127.0.0.1:8080"
   import axios from "axios"
+  import {mapActions} from 'vuex'
   import commentList from '@/components/comments/commentList'
   import articleLike from '@/components/articles/articleLike'
   
@@ -50,6 +51,7 @@
       }
     },
     methods: {
+      ...mapActions(['getArticle']),
       shareContent(){
         Kakao.Link.createDefaultButton({
         container: '#kakao-link',
@@ -91,44 +93,6 @@
         }
       });
     },
-        // getcurrentuser(){
-        //   const axiosConfig = {
-        //     headers:{
-        //       Authorization : `Token ${this.$cookies.get('auth-token')}`
-        //     },
-        //   }
-        //   axios.get(`${BACK_URL}/post/user/`,axiosConfig)
-        //     .then((reaponse)=>{
-        //       this.currentuser = reaponse.data.username
-        //   if (this.article.user.username===this.currentuser){
-        //     this.flag = true
-        //   }  
-        //     })
-        //     .catch((err)=>{
-        //       console.error(err)
-        //     })
-        // },
-      getItem(){
-        const config = {
-          headers: {
-            Authorization: `${this.$cookies.get('auth-token')}`
-          }
-        }
-        axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}`)
-        .then((response)=>{
-          console.log(response)
-          this.article.pid = response.data.pid
-          this.article.title = response.data.title
-          this.article.price = response.data.price
-          this.article.description = response.data.description
-
-          // this.cdate=this.article.created_at.substr(0,10)
-          // this.ctime=this.article.created_at.substr(11,8)
-        })
-        .catch((err)=>{
-          console.error(err)
-        })
-      },
       likeCheck(){
         const articleId = this.$route.params.ID
         axios.post(BACK_URL + `/articles/${articleId}/like/check/`, null, { headers: {'Authorization':`Token ${this.$cookies.get('auth-token')}`}})
@@ -143,11 +107,7 @@
       }
     },
     created: function(){
-        // this.getcurrentuser()
-    },
-    mounted: function(){
-      this.getItem()
-      // this.likeCheck()
+      this.getArticle(this.$route.params.ID)
     },
   }
 </script>

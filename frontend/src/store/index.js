@@ -25,6 +25,22 @@ export default new Vuex.Store({
       password:'',
       birthday:'',
     },
+    artcileData:{
+      articleId:'',
+      userId:'',
+      categoryId:'',
+      title:'',
+      writer:'',
+      address:'',
+      description:'',
+      min_price:'',
+      sum_price:'',
+      urlLink:'',
+      image:'',
+      temp:'',
+      endTime:'',
+      createTine:'',
+    },
     isSended:false,
 
     //게시글
@@ -75,6 +91,23 @@ export default new Vuex.Store({
     GET_ARTICLES(state,articles){
       state.articles=articles
     },
+    GET_ARTICLE(state,response){
+      state.articleId=response.data.article_id,
+      state.userId=response.data.user_id,
+      state.categoryId=response.data.category_id,
+      state.title = response.data.title,
+      state.writer=response.data.writer,
+      state.address=response.data.address,
+      state.description = response.data.description,
+      state.min_price = response.data.min_price,
+      state.sum_price = response.data.sum_price,
+      state.urlLink=response.data.url_link,
+      state.image=response.data.image,
+      state.temp=response.data.temp,
+      state.endTime=response.data.end_time,
+      state.createTine=response.data.created_time
+    },
+
   },
 
   actions: {
@@ -119,12 +152,8 @@ export default new Vuex.Store({
     },
     //profile
     getUserData({state,commit}){
-      const config = {
-        headers: {
-            Authorization: state.authToken
-        }
-      }
-      axios.get(`${BACK_URL}/account/read`)
+      const Authorization=state.authToken
+      axios.get(`${BACK_URL}/account/read`,Authorization)
       .then((response)=>{
         commit('GET_USERDATA',response.data)
         axios.defaults.headers.common['Authorization'] = config.headers.Authorization;
@@ -135,34 +164,25 @@ export default new Vuex.Store({
     },
     editUser({commit},editData){
       if(editData.editDataForSend.password===editData.password2){ 
-          const config = {
-              headers: {
-                  Authorization: `${cookies.get('auth-token')}`
-              }
-          }
-          axios.post(`${BACK_URL}/account/update`,editData.editDataForSend,config)
-          .then(()=>{
-            // axios.defaults.headers.common['Authorization'] = config.headers.Authorization;
+          const Authorization=state.authToken
+          axios.post(`${BACK_URL}/account/update`,[editData.editDataForSend,Authorization])
+            .then(()=>{
+              axios.defaults.headers.common['Authorization'] = config.headers.Authorization;
               alert("수정이 완료되었습니다. 다시 로그인해 주세요")
               commit('REMOVE_TOKEN')
-          })
-          .catch((err)=>{
+            })
+            .catch((err)=>{
               console.error(err)
-          })
+            })
       }else{
           console.log("else")
           alert("비밀번호를 확인해 주세요")
       }
     },
     deleteUser({state,commit}){
-      const config = {
-        headers: {
-            Authorization: state.authToken
-        }
-      }
-      axios.get(`${BACK_URL}/account/delete`)
+      const Authorization=state.authToken
+      axios.get(`${BACK_URL}/account/delete`,Authorization)
         .then(()=>{
-            axios.defaults.headers.common['Authorization'] = config.headers.Authorization;
             commit("REMOVE_TOKEN")
             alert("회원 탈퇴가 완료되었습니다.")
             router.push('/');
@@ -175,81 +195,59 @@ export default new Vuex.Store({
 
     //게시글 관리
     //전체 조회, 임시저장글 조회
-    getArticles({state,commit},num){
-      if (num===0) {
-       axios.get(`${BACK_URL}/post/read/${num}`,null)
-          .then((response) => {
-            commit('GET_ARTICLES',response.data.postList)
-          })
-          .catch((err) => {
-            console.error(err)
-          })
-      }else{
-        const config = {
-          headers: {
-            Authorization: state.authToken
-          }
-        }
-        axios.get(`${BACK_URL}/post/read/${bool}/${config.headers.Authorization}`)
-          .then((response) => {
-            commit('GET_ARTICLES',response.data.postList)
-          })
-          .catch((err) => {
-            console.error(err)
-          })  
-      }
+    getArticles({state,commit},data){
+      const Authorization=state.authToken
+      axios.get(`${BACK_URL}/post/read/${data.temp}/${data.categoryId}`,Authorization)
+        .then((response) => {
+          commit('GET_ARTICLES',response.data.postList)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    },
+    //단일 게시글 조회
+    getArticle({coomit},articleID){
+      const Authorization=state.authToken
+      axios.get(`${BACK_URL}/post/detail/${articleID}`,Authorization)
+        .then((response)=>{
+          commit('GET_ARTICLE',response)
+        })
+        .catch((err)=>{
+          console.error(err)
+        })
     },
     //게시글 생성
     createArticle({state,commit},articleData){
-      const config = {
-        headers: {
-          Authorization: state.authToken
-        }
-      }
-      axios.post(`${BACK_URL}/post/create/${articleData.temp}` ,articleData.articleData)
+      const Authorization=state.authToken
+      axios.post(`${BACK_URL}/post/create/${articleData.temp}` ,[articleData.articleData,Authorization])
         .then(() => { 
-          axios.defaults.headers.common['Authorization'] = config.headers.Authorization;
           router.push('article')
         })
         .catch(err => console.log(err))
     },
-    editArticle({state,commit},){
-      const config = {
-        headers: {
-          Authorization: state.authToken
-        }
-      }
-      axios.post(`${BACK_URL}/post/update/${articleData.temp}` ,articleData.articleData)
-        .then(() => { 
-          axios.defaults.headers.common['Authorization'] = config.headers.Authorization;
-          router.push('article')
-        })
-        .catch(err => console.log(err))
-    },
-    
     //게시글 수정하기
     updateArticle(context,updateData){
-      axios.post(`${BACK_URL}/post/update/${updateData.temp}`, updateData.articleUpdateData)
+      const Authorization=state.authToken
+      axios.post(`${BACK_URL}/post/update/${updateData.temp}`, [updateData.articleUpdateData,Authorization])
       .then((response) => {
         this.$router.push({name:'articleDetail',params:this.$route.params.ID})
-        })
+      })
       .catch((err)=>{
         console.error(err)
       })
     },
+    //게시글 삭제하기
     deleteArticle(context,articleId){
-      axios.get(`BACK_URL/post/delete/${articleId}`)
+      const Authorization=state.authToken
+      axios.get(`BACK_URL/post/delete/${articleId}`,Authorization)
        .then(()=>{
-          axios.defaults.headers.common['Authorization'] = config.headers.Authorization;
           router.push({name:'articleList'})
        })
        .catch(()=>{
          console.log(err)
        })
     }
-
   },
-
   modules: {
   }
 })

@@ -20,7 +20,7 @@ export default {
   data(){
     return{
       comments:[],
-      comment_content:{
+      commentData:{
         content:'',
         writer: '',
         articleno: '',
@@ -30,14 +30,11 @@ export default {
   methods: {
       createComment(){
         this.comment_content.articleno=this.$route.params.ID
-        const config = {
-          headers:{
-            Authorization : `${this.$cookies.get('auth-token')}`
-          },
-        }
-        axios.post( `${BACK_URL}/comment/create/${config.headers.Authorization}` , this.comment_content)
+        const Authorization = `${this.$cookies.get('auth-token')}`
+
+        axios.post( `${BACK_URL}/comment/create` , [this.commentData,Authorization])
           .then(()=>{
-            this.comment_content.content=''
+            this.commentData.content=''
             console.log('댓글 보내기 완료')
           })
           .catch((err)=>{
@@ -47,17 +44,12 @@ export default {
       getComments()
       { 
         axios.get(BACK_URL+'/comment/read/'+this.$route.params.ID)
-            .then((response)=>{
-              // console.log('여기까지 들어옴 ?')
-              // console.log(response)
-              // console.log('잘 들어왔네!')
-              this.comments = response.data.commentList
-              // console.log(this.comments)
-              // console.log('this.comments')
-            })
-            .catch((err)=>{
-              console.error(err)
-            })       
+          .then((response)=>{
+            this.comments = response.data.commentList
+          })
+          .catch((err)=>{
+            console.error(err)
+          })       
       },
   },
   created(){
