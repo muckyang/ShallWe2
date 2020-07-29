@@ -104,7 +104,7 @@ export default {
         axios.get(`${BACK_URL}/post/read/1/${config.headers.Authorization}`, this.searchData)
           .then((res) =>{
             console.log(res.data)
-            // this.$router.push('/search')
+            this.$router.push('/search')
           })
         router.push('/search')
         this.keyword=''
