@@ -47,7 +47,7 @@ public class LikeController {
     public Object Like(@Valid @PathVariable int articleId, @RequestHeader String token) {
         String message = "";
         User jwtuser = jwtService.getUser(token);
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
         if(token == null){
             message = "로그인이 되어있지 않습니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -92,7 +92,7 @@ public class LikeController {
     public Object LikeCheck(@Valid @PathVariable int articleId, @RequestHeader String token) {
         String message = "";
         User jwtuser = jwtService.getUser(token);
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
         if(token == null){
             message = "로그인이 되어있지 않습니다.";
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);

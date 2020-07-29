@@ -55,7 +55,7 @@ public class CommentController {
         int articleId = request.getArticleId();
         User jwtuser = jwtService.getUser(token);
 
-        Optional<User> userOpt = userDao.findUserByIdAndPassword(jwtuser.getId(), jwtuser.getPassword());
+        Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
         if (userOpt.isPresent()) {
             Comment comment = new Comment();
             comment.setArticleId(articleId);

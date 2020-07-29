@@ -12,8 +12,6 @@ public class UserResponse {
     public String data;
     @ApiModelProperty(value = "object", position = 3)
     public Object object;
-    @ApiModelProperty(value = "id", position = 4)
-    public String id;
     @ApiModelProperty(value = "password", position = 5)
     public String password;
     @ApiModelProperty(value = "email", position = 6)
