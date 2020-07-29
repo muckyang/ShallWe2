@@ -1,12 +1,18 @@
 <template>
   <div>
-    <label for="">Title</label>
+    <hr>
+    <label for="">카테고리</label>
+    <input type="number" v-model="articleData.Temp">
+    <hr>
+    <label for="">제목</label>
     <input type="text" v-model="articleData.title">
     <label for="">address</label>
     <input type="text" v-model="articleData.address">
-    <label for="">description</label>
+    <hr>
+    <label for="">내용</label>
     <input type="text" v-model="articleData.description">
-    <label for="">minPrice</label>
+    <hr>
+    <label for="">최소주문금액</label>
     <input type="number" v-model="articleData.minPrice">
     <label for="">urlLink</label>
     <input type="text" v-model="articleData.urlLink">
