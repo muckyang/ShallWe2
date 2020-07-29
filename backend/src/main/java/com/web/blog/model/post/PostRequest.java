@@ -29,6 +29,7 @@ public class PostRequest {
     String description;
     String urlLink;
     String image;
+    String token;
     int temp;
     LocalDateTime endTime;
         

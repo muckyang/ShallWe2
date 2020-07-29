@@ -21,6 +21,7 @@ public class SignupRequest {
     String password;
 
     String name;
+    String token;
     @ApiModelProperty(required = true)
     @NotNull
     String nickname;

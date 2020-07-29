@@ -13,21 +13,19 @@ import com.web.blog.model.user.UserResponse;
 import com.web.blog.model.auth.Auth;
 import com.web.blog.model.user.AuthRequest;
 import com.web.blog.model.user.SignupRequest;
+import com.web.blog.model.user.TokenRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
 
 import org.springframework.web.bind.annotation.RestController;
 
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.CookieValue;
-// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,7 +34,6 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.thymeleaf.context.Context;
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = UserResponse.class),
@@ -164,10 +161,10 @@ public class AccountController {
 
     @PostMapping("/account/read") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "프로필 조회")
-    public Object info(HttpEntity<byte[]> requestEntity ,@CookieValue(value = "authToken") Object cookietoken ) {
+    public Object info(@RequestBody TokenRequest request) {
     // @RequestHeader(value = "Authorization") String token
-    System.out.println("cookie : "  +cookietoken.toString());
-        String token = requestEntity.getHeaders().getFirst("Authorization"); 
+    
+        String token = request.getToken(); 
         System.out.println(token);
 
         // Optional<User> userOpt = userDao.findById(id);
@@ -199,12 +196,9 @@ public class AccountController {
 
     @PostMapping("/account/update")
     @ApiOperation(value = "수정하기")
-    public Object update(@Valid @RequestBody SignupRequest request , @RequestHeader(value = "Authorization") String token) {
-
-        if (token == "null") // 비로그인 상태일 때 
-            System.out.println("null");
-        else
-            System.out.println(" token : " + token);
+    public Object update(@Valid @RequestBody SignupRequest request) {
+        String token = request.getToken();
+       
         // 복호화
         User jwtuser = jwtService.getUser(token);
         Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
@@ -247,8 +241,8 @@ public class AccountController {
 
     @PostMapping("/account/delete")
     @ApiOperation(value = "삭제하기")
-    public Object delete( @RequestHeader(value = "Authorization") String token) {
-
+    public Object delete( @RequestBody TokenRequest request) {
+        String token = request.getToken();
         User jwtuser = jwtService.getUser(token);
 
         Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());

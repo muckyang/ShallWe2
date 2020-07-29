@@ -9,6 +9,7 @@ import com.web.blog.dao.UserDao;
 import com.web.blog.model.post.PostResponse;
 import com.web.blog.model.like.Like;
 import com.web.blog.model.like.LikeResponse;
+import com.web.blog.model.user.TokenRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
 
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 // import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiResponse;
@@ -44,8 +45,9 @@ public class LikeController {
 
     @PostMapping("/like/{articleId}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "좋아요 / 좋아요 취소")
-    public Object Like(@Valid @PathVariable int articleId, @RequestHeader String token) {
+    public Object Like(@RequestBody TokenRequest request,@Valid @PathVariable int articleId) {
         String message = "";
+        String token = request.getToken();
         User jwtuser = jwtService.getUser(token);
         Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
         if(token == null){
@@ -89,8 +91,9 @@ public class LikeController {
 
     @PostMapping("/likedcheck/{articleId}") // SWAGGER UI에 보이는 REQUEST명
     @ApiOperation(value = "좋아요여부 확인")
-    public Object LikeCheck(@Valid @PathVariable int articleId, @RequestHeader String token) {
+    public Object LikeCheck(@RequestBody TokenRequest request , @Valid @PathVariable int articleId) {
         String message = "";
+        String token = request.getToken();
         User jwtuser = jwtService.getUser(token);
         Optional<User> userOpt = userDao.findUserByEmailAndPassword(jwtuser.getEmail(), jwtuser.getPassword());
         if(token == null){
