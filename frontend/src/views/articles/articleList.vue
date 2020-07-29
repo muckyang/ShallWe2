@@ -73,7 +73,7 @@ export default {
     ...mapState(['articles'])
   },
   created () {
-    this.getArticles(true)
+    this.getArticles(1)
   },
 }
 </script>

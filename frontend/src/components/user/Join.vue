@@ -328,7 +328,7 @@
 
 <script>
 import axios from "axios"
-import {mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 const BACK_URL = "http://127.0.0.1:8080"
 
     export default {
@@ -345,15 +345,16 @@ const BACK_URL = "http://127.0.0.1:8080"
                         id: '',
                         name:'', 
                         nickname: '',
-                        password:''
+                        password:'',
+                        authNumber:'',
                     },
                     password2:''       
                 },
-                isTerm: false,
+                // isTerm: false,
             }
         },
         methods: {
-            ...mapActions(["signUp"]),
+            ...mapActions(["signUp","sendEmail"]),
             checkTerm(){
                 if(this.isTerm){
                     this.isTerm = false
@@ -362,8 +363,10 @@ const BACK_URL = "http://127.0.0.1:8080"
                 }
             } //바인딩 완료했으니 회원가입 버튼 누를때 
             // isTerm이 true일때 통과하는 조건 추가하면 됨
-
         },
+        computed:{
+            ...mapState(["isSended"])
+        }
     }
 
 </script>
