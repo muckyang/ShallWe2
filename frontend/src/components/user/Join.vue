@@ -299,7 +299,7 @@
                         <div class="modal-footer"> 
                             <div class="agree">
                                 <label for="agreeType" class="agreeText">약관에 동의합니다.</label>
-                                <input type="checkbox" id="agreeType" v-model="isTerm" @click="checkTerm">
+                                <input type="checkbox" id="agreeType" v-model="isTerm" @click="termCheck">
                             </div>
                             <button type="button" class="btn btn-secondary agreeBtn" data-dismiss="modal">Close</button>
                         </div>
@@ -307,18 +307,20 @@
                     </div>
                     </div>
                     </div>
-                <!-- <label>
-                    <input v-model="isTerm" type="checkbox" id="term"/>
-                    <span>약관에 동의합니다</span>
-                </label>
-                <span class="go-term">약관 보기</span><br><br>-->
+
 
                 <hr class="line">
-                <button @click="signUp(signUpData)" class="submitButton">
+                <button @click="sendEmail(signUpData)" v-if="!isSended" class="btn">
                     <span>
-                        작성완료
+                        이메일 인증
                     </span>
                 </button>
+                <button @click="signUp(signUpData)" v-if="isSended" class="btn">
+                    <span>
+                        가입하기
+                    </span>
+                </button>
+                <input type="text" v-if="isSended" v-model="signUpData.signUpDataForSend.authNumber" placeholder="메일로 받으신 인증번호를 입력해주세요">
             </div>
         </div> 
     </div>
@@ -327,7 +329,7 @@
 
 <script>
 import axios from "axios"
-import {mapActions, mapState} from 'vuex'
+import {mapActions, mapState, mapMutations} from 'vuex'
 const BACK_URL = "http://127.0.0.1:8080"
 
     export default {
@@ -349,19 +351,12 @@ const BACK_URL = "http://127.0.0.1:8080"
                     },
                     password2:''       
                 },
-                // isTerm: false,
+                isTerm: false,
             }
         },
         methods: {
             ...mapActions(["signUp","sendEmail"]),
-            checkTerm(){
-                if(this.isTerm){
-                    this.isTerm = false
-                }else{
-                    this.isTerm = true
-                }
-            } //바인딩 완료했으니 회원가입 버튼 누를때 
-            // isTerm이 true일때 통과하는 조건 추가하면 됨
+            ...mapMutations(["termCheck"])
         },
         computed:{
             ...mapState(["isSended"])
