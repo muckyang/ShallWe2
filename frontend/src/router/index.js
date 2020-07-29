@@ -11,6 +11,7 @@ import Join from '../components/user/Join.vue'
 import editUser from '../components/user/editUser.vue'
 import Profile from '../components/user/Profile.vue'
 import emailAuthenticate from '../components/user/emailAuthenticate.vue'
+import SignUpComplete from '../components/user/SignUpComplete.vue'
 
 // 아티클
 import articleCreate from '../views/articles/articleCreate.vue'
@@ -120,7 +121,12 @@ Vue.use(VueRouter)
       path: '/500',
       component: err500
     },
-
+    // 회원가입 완료
+    {
+      path: '/user/signupcomplete',
+      name: SignUpComplete,
+      component: SignUpComplete
+    },
   
   
   ]
