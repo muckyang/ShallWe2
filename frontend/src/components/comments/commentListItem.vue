@@ -44,28 +44,29 @@ export default {
     },
     methods:{
         deleteComment(){
-          axios.post(BACK_URL+`/comment/delete/${this.ducomment.no}`)
-            .then(()=>{
-                this.watchFlag=true
-            })
-            .catch((err)=>{
-                console.error(err)
-            })
-      },
-      showInput(){
-          this.flag=true
-      },
-      updateComment(){
-        console.log(this.comment.content)
-        axios.post(BACK_URL+'/comment/update/',this.comment)
-            .then((response)=>{
-                this.ducomment=response.data
-                this.flag=false
-            })
-            .catch((err)=>{
-                console.error(err)
-            })
-      },
+            const Authorization = `${this.$cookies.get('auth-token')}`
+            axios.post(BACK_URL+`/comment/delete/${this.ducomment.no}`,Authorization)
+                .then(()=>{
+                    this.watchFlag=true
+                })
+                .catch((err)=>{
+                    console.error(err)
+                })
+        },
+        showInput(){
+            this.flag=true
+        },
+        updateComment(){
+            const Authorization = `${this.$cookies.get('auth-token')}`
+            axios.post(BACK_URL+'/comment/update/',[this.comment,Authorization])
+                .then((response)=>{
+                    this.ducomment=response.data
+                    this.flag=false
+                })
+                .catch((err)=>{
+                    console.error(err)
+                })
+        },
     },
     watch:{
         watchFlag(){
