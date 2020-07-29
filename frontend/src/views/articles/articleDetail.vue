@@ -5,14 +5,14 @@
       <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
         <img class="MyImage" src="https://source.unsplash.com/random" alt="...">
         <div class="articleInfo">
-          <div class="title"><p>{{ article.title }}</p></div>
+          <div class="title"><p>{{ articleData.title }}</p></div>
           <div><p>가격 들어갈 자리</p></div>
-          <div class="writer"><p>{{ article.price }}</p></div>
-          <div class="description" id="item-1"><p>{{ article.description }}</p></div>
-          <div class="update btn btn-secondary"><router-link class="text-white text-decoration-none" :to="{name:'articleUpdate', params: {ID: `${article.pid}`}}">수정</router-link></div>
+          <div class="minPrice"><p>{{ articleData.minPrice }}</p></div>
+          <div class="description" id="item-1"><p>{{ articleData.description }}</p></div>
+          <div class="update btn btn-secondary"><router-link class="text-white text-decoration-none" :to="{name:'articleUpdate', params: {ID: `${articleData.articleId}`}}">수정</router-link></div>
         </div> 
-        <div><articleLike  @like-change="likeChange" :isLiked="isLiked" :article="article"/></div>
-        <div class="update"><router-link :to="{name:'articleUpdate', params: {ID: `${article.pid}`}}">수정</router-link></div>
+        <!-- <div><articleLike  @like-change="likeChange" :isLiked="isLiked" :articleData="articleData"/></div> -->
+        <div class="update"><router-link :to="{name:'articleUpdate', params: {ID: `${articleData.articleId}`}}">수정</router-link></div>
 
         <a href="javascript:;" @click="shareContent" id="kakao-link">
           <img src="../../assets/img/kakao_btn.png">
@@ -20,7 +20,7 @@
 
       </div> 
     </div>
-    <commentList/>
+    <!-- <commentList/> -->
   </div>
 </template>
 
@@ -29,6 +29,7 @@
 <script>
   const BACK_URL = "http://127.0.0.1:8080"
   import axios from "axios"
+  import {mapState,mapActions} from 'vuex'
   import commentList from '@/components/comments/commentList'
   import articleLike from '@/components/articles/articleLike'
   
@@ -40,16 +41,11 @@
     },
     data () {
       return {
-        article: {
-          pid:null,
-          title: null,
-          price: null,
-          description: null,
-        },
         isLiked:null,
       }
     },
     methods: {
+      ...mapActions(['getArticle']),
       shareContent(){
         Kakao.Link.createDefaultButton({
         container: '#kakao-link',
@@ -91,44 +87,6 @@
         }
       });
     },
-        // getcurrentuser(){
-        //   const axiosConfig = {
-        //     headers:{
-        //       Authorization : `Token ${this.$cookies.get('auth-token')}`
-        //     },
-        //   }
-        //   axios.get(`${BACK_URL}/post/user/`,axiosConfig)
-        //     .then((reaponse)=>{
-        //       this.currentuser = reaponse.data.username
-        //   if (this.article.user.username===this.currentuser){
-        //     this.flag = true
-        //   }  
-        //     })
-        //     .catch((err)=>{
-        //       console.error(err)
-        //     })
-        // },
-      getItem(){
-        const config = {
-          headers: {
-            Authorization: `${this.$cookies.get('auth-token')}`
-          }
-        }
-        axios.get(`${BACK_URL}/post/detail/${this.$route.params.ID}/${config.headers.Authorization}`)
-        .then((response)=>{
-          console.log(response)
-          this.article.pid = response.data.pid
-          this.article.title = response.data.title
-          this.article.price = response.data.price
-          this.article.description = response.data.description
-
-          // this.cdate=this.article.created_at.substr(0,10)
-          // this.ctime=this.article.created_at.substr(11,8)
-        })
-        .catch((err)=>{
-          console.error(err)
-        })
-      },
       likeCheck(){
         const articleId = this.$route.params.ID
         axios.post(BACK_URL + `/articles/${articleId}/like/check/`, null, { headers: {'Authorization':`Token ${this.$cookies.get('auth-token')}`}})
@@ -143,12 +101,12 @@
       }
     },
     created: function(){
-        // this.getcurrentuser()
+      this.getArticle(this.$route.params.ID)
     },
-    mounted: function(){
-      this.getItem()
-      // this.likeCheck()
-    },
+    computed:{
+      ...mapState(['articleData'])
+      
+    }
   }
 </script>
 
