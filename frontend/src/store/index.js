@@ -26,7 +26,7 @@ export default new Vuex.Store({
       birthday:'',
     },
     isTerm:false,
-    artcileData:{
+    articleData:{
       articleId:'',
       userId:'',
       categoryId:'',
@@ -34,13 +34,13 @@ export default new Vuex.Store({
       writer:'',
       address:'',
       description:'',
-      min_price:'',
-      sum_price:'',
+      minPrice:'',
+      sumPrice:'',
       urlLink:'',
       image:'',
       temp:'',
       endTime:'',
-      createTine:'',
+      createTime:'',
     },
     isSended:false,
 
@@ -102,20 +102,22 @@ export default new Vuex.Store({
       state.articles=articles
     },
     GET_ARTICLE(state,response){
-      state.articleId=response.data.article_id,
-      state.userId=response.data.user_id,
-      state.categoryId=response.data.category_id,
-      state.title = response.data.title,
-      state.writer=response.data.writer,
-      state.address=response.data.address,
-      state.description = response.data.description,
-      state.min_price = response.data.min_price,
-      state.sum_price = response.data.sum_price,
-      state.urlLink=response.data.url_link,
-      state.image=response.data.image,
-      state.temp=response.data.temp,
-      state.endTime=response.data.end_time,
-      state.createTine=response.data.created_time
+      console.log(response,"Mutations")
+      state.articleData.articleId=response.data.articleId,
+      state.articleData.userId=response.data.userId,
+      state.articleData.categoryId=response.data.categoryId,
+      state.articleData.title = response.data.title,
+      state.articleData.writer=response.data.writer,
+      state.articleData.address=response.data.address,
+      state.articleData.description = response.data.description,
+      state.articleData.minPrice = response.data.minPrice,
+      state.articleData.sumPrice = response.data.sumPrice,
+      state.articleData.urlLink=response.data.urlLink,
+      state.articleData.image=response.data.image,
+      state.articleData.temp=response.data.temp,
+      state.articleData.endTime=response.data.endTime,
+      state.articleData.createTime=response.data.createdTime
+      console.log(state.articleData,"GET_ARTICLE")
     },
 
   },
@@ -142,7 +144,6 @@ export default new Vuex.Store({
       }
     },
     signUp({commit},signUpData){
-      console.log(signUpData.signUpDataForSend)
         axios.post(`${BACK_URL}/account/signup`, signUpData.signUpDataForSend)
         .then((res) => {
             console.log(res,"COMPLETE")
@@ -166,22 +167,19 @@ export default new Vuex.Store({
     },
     //profile
     getUserData({state,commit}){
-      const Authorization=state.authToken
-      axios.get(`${BACK_URL}/account/read`,Authorization)
+      const auth={token:state.authToken}
+      axios.post(`${BACK_URL}/account/read`,auth)
       .then((response)=>{
         commit('GET_USERDATA',response.data)
-        axios.defaults.headers.common['Authorization'] = config.headers.Authorization;
       })
       .catch((err)=>{
           console.error(err)
       })
     },
-    editUser({commit},editData){
+    editUser({state,commit},editData){
       if(editData.editDataForSend.password===editData.password2){ 
-          const Authorization=state.authToken
-          axios.post(`${BACK_URL}/account/update`,[editData.editDataForSend,Authorization])
+          axios.post(`${BACK_URL}/account/update`,editData.editDataForSend)
             .then(()=>{
-              axios.defaults.headers.common['Authorization'] = config.headers.Authorization;
               alert("수정이 완료되었습니다. 다시 로그인해 주세요")
               commit('REMOVE_TOKEN')
             })
@@ -194,8 +192,8 @@ export default new Vuex.Store({
       }
     },
     deleteUser({state,commit}){
-      const Authorization=state.authToken
-      axios.get(`${BACK_URL}/account/delete`,Authorization)
+      const auth={token:state.authToken}
+      axios.post(`${BACK_URL}/account/delete`,auth)
         .then(()=>{
             commit("REMOVE_TOKEN")
             alert("회원 탈퇴가 완료되었습니다.")
@@ -210,8 +208,8 @@ export default new Vuex.Store({
     //게시글 관리
     //전체 조회, 임시저장글 조회
     getArticles({state,commit},data){
-      const Authorization=state.authToken
-      axios.get(`${BACK_URL}/post/read/${data.temp}/${data.categoryId}`,Authorization)
+      const auth={token:state.authToken}
+      axios.post(`${BACK_URL}/post/read/${data.temp}/${data.categoryId}`,auth)
         .then((response) => {
           commit('GET_ARTICLES',response.data.postList)
         })
@@ -220,10 +218,11 @@ export default new Vuex.Store({
         })
     },
     //단일 게시글 조회
-    getArticle({coomit},articleID){
-      const Authorization=state.authToken
-      axios.get(`${BACK_URL}/post/detail/${articleID}`,Authorization)
+    getArticle({state,commit},articleID){
+      const auth={token:state.authToken}
+      axios.post(`${BACK_URL}/post/detail/${articleID}`,auth)
         .then((response)=>{
+          console.log(response)
           commit('GET_ARTICLE',response)
         })
         .catch((err)=>{
@@ -231,29 +230,28 @@ export default new Vuex.Store({
         })
     },
     //게시글 생성
-    createArticle({state,commit},articleData){
-      const Authorization=state.authToken
-      axios.post(`${BACK_URL}/post/create/${articleData.temp}` ,[articleData.articleData,Authorization])
+    createArticle(context,articleData){
+      console.log(articleData.articleData)
+      axios.post(`${BACK_URL}/post/create/${articleData.temp}` ,articleData.articleData)
         .then(() => { 
           router.push('article')
         })
         .catch(err => console.log(err))
     },
     //게시글 수정하기
-    updateArticle(context,updateData){
-      const Authorization=state.authToken
-      axios.post(`${BACK_URL}/post/update/${updateData.temp}`, [updateData.articleUpdateData,Authorization])
+    updateArticle({state},updateData){
+      axios.post(`${BACK_URL}/post/update/${updateData.temp}`, updateData.articleUpdateData)
       .then((response) => {
-        this.$router.push({name:'articleDetail',params:this.$route.params.ID})
+        router.push(`/detail/${updateData.articleUpdateData.articleId}`)
       })
       .catch((err)=>{
         console.error(err)
       })
     },
     //게시글 삭제하기
-    deleteArticle(context,articleId){
-      const Authorization=state.authToken
-      axios.get(`BACK_URL/post/delete/${articleId}`,Authorization)
+    deleteArticle({state},articleId){
+      const auth={token:state.authToken}
+      axios.get(`${BACK_URL}/post/delete/${articleId}`,auth)
        .then(()=>{
           router.push({name:'articleList'})
        })

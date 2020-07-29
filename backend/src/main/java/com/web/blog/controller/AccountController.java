@@ -208,7 +208,7 @@ public class AccountController {
         if (userOpt.isPresent()) {
             // 이메일, 닉네임 중복처리
             System.out.println("token으로 찾기 완료 ");
-            User user = userDao.getUserByEmail(request.getEmail());
+            User user = userDao.getUserByEmail(jwtuser.getEmail());
             System.out.println("id로 검색");
 
             // Optional<User> isNickname = userDao.getUserByNickname(request.getNickname());

@@ -2,22 +2,20 @@
   <div>
     <label for="">Title</label>
     <input type="text" v-model="articleData.title">
-    <label for="">writer</label>
-    <input type="text" v-model="articleData.writer">
     <label for="">address</label>
     <input type="text" v-model="articleData.address">
     <label for="">description</label>
     <input type="text" v-model="articleData.description">
     <label for="">minPrice</label>
     <input type="number" v-model="articleData.minPrice">
-    <label for="">sumPrice</label>
-    <input type="number" v-model="articleData.sumPrice">
     <label for="">urlLink</label>
     <input type="text" v-model="articleData.urlLink">
     <label for="">Image</label>
     <input type="image" v-model="articleData.Image">
     <label for="">Temp</label>
-    <input type="number" v-model="articleData.Temp">
+    <input type="number" v-model="articleData.temp">
+    <label for="">category</label>
+    <input type="number" v-model="articleData.categoryId">
     <button class="font-weight-bold btn btn-dark" type="submit" @click="createArticle({articleData,temp:1})" value="Submit">Submit</button>
     <button @click="tempSaveArticle({articleData,temp:0})">임시저장</button>
 
@@ -77,6 +75,7 @@
           urlLink: null,
           imgae: null,
           temp: null,
+          token:this.$cookies.get('auth-token')
         },
         imageUrl: null, //다시 검토
       };

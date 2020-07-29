@@ -11,7 +11,7 @@
                             <!-- <i class="fas fa-key"></i> -->
                             <label for="password">비밀번호</label>
                         </div>
-                        <input v-model="password"
+                        <input v-model="editData.editDataForSend.password"
                             id="password" 
                             type="password"
                             name="password"
@@ -26,7 +26,7 @@
                             <!-- <i class="fas fa-key"></i> -->
                             <label for="password-confirm">비밀번호 확인</label>
                         </div>
-                        <input v-model="password2" 
+                        <input v-model="editData.password2" 
                             id="password-confirm"
                             name="password-confirm"
                             type="password"
@@ -41,7 +41,7 @@
                             <!-- <i class="fas fa-user"></i> -->
                             <label for="name">이름</label>
                         </div>
-                        <input v-model="name" 
+                        <input v-model="editData.editDataForSend.name" 
                             id="name"
                             name="name"
                             placeholder="이름을 입력해주세요"
@@ -53,7 +53,7 @@
                             <!-- <i class="fas fa-user"></i> -->
                             <label for="nickname">닉네임</label>
                         </div>
-                        <input v-model="nickname"
+                        <input v-model="editData.editDataForSend.nickname"
                             id="nickname"
                             name="nickname"
                             placeholder="닉네임을 입력해주세요" 
@@ -65,7 +65,7 @@
                             <!-- <i class="fas fa-home"></i> -->
                             <label for="address">주소</label>
                         </div>
-                        <input v-model="address" 
+                        <input v-model="editData.editDataForSend.address" 
                             id="address"
                             name="address"
                             placeholder="주소를 입력해주세요"
@@ -77,7 +77,7 @@
                             <!-- <i class="fas fa-birthday-cake"></i> -->
                             <label for="birthday">생일</label>
                         </div>
-                        <input v-model="birthday" 
+                        <input v-model="editData.editDataForSend.birthday" 
                             id="birthday"
                             name="birthday"
                             placeholder="YYYY-MM-DD"
@@ -86,7 +86,7 @@
 
                 </div>
                 <hr class="line">
-                <button v-on:click="editUser" class="submitButton">
+                <button @click="editUser(editData)" class="submitButton">
                     <span>
                         작성완료
                     </span>
@@ -109,11 +109,11 @@ export default {
                 editDataForSend:{
                     name:'',
                     address:'',
-                    email:'',
                     nickname:'',
-                    id:'',
                     password:'',
+                    email:'',
                     birthday:'',
+                    token:this.$cookies.get('auth-token')
                 },
                 password2:'',
             },
@@ -126,14 +126,12 @@ export default {
     },
     created: function(){
         this.getUserData()
-        console.log(this.userData)
         this.editData.editDataForSend.name=this.userData.name
         this.editData.editDataForSend.address=this.userData.address
-        this.editData.editDataForSend.email=this.userData.email
         this.editData.editDataForSend.nickname=this.userData.nickname
-        this.editData.editDataForSend.id=this.userData.id
         this.editData.editDataForSend.password=this.userData.password
         this.editData.editDataForSend.birthday=this.userData.birthday
+        this.editData.editDataForSend.email=this.userData.email
     },
     computed:{
         ...mapState(["userData"]),
