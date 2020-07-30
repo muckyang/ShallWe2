@@ -46,14 +46,16 @@
             
           </div>
         </div>
-          <input class="searchInput form-control d-inline mr-1" type="search" 
+          <input class="searchInput" type="search" 
           style="font-family: FontAwesome;" 
           placeholder="Search" v-model="searchData.word" 
           @keypress.enter="search" 
-          aria-label="Search">
+          >
 
-          <button class="searchInput btn btn-outline-secondary my-2 my-sm-0" 
-          type="submit" @click="search"><i class="fas fa-search"></i></button>
+          <button class="searchBtn 
+          my-2 my-sm-0" 
+          type="submit" @click="search">
+          <i class="fas fa-search"></i></button>
         </div>
       </div>
     </nav>
@@ -156,8 +158,10 @@ font-style: normal;
   font-size: 12px;
 }
 .wall{
-  padding: .5rem 1rem;
+  padding: .5rem 0.2rem;
   font-size: 12px;
+  margin-left: -4px;
+  margin-right: 1px;
 }
 .down{
   padding-bottom:3px;
@@ -170,7 +174,21 @@ font-style: normal;
 }
 .searchInput{
   height: 35px;
+  width: 170px;
+  border-style: solid;
+  border-width: 1.5px;
+  border-radius: 0;
+  border-color: #453d40;
 }
+.searchBtn{
+  height: 35px;
+  border-style: solid;
+  border-radius: 0;
+  border-color: #453d40;
+  background-color: #453d40;
+  color: #faf9fa;
+}
+
 /* .dropdown-toggle {
   background-color: white;
   border: white;
